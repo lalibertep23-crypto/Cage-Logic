@@ -1,0 +1,303 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-barlow);
+  --font-mono: var(--font-dm-mono);
+  --font-heading: var(--font-anton);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ── Cage Logic — Warm Concrete Theme ───────────────────────────────────────
+   Rio fight club. Weathered locker room. Not Silicon Valley.
+   Palette: burnt amber (#C9822A), warm near-black (#0F0D0B), jungle green (#2A5C3F)
+   Fonts: Anton (display/score), Barlow Condensed (labels), DM Mono (data)
+   Radius: 0px everywhere — sharp corners, no pill, no rounding.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Light mode kept minimal — app always loads dark */
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.10 0 0);
+  --card: oklch(0.98 0 0);
+  --card-foreground: oklch(0.10 0 0);
+  --popover: oklch(0.98 0 0);
+  --popover-foreground: oklch(0.10 0 0);
+  --primary: #C9822A;
+  --primary-foreground: #0F0D0B;
+  --secondary: oklch(0.94 0 0);
+  --secondary-foreground: oklch(0.10 0 0);
+  --muted: oklch(0.94 0 0);
+  --muted-foreground: oklch(0.50 0 0);
+  --accent: oklch(0.94 0 0);
+  --accent-foreground: oklch(0.10 0 0);
+  --destructive: #8B2525;
+  --border: oklch(0.88 0 0);
+  --input: oklch(0.88 0 0);
+  --ring: #C9822A;
+  --chart-1: #C9822A;
+  --chart-2: #2A5C3F;
+  --chart-3: #8B2525;
+  --chart-4: #8A8070;
+  --chart-5: #544C40;
+  --radius: 0px;
+  --sidebar: oklch(0.96 0 0);
+  --sidebar-foreground: oklch(0.10 0 0);
+  --sidebar-primary: #C9822A;
+  --sidebar-primary-foreground: #0F0D0B;
+  --sidebar-accent: oklch(0.94 0 0);
+  --sidebar-accent-foreground: oklch(0.10 0 0);
+  --sidebar-border: oklch(0.88 0 0);
+  --sidebar-ring: #C9822A;
+}
+
+.dark {
+  /* ── Surface layers ─────────────────────────────── */
+  --background:        #1A1713;   /* lifted concrete — readable in bright gym */
+  --foreground:        #F5F0E8;   /* warm off-white */
+  --card:              #252118;   /* clearly raised surface, visible hierarchy */
+  --card-foreground:   #F5F0E8;
+  --popover:           #252118;
+  --popover-foreground:#F5F0E8;
+
+  /* ── Brand palette ──────────────────────────────── */
+  --primary:           #D4922E;   /* amber — slightly brighter, punches in gym light */
+  --primary-foreground:#1A1713;
+  --secondary:         #2E2922;   /* lifted secondary surface */
+  --secondary-foreground:#F5F0E8;
+  --muted:             #13110E;   /* sunken / pressed state */
+  --muted-foreground:  #AA9A88;   /* warm gray — readable in harsh lighting */
+  --accent:            #3D8B55;   /* jungle green brighter — confirmations, streaks */
+  --accent-foreground: #F5F0E8;
+  --destructive:       #A83030;   /* brick red — slightly lifted for visibility */
+
+  /* ── Structural ─────────────────────────────────── */
+  --border:   rgba(245, 240, 232, 0.14);   /* more visible edges, readable in gym */
+  --input:    rgba(245, 240, 232, 0.16);   /* clearly visible form fields */
+  --ring:     #D4922E;                      /* amber focus ring */
+
+  /* ── Charts ─────────────────────────────────────── */
+  --chart-1: #D4922E;
+  --chart-2: #3D8B55;
+  --chart-3: #A83030;
+  --chart-4: #AA9A88;
+  --chart-5: #6A6055;
+
+  /* ── Radius: 0 — no rounding anywhere ───────────── */
+  --radius: 0px;
+
+  /* ── Sidebar ─────────────────────────────────────── */
+  --sidebar:                #13110E;
+  --sidebar-foreground:     #F5F0E8;
+  --sidebar-primary:        #D4922E;
+  --sidebar-primary-foreground: #1A1713;
+  --sidebar-accent:         #2E2922;
+  --sidebar-accent-foreground: #F5F0E8;
+  --sidebar-border:         rgba(245, 240, 232, 0.14);
+  --sidebar-ring:           #D4922E;
+}
+
+/* ── Typography ─────────────────────────────────────────────────────────────
+   Anton     → font-anton  → display numbers, stamped text, score
+   Barlow    → font-sans   → section labels, nav, UI text (replaces Geist)
+   DM Mono   → font-mono   → data readouts, metadata, small print
+   ──────────────────────────────────────────────────────────────────────── */
+.font-anton  { font-family: var(--font-anton), 'Anton', sans-serif; }
+.font-barlow { font-family: var(--font-barlow), 'Barlow Condensed', sans-serif; }
+.font-mono   { font-family: var(--font-dm-mono), 'DM Mono', monospace; }
+
+/* ── Concrete grain texture ─────────────────────────────────────────────────
+   Two SVG noise layers: fine grain + large concrete mottle.
+   Applied to the body background. Subtle enough to read over, strong enough
+   to feel like a wall, not an app store screenshot.
+   ──────────────────────────────────────────────────────────────────────── */
+.dark body {
+  background-image:
+    url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'220'%20height%3D'220'%3E%3Cfilter%20id%3D'n'%3E%3CfeTurbulence%20type%3D'fractalNoise'%20baseFrequency%3D'0.9'%20numOctaves%3D'2'%20seed%3D'4'%2F%3E%3CfeColorMatrix%20values%3D'0%200%200%200%200.18%20%200%200%200%200%200.14%20%200%200%200%200%200.10%20%200%200%200%200.55%200'%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D'100%25'%20height%3D'100%25'%20filter%3D'url(%23n)'%2F%3E%3C%2Fsvg%3E"),
+    url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'800'%20height%3D'800'%3E%3Cfilter%20id%3D'm'%3E%3CfeTurbulence%20type%3D'fractalNoise'%20baseFrequency%3D'0.012'%20numOctaves%3D'2'%20seed%3D'9'%2F%3E%3CfeColorMatrix%20values%3D'0%200%200%200%200.10%20%200%200%200%200%200.08%20%200%200%200%200%200.06%20%200%200%200%200.7%200'%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D'100%25'%20height%3D'100%25'%20filter%3D'url(%23m)'%2F%3E%3C%2Fsvg%3E"),
+    radial-gradient(120% 60% at 80% 0%, rgba(212,146,46,0.10) 0%, transparent 60%),
+    radial-gradient(120% 60% at 20% 100%, rgba(61,139,85,0.08) 0%, transparent 60%);
+  background-blend-mode: overlay, multiply, normal, normal;
+}
+
+/* ── Paint streak — top of every page ──────────────────────────────────────
+   A thin irregular amber/green gradient line across the very top.
+   Looks like a stencil was dragged across the wall.
+   ──────────────────────────────────────────────────────────────────────── */
+.dark body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #C9822A 10%,
+    #7A4F1A 22%,
+    transparent 28%,
+    #C9822A 40%,
+    transparent 50%,
+    #2A5C3F 70%,
+    transparent 78%,
+    #C9822A 92%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Stencil utility — spray-painted number effect ──────────────────────────
+   Apply to any large display number. Horizontal mask bridges simulate
+   a stencil that was cut from cardboard and spray-painted onto the wall.
+   Usage: <span class="stencil">78</span>
+   ──────────────────────────────────────────────────────────────────────── */
+.stencil {
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 0%    22%,
+    transparent 22%  24.2%,
+    #000 24.2% 50%,
+    transparent 50%  52.2%,
+    #000 52.2% 78%,
+    transparent 78%  80.2%,
+    #000 80.2% 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    #000 0%    22%,
+    transparent 22%  24.2%,
+    #000 24.2% 50%,
+    transparent 50%  52.2%,
+    #000 52.2% 78%,
+    transparent 78%  80.2%,
+    #000 80.2% 100%
+  );
+  filter: contrast(1.05);
+}
+
+/* ── Nudge strip — left-border alert, not a rounded card ───────────────────
+   Usage: <div class="nudge-strip">content</div>
+   ──────────────────────────────────────────────────────────────────────── */
+.nudge-strip {
+  border-left: 2px solid #A83030;
+  background: #252118;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nudge-strip-amber {
+  border-left: 2px solid #D4922E;
+  background: #252118;
+  padding: 10px 14px;
+}
+
+/* ── Score axis — tick ruler under the score ────────────────────────────────
+   The horizontal 0–100 scale with a glowing amber marker at the current value.
+   See usage in investment score components.
+   ──────────────────────────────────────────────────────────────────────── */
+.score-axis {
+  position: relative;
+  height: 14px;
+  border-top: 1px solid rgba(245,240,232,0.16);
+}
+
+/* ── Hairline rule ─────────────────────────────────────────────────────────
+   Sharp horizontal divider. Use instead of border-border on sections.
+   ──────────────────────────────────────────────────────────────────────── */
+.cl-rule {
+  height: 1px;
+  background: rgba(245,240,232,0.08);
+}
+.cl-rule-hard {
+  height: 1px;
+  background: rgba(245,240,232,0.16);
+}
+
+/* ── Label caps — spaced uppercase label style ─────────────────────────────
+   Usage: <span class="label-caps">SECTION TITLE</span>
+   ──────────────────────────────────────────────────────────────────────── */
+.label-caps {
+  font-family: var(--font-barlow), 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #AA9A88;
+}
+
+/* ── Data mono — small metadata readouts ───────────────────────────────────
+   Usage: <span class="data-mono">06:42 GI</span>
+   ──────────────────────────────────────────────────────────────────────── */
+.data-mono {
+  font-family: var(--font-dm-mono), 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  color: #7A6E60;
+}
+
+/* ── Punch-in button glow ──────────────────────────────────────────────────
+   Added via Tailwind class on the LOG SESSION button.
+   ──────────────────────────────────────────────────────────────────────── */
+.punch-glow:hover {
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.2),
+    0 0 0 1px #C9822A,
+    0 8px 24px rgba(201,130,42,0.18);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-barlow), 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.01em;
+  }
+  html {
+    @apply font-sans;
+  }
+}
