@@ -348,7 +348,7 @@ export default async function BreathworkPage() {
               <div style={{ flex: 1, height: 1, background: C.border }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {sessions.map((s, i) => (
+              {sessions.map((s: any, i: number) => (
                 <div
                   key={s.id}
                   style={{
