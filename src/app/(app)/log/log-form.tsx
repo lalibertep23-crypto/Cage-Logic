@@ -71,23 +71,48 @@ export type TagOption = {
   label: string;
   position: string | null;
   category: string | null;
+  side: string;
 };
 
+// Group key = position + side (when not neutral), e.g. "half_guard_top"
+function groupKey(t: TagOption): string {
+  const pos = t.position ?? '__null__';
+  if (t.side && t.side !== 'neutral') return `${pos}_${t.side}`;
+  return pos;
+}
+
 const POSITION_ORDER = [
-  'standup', 'closed_guard', 'open_guard', 'half_guard',
-  'side_control', 'mount', 'back', 'turtle', null,
+  'standup',
+  'closed_guard',
+  'open_guard',
+  'half_guard_bottom', 'half_guard_top',
+  'side_control_bottom', 'side_control_top',
+  'mount_bottom', 'mount_top',
+  'back_top', 'back_bottom',
+  'turtle_bottom', 'turtle_top',
+  '__null__',
 ] as const;
 
 const POSITION_LABEL: Record<string, string> = {
-  standup:     'STANDUP',
-  closed_guard:'CLOSED GUARD',
-  open_guard:  'OPEN GUARD',
-  half_guard:  'HALF GUARD',
-  side_control:'SIDE CONTROL',
-  mount:       'MOUNT',
-  back:        'BACK',
-  turtle:      'TURTLE',
-  __null__:    'OTHER',
+  standup:           'STANDUP',
+  closed_guard:      'CLOSED GUARD',
+  open_guard:        'OPEN GUARD',
+  half_guard_top:    'HALF GUARD — TOP',
+  half_guard_bottom: 'HALF GUARD — BOTTOM',
+  half_guard:        'HALF GUARD',
+  side_control_top:  'SIDE CONTROL — TOP',
+  side_control_bottom:'SIDE CONTROL — BOTTOM',
+  side_control:      'SIDE CONTROL',
+  mount_top:         'MOUNT — TOP',
+  mount_bottom:      'MOUNT — BOTTOM',
+  mount:             'MOUNT',
+  back_top:          'BACK — TAKING',
+  back_bottom:       'BACK — DEFENDING',
+  back:              'BACK',
+  turtle_top:        'TURTLE — ATTACKING',
+  turtle_bottom:     'TURTLE — DEFENDING',
+  turtle:            'TURTLE',
+  __null__:          'OTHER',
 };
 
 const initialState: LogState = {};
@@ -126,15 +151,15 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
   const grouped = useMemo(() => {
     const m = new Map<string, TagOption[]>();
     for (const t of filtered) {
-      const key = t.position ?? '__null__';
+      const key = groupKey(t);
       if (!m.has(key)) m.set(key, []);
       m.get(key)!.push(t);
     }
     return m;
   }, [filtered]);
-  const orderedKeys = POSITION_ORDER
-    .map((p) => (p === null ? '__null__' : p))
-    .filter((k) => grouped.has(k));
+  const orderedKeys = (POSITION_ORDER as readonly string[])
+    .filter((k) => grouped.has(k))
+    .concat(Array.from(grouped.keys()).filter((k) => !(POSITION_ORDER as readonly string[]).includes(k)));
 
   return (
     <form action={formAction} style={{ display: 'flex', flexDirection: 'column', background: C.bg, minHeight: '100vh' }}>

@@ -20,8 +20,9 @@ export default async function LogPage() {
 
   const { data: tagRows } = await supabase
     .from('technique_tags')
-    .select('id, slug, label, position, category, is_custom')
+    .select('id, slug, label, position, category, side, is_custom')
     .order('position', { ascending: true })
+    .order('side', { ascending: true })
     .order('label', { ascending: true });
 
   const tags: TagOption[] = (tagRows ?? []).map((r) => ({
@@ -30,6 +31,7 @@ export default async function LogPage() {
     label: r.label as string,
     position: (r.position as string | null) ?? null,
     category: (r.category as string | null) ?? null,
+    side: (r.side as string | null) ?? 'neutral',
   }));
 
   return (

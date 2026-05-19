@@ -5,14 +5,14 @@
 -- Run once after schema migration. Idempotent via slug uniqueness.
 -- ============================================================================
 
-insert into public.technique_tags (slug, label, discipline, category, position) values
--- ---------- GUARD (closed/open) ----------
-('scissor-sweep',          'Scissor sweep',                 'bjj', 'sweep',              'closed_guard'),
-('hip-bump-sweep',          'Hip bump sweep',                'bjj', 'sweep',              'closed_guard'),
-('flower-sweep',            'Flower sweep',                  'bjj', 'sweep',              'closed_guard'),
-('pendulum-sweep',          'Pendulum sweep',                'bjj', 'sweep',              'closed_guard'),
-('triangle-from-guard',     'Triangle from guard',           'bjj', 'submission',         'closed_guard'),
-('armbar-from-guard',       'Armbar from guard',             'bjj', 'submission',         'closed_guard'),
+insert into public.technique_tags (slug, label, discipline, category, position, side) values
+-- ---------- GUARD (closed/open) — always bottom ----------
+('scissor-sweep',          'Scissor sweep',                 'bjj', 'sweep',              'closed_guard', 'bottom'),
+('hip-bump-sweep',          'Hip bump sweep',                'bjj', 'sweep',              'closed_guard', 'bottom'),
+('flower-sweep',            'Flower sweep',                  'bjj', 'sweep',              'closed_guard', 'bottom'),
+('pendulum-sweep',          'Pendulum sweep',                'bjj', 'sweep',              'closed_guard', 'bottom'),
+('triangle-from-guard',     'Triangle from guard',           'bjj', 'submission',         'closed_guard', 'bottom'),
+('armbar-from-guard',       'Armbar from guard',             'bjj', 'submission',         'closed_guard', 'bottom'),
 ('kimura-from-guard',       'Kimura from guard',             'bjj', 'submission',         'closed_guard'),
 ('omoplata',                'Omoplata',                      'bjj', 'submission',         'closed_guard'),
 ('guillotine-from-guard',   'Guillotine from guard',         'bjj', 'submission',         'closed_guard'),
