@@ -58,15 +58,15 @@ export default function WelcomePage() {
         </div>
 
         {/* Graffiti wordmark — CSS text treatment, Anton + outline + 3D step shadow */}
-        <div style={{ marginTop: 28, marginLeft: -4, transform: 'rotate(-2deg)', transformOrigin: 'left center' }}>
+        <div style={{ marginTop: 28, transform: 'rotate(-2deg)', transformOrigin: 'left center' }}>
           {/* CAGE — amber fill */}
           <div style={{
             fontFamily: 'var(--font-anton)',
-            fontSize: 88,
+            fontSize: 'clamp(64px, 21vw, 88px)',
             lineHeight: 0.85,
             letterSpacing: '0.02em',
             color: '#D4922E',
-            WebkitTextStroke: '6px #13110E',
+            WebkitTextStroke: '4px #13110E',
             paintOrder: 'stroke fill',
             textShadow: `
               2px 2px 0 #000,
@@ -79,13 +79,13 @@ export default function WelcomePage() {
           {/* LOGIC — cream fill, offset right */}
           <div style={{
             fontFamily: 'var(--font-anton)',
-            fontSize: 88,
+            fontSize: 'clamp(64px, 21vw, 88px)',
             lineHeight: 0.85,
             letterSpacing: '0.02em',
             color: '#F0E8D8',
-            WebkitTextStroke: '6px #13110E',
+            WebkitTextStroke: '4px #13110E',
             paintOrder: 'stroke fill',
-            marginLeft: 20,
+            marginLeft: 'clamp(10px, 3vw, 20px)',
             textShadow: `
               2px 2px 0 #7A4F1A,
               4px 4px 0 #7A4F1A,

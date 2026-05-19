@@ -27,6 +27,18 @@ const C = {
   lineHard: 'rgba(245,240,232,0.22)',
 };
 
+function getBeltColor(color: string | null): string {
+  const map: Record<string, string> = {
+    white:  '#E8E4DC',
+    blue:   '#1E5FA8',
+    purple: '#6B3A8A',
+    brown:  '#6B3A1F',
+    black:  '#1A1713',
+    red:    '#8B2020',
+  };
+  return map[String(color ?? 'white').toLowerCase()] ?? '#E8E4DC';
+}
+
 const DOMAINS = [
   { key: 'consistency' as const, label: 'CONSISTENCY', weight: 25 },
   { key: 'reflection'  as const, label: 'REFLECTION',  weight: 20 },
@@ -246,7 +258,7 @@ export default async function HomePage() {
       <div style={{ borderTop: `1px solid ${C.line}`, padding: '14px 22px 12px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14 }}>
           <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.mid }}>DOMAINS</span>
-          <Link href="/score" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.1em', textDecoration: 'none' }}>
+          <Link href="/score" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.amber, letterSpacing: '0.1em', textDecoration: 'none', border: `1px solid ${C.amberLow}`, padding: '3px 8px' }}>
             FULL BREAKDOWN →
           </Link>
         </div>
@@ -296,16 +308,39 @@ export default async function HomePage() {
             </span>
           )}
         </div>
-        {today.loggedToday
-          ? <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.08em' }}>—</span>
-          : <Link href="/log" style={{ textDecoration: 'none' }}>
-              <span style={{
-                fontFamily: 'var(--font-bebas)', fontSize: 16,
-                letterSpacing: '0.16em', color: C.amber,
-                borderBottom: `1px solid ${C.amberLow}`, paddingBottom: 1,
-              }}>LOG →</span>
-            </Link>
-        }
+        <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.08em' }}>—</span>
+      </div>
+
+      {/* ── PUNCH IN — moved up, right after TODAY ───────────────────────── */}
+      <div style={{ padding: '12px 22px 0' }}>
+        <Link href="/log" style={{ textDecoration: 'none', display: 'block' }}>
+          <div style={{
+            background: today.loggedToday ? C.bgRaised : C.amber,
+            color: today.loggedToday ? C.midLow : C.bg,
+            padding: '18px 24px',
+            position: 'relative',
+            cursor: today.loggedToday ? 'default' : 'pointer',
+            border: today.loggedToday ? `1px solid ${C.lineHard}` : '1px solid transparent',
+            boxShadow: today.loggedToday ? 'none' : `inset 0 0 0 1px rgba(0,0,0,0.2), 0 4px 16px rgba(212,146,46,0.18)`,
+            transition: 'background 120ms',
+          }}>
+            {!today.loggedToday && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'rgba(0,0,0,0.15)' }}/>}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-anton)', fontSize: 30, letterSpacing: '0.06em', lineHeight: 0.95 }}>
+                  {today.loggedToday ? 'PUNCHED IN' : 'PUNCH IN'}
+                </div>
+                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.16em', opacity: 0.75, marginTop: 4 }}>
+                  {today.loggedToday ? "EDIT TODAY'S LOG" : "LOG TODAY'S SESSION"}
+                </div>
+              </div>
+              <svg width={44} height={26} viewBox="0 0 56 32" fill="none">
+                <path d="M4 4V28 M14 4V28 M24 4V28 M34 4V28 M2 18L40 12"
+                      stroke="currentColor" strokeWidth="2.5" strokeLinecap="square"/>
+              </svg>
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* ── Week stats ───────────────────────────────────────────────────── */}
@@ -362,70 +397,35 @@ export default async function HomePage() {
         </span>
       </div>
 
-      {/* ── Mental check-in nudge ────────────────────────────────────────── */}
-      {!didCheckInToday && (
-        <div style={{
-          margin: '8px 22px 0',
-          padding: '10px 14px',
-          borderLeft: `2px solid ${C.amberLow}`,
-          background: C.bgRaised,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.amberLow, letterSpacing: '0.16em', flexShrink: 0 }}>MIND</span>
-            <div style={{ width: 1, height: 14, background: C.midLow, flexShrink: 0 }}/>
-            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, color: C.mid, letterSpacing: '0.04em' }}>Daily check-in pending.</span>
-          </div>
-          <Link href="/mental/check-in" style={{ textDecoration: 'none' }}>
-            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 16, letterSpacing: '0.1em', color: C.amber }}>→</span>
-          </Link>
-        </div>
-      )}
-
-      {/* ── PUNCH IN — the big LOG SESSION CTA ───────────────────────────── */}
-      <div style={{ padding: '16px 22px 14px' }}>
-        <Link href="/log" style={{ textDecoration: 'none', display: 'block' }}>
-          <div style={{
-            background: today.loggedToday ? C.bgRaised : C.amber,
-            color: today.loggedToday ? C.midLow : C.bg,
-            padding: '20px 24px',
-            position: 'relative',
-            cursor: today.loggedToday ? 'default' : 'pointer',
-            boxShadow: today.loggedToday ? 'none' : `inset 0 0 0 1px rgba(0,0,0,0.2)`,
-            transition: 'background 120ms',
-          }}>
-            {/* Inset shadow top — stamped depth */}
-            {!today.loggedToday && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'rgba(0,0,0,0.15)' }}/>}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ fontFamily: 'var(--font-anton)', fontSize: 30, letterSpacing: '0.06em', lineHeight: 0.95 }}>
-                  {today.loggedToday ? 'PUNCHED IN' : 'PUNCH IN'}
-                </div>
-                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.16em', opacity: 0.75, marginTop: 4 }}>
-                  {today.loggedToday ? "EDIT TODAY'S LOG" : "LOG TODAY'S SESSION"}
-                </div>
-              </div>
-              {/* Tally marks — feels like a physical clock-in card */}
-              <svg width={44} height={26} viewBox="0 0 56 32" fill="none">
-                <path d="M4 4V28 M14 4V28 M24 4V28 M34 4V28 M2 18L40 12"
-                      stroke="currentColor" strokeWidth="2.5" strokeLinecap="square"/>
-              </svg>
-            </div>
-          </div>
-        </Link>
-      </div>
 
       {/* ── Stripe Track ─────────────────────────────────────────────────── */}
       {primaryDiscipline && (
         <div style={{ borderTop: `1px solid ${C.line}`, padding: '16px 22px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
             <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.mid }}>STRIPE TRACK</span>
-            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.1em' }}>
-              {primaryDiscipline.rank_color
-                ? String(primaryDiscipline.rank_color).toUpperCase() + ' BELT'
-                : 'BELT'}{' '}
-              {Array.from({ length: 4 }, (_, i) => i < (primaryDiscipline.stripes ?? 0) ? '●' : '○').join(' ')}
-            </span>
+            {/* Visual belt with stripes */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.1em' }}>
+                {String(primaryDiscipline.rank_color ?? 'WHITE').toUpperCase()} BELT
+              </span>
+              <div style={{
+                width: 56, height: 10,
+                background: getBeltColor(primaryDiscipline.rank_color as string | null),
+                position: 'relative',
+                border: '1px solid rgba(245,240,232,0.25)',
+                flexShrink: 0,
+              }}>
+                {Array.from({ length: primaryDiscipline.stripes ?? 0 }, (_, i) => (
+                  <div key={i} style={{
+                    position: 'absolute',
+                    right: i * 7 + 3,
+                    top: 0, bottom: 0,
+                    width: 4,
+                    background: 'rgba(255,255,255,0.9)',
+                  }}/>
+                ))}
+              </div>
+            </div>
           </div>
           {/* Time bar */}
           <div style={{ marginBottom: 10 }}>
