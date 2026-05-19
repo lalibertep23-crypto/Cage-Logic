@@ -10,7 +10,7 @@ export async function logBreathworkSession(pattern: string, durationMin: number)
   } = await supabase.auth.getUser();
   if (!user) redirect('/');
 
-  const { error } = await supabase.from('breathwork_sessions').insert({
+  const { error } = await (supabase.from as any)('breathwork_sessions').insert({
     athlete_id: user.id,
     pattern,
     duration_min: durationMin,
@@ -26,12 +26,12 @@ export async function getBreathworkSessions(athleteId: string) {
   const supabase = await createClient();
 
   const { count: totalCount } = await supabase
-    .from('breathwork_sessions')
+    .from('breathwork_sessions' as any)
     .select('id', { count: 'exact', head: true })
     .eq('athlete_id', athleteId);
 
   const { count: phase1Count } = await supabase
-    .from('breathwork_sessions')
+    .from('breathwork_sessions' as any)
     .select('id', { count: 'exact', head: true })
     .eq('athlete_id', athleteId)
     .eq('pattern', 'phase_1');

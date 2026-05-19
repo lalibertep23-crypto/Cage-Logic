@@ -78,17 +78,17 @@ export default async function BreathworkPage() {
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString();
 
   const [{ count: weekCount }, { count: phase1Count }, { data: recent }] = await Promise.all([
-    supabase
+    (supabase as any)
       .from('breathwork_sessions')
       .select('id', { count: 'exact', head: true })
       .eq('athlete_id', user.id)
       .gte('completed_at', weekStart),
-    supabase
+    (supabase as any)
       .from('breathwork_sessions')
       .select('id', { count: 'exact', head: true })
       .eq('athlete_id', user.id)
       .eq('pattern', 'phase_1'),
-    supabase
+    (supabase as any)
       .from('breathwork_sessions')
       .select('id, pattern, duration_min, completed_at')
       .eq('athlete_id', user.id)
