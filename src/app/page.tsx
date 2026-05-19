@@ -99,7 +99,7 @@ export default function WelcomePage() {
         {/* Tagline below the wordmark */}
         <div style={{ marginTop: 8, paddingLeft: 2 }}>
           <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.28em', color: 'rgba(201,130,42,0.65)' }}>
-            COMBAT SPORTS TRAINING OS
+            LOG. SCORE. IMPROVE.
           </div>
         </div>
 
