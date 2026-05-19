@@ -155,9 +155,14 @@ export default async function SessionDetailPage({
             </div>
           </div>
         </div>
-        <Link href="/history" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.dimmer, textDecoration: 'none' }}>
-          ← HISTORY
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <Link href={`/history/${id}/edit`} style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.amber, textDecoration: 'none', borderBottom: `1px solid ${C.amberLow}`, paddingBottom: 1 }}>
+            EDIT
+          </Link>
+          <Link href="/history" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.dimmer, textDecoration: 'none' }}>
+            ← HISTORY
+          </Link>
+        </div>
       </div>
 
       <div style={{ padding: '0 22px' }}>
