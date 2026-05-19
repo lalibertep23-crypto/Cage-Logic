@@ -17,7 +17,7 @@ export default function WelcomePage() {
       {/* ── Hero image — portrait-composed, brain centered, graffiti wall */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0,
-        backgroundImage: 'url(/hero-mobile.jpg)',
+        backgroundImage: 'url(/hero-mobile.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center center',
         opacity: 0.85,
