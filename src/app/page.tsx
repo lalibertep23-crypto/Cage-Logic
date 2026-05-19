@@ -14,14 +14,14 @@ export default function WelcomePage() {
       flexDirection: 'column',
     }}>
 
-      {/* ── Hero image — full bleed, boosted saturation to pop graffiti colors */}
+      {/* ── Hero image — portrait-composed, brain centered, graffiti wall */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0,
-        backgroundImage: 'url(/cage-logic-hero.jpg)',
+        backgroundImage: 'url(/hero-mobile.jpg)',
         backgroundSize: 'cover',
-        backgroundPosition: 'center top',
-        opacity: 0.75,
-        filter: 'saturate(1.6) contrast(1.05)',
+        backgroundPosition: 'center center',
+        opacity: 0.85,
+        filter: 'saturate(1.2) contrast(1.05)',
       }}/>
 
       {/* ── Dark vignette — bottom fades to dark, top stays open ─────────── */}

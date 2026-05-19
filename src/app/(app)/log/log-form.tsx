@@ -37,7 +37,7 @@ const flatInputStyle: React.CSSProperties = {
   padding: '10px 12px',
   color: C.text,
   fontFamily: 'var(--font-dm-mono)',
-  fontSize: 13,
+  fontSize: 16, // 16px minimum prevents iOS Safari auto-zoom which blocks keyboard input
   letterSpacing: '0.04em',
   outline: 'none',
   width: '100%',
@@ -361,7 +361,7 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
               </div>
 
               <FlatField label="WHAT IT FELT LIKE">
-                <textarea name={`rolls[${idx}].felt`} maxLength={200} placeholder="lost guard early · swept twice" rows={2} style={{ ...flatInputStyle, resize: 'none' }} />
+                <textarea name={`rolls[${idx}].felt`} maxLength={2000} placeholder="lost guard early · swept twice" rows={2} style={{ ...flatInputStyle, resize: 'none' }} />
               </FlatField>
             </div>
           ))}

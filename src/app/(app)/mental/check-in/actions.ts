@@ -13,6 +13,7 @@ const Schema = z.object({
     .int()
     .min(1, 'Pick a value.')
     .max(5),
+  notes: z.string().max(2000).optional(),
 });
 
 export type CheckInState = {
@@ -24,7 +25,10 @@ export async function submitCheckInAction(
   _prev: CheckInState,
   formData: FormData
 ): Promise<CheckInState> {
-  const parsed = Schema.safeParse({ mood: formData.get('mood') });
+  const parsed = Schema.safeParse({
+    mood: formData.get('mood'),
+    notes: formData.get('notes') || undefined,
+  });
 
   if (!parsed.success) {
     const fieldErrors: CheckInState['fieldErrors'] = {};
@@ -46,6 +50,7 @@ export async function submitCheckInAction(
     athlete_id: user.id,
     instrument: 'daily_prompt',
     score: parsed.data.mood,
+    raw_responses_encrypted: parsed.data.notes ?? null,
   });
 
   if (error) return { error: error.message };

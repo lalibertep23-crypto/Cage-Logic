@@ -89,6 +89,32 @@ export function CheckInForm() {
         </p>
       )}
 
+      {/* Optional free-text note */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 13, letterSpacing: '0.22em', color: C.dim }}>
+          WHAT&apos;S ON YOUR MIND <span style={{ fontSize: 10, letterSpacing: '0.14em', color: C.dimmer }}>OPTIONAL</span>
+        </span>
+        <textarea
+          name="notes"
+          maxLength={2000}
+          rows={3}
+          placeholder="Anything worth noting before you train."
+          style={{
+            background: C.bgSunk,
+            border: 'none',
+            borderBottom: `1px solid rgba(245,240,232,0.16)`,
+            padding: '10px 12px',
+            color: C.text,
+            fontFamily: 'var(--font-dm-mono)',
+            fontSize: 16,
+            letterSpacing: '0.04em',
+            outline: 'none',
+            width: '100%',
+            resize: 'none',
+          }}
+        />
+      </div>
+
       <button
         type="submit"
         disabled={pending || !selected}
