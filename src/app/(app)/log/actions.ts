@@ -62,7 +62,8 @@ export async function logSessionAction(
     return { fieldErrors };
   }
 
-  const techniqueIds = formData.getAll('techniqueId').map((v) => v.toString()).filter(Boolean);
+  const techniqueIds    = formData.getAll('techniqueId').map((v) => v.toString()).filter(Boolean);
+  const customTechniques = formData.getAll('customTechnique').map((v) => v.toString().trim()).filter(Boolean);
 
   // Rolls: read indexed entries up to a sane max (12).
   type RollRow = {
@@ -86,6 +87,21 @@ export async function logSessionAction(
       outcome: outcomeRaw as (typeof OUTCOMES)[number],
       felt,
     });
+  }
+
+  // Submission chains: read indexed steps per roll index.
+  type ChainStepData = { position: string | null; technique_custom: string | null; result: string | null };
+  const rollChainSteps: ChainStepData[][] = [];
+  for (let i = 0; i < 12; i++) {
+    const steps: ChainStepData[] = [];
+    for (let s = 0; s < 10; s++) {
+      const position  = emptyToUndefined(formData.get(`rolls[${i}].chain[${s}].position`)) ?? null;
+      const technique = emptyToUndefined(formData.get(`rolls[${i}].chain[${s}].technique`)) ?? null;
+      const result    = emptyToUndefined(formData.get(`rolls[${i}].chain[${s}].result`)) ?? null;
+      if (!position && !technique) break;
+      steps.push({ position, technique_custom: technique, result });
+    }
+    rollChainSteps.push(steps);
   }
 
   const supabase = await createClient();
@@ -131,6 +147,20 @@ export async function logSessionAction(
     }
   }
 
+  // 2b) Insert custom technique submissions + link via custom_session_techniques
+  for (const name of customTechniques) {
+    const { data: submission, error: subErr } = await supabase
+      .from('custom_technique_submissions')
+      .insert({ athlete_id: user.id, name, status: 'pending' })
+      .select('id')
+      .single();
+    if (subErr || !submission) continue; // non-fatal
+    await supabase.from('custom_session_techniques').insert({
+      session_id: sessionId,
+      custom_submission_id: submission.id,
+    });
+  }
+
   // 3) Insert reflection if any text was provided
   if (parsed.data.whatClicked || parsed.data.whatDidnt || parsed.data.questionForCoach) {
     const { error: reflErr } = await supabase.from('session_reflections').insert({
@@ -145,7 +175,7 @@ export async function logSessionAction(
     }
   }
 
-  // 4) Insert rolls (batch)
+  // 4) Insert rolls (batch) — select back IDs so we can link chains
   if (rolls.length > 0) {
     const rollRows = rolls.map((r, idx) => ({
       session_id: sessionId,
@@ -156,9 +186,37 @@ export async function logSessionAction(
       outcome: r.outcome,
       felt: r.felt,
     }));
-    const { error: rollErr } = await supabase.from('roll_logs').insert(rollRows);
-    if (rollErr) {
-      return { error: `Saved session but rolls failed: ${rollErr.message}` };
+    const { data: insertedRolls, error: rollErr } = await supabase
+      .from('roll_logs')
+      .insert(rollRows)
+      .select('id, round_number');
+    if (rollErr || !insertedRolls) {
+      return { error: `Saved session but rolls failed: ${rollErr?.message}` };
+    }
+
+    // 5) Insert submission chains (non-fatal — don't block redirect)
+    for (let i = 0; i < insertedRolls.length; i++) {
+      const steps = rollChainSteps[i] ?? [];
+      if (steps.length === 0) continue;
+      const rollId = insertedRolls.find((r) => r.round_number === i + 1)?.id;
+      if (!rollId) continue;
+
+      const { data: chain, error: chainErr } = await supabase
+        .from('submission_chains')
+        .insert({ roll_id: rollId, athlete_id: user.id })
+        .select('id')
+        .single();
+      if (chainErr || !chain) continue;
+
+      const entryRows = steps.map((step, sIdx) => ({
+        chain_id: chain.id,
+        athlete_id: user.id,
+        sequence_order: sIdx + 1,
+        starting_position: step.position,
+        technique_custom: step.technique_custom,
+        result: step.result,
+      }));
+      await supabase.from('submission_chain_entries').insert(entryRows);
     }
   }
 

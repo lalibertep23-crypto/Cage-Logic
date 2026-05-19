@@ -65,6 +65,13 @@ const SIZES = [
   { value: 'bigger',  label: 'BIGGER' },
 ];
 
+const CHAIN_RESULTS = [
+  { value: 'finished',     label: 'FINISHED' },
+  { value: 'defended',     label: 'DEFENDED' },
+  { value: 'escaped',      label: 'ESCAPED' },
+  { value: 'transitioned', label: 'TRANS' },
+];
+
 export type TagOption = {
   id: string;
   slug: string;
@@ -120,9 +127,31 @@ type RollRow = { id: number };
 
 // ── Main form ────────────────────────────────────────────────────────────────
 export function LogForm({ tags }: { tags: TagOption[] }) {
+  type ChainStep = { id: number; position: string; technique: string; result: string };
+  type CustomEntry = { localId: number; name: string };
+
   const [state, formAction, pending] = useActionState(logSessionAction, initialState);
   const [rolls, setRolls]           = useState<RollRow[]>([]);
+  const [rollChains, setRollChains] = useState<Record<number, ChainStep[]>>({});
+  const [chainOpen, setChainOpen]   = useState<Record<number, boolean>>({});
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [customEntries, setCustomEntries] = useState<CustomEntry[]>([]);
+
+  function addChainStep(rollId: number) {
+    setRollChains(prev => ({
+      ...prev,
+      [rollId]: [...(prev[rollId] ?? []), { id: Date.now(), position: '', technique: '', result: 'finished' }],
+    }));
+  }
+  function removeChainStep(rollId: number, stepId: number) {
+    setRollChains(prev => ({ ...prev, [rollId]: (prev[rollId] ?? []).filter(s => s.id !== stepId) }));
+  }
+  function updateChainStep(rollId: number, stepId: number, field: keyof ChainStep, value: string) {
+    setRollChains(prev => ({
+      ...prev,
+      [rollId]: (prev[rollId] ?? []).map(s => s.id === stepId ? { ...s, [field]: value } : s),
+    }));
+  }
   const [query, setQuery]           = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sessionType, setSessionType] = useState('gi');
@@ -235,7 +264,7 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
       <LogSection number="02" title="WHAT YOU WORKED ON">
 
         {/* Selected technique chips */}
-        {selectedTags.length > 0 && (
+        {(selectedTags.length > 0 || customEntries.length > 0) && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
             {selectedTags.map((t) => (
               <button
@@ -257,10 +286,33 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
                 {t.label.toUpperCase()} <X size={9} />
               </button>
             ))}
+            {customEntries.map((c) => (
+              <button
+                key={c.localId}
+                type="button"
+                onClick={() => setCustomEntries((prev) => prev.filter((x) => x.localId !== c.localId))}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  background: C.bgRaised,
+                  border: `1px solid ${C.midLow}`,
+                  color: C.mid,
+                  padding: '5px 10px',
+                  fontFamily: 'var(--font-bebas)',
+                  fontSize: 12,
+                  letterSpacing: '0.1em',
+                  cursor: 'pointer',
+                }}
+              >
+                {c.name.toUpperCase()} · CUSTOM <X size={9} />
+              </button>
+            ))}
           </div>
         )}
         {selectedIds.map((id) => (
           <input key={id} type="hidden" name="techniqueId" value={id} />
+        ))}
+        {customEntries.map((c) => (
+          <input key={c.localId} type="hidden" name="customTechnique" value={c.name} />
         ))}
 
         {/* Toggle picker */}
@@ -305,7 +357,7 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
                   borderBottom: `1px solid ${C.lineHard}`,
                   color: C.text,
                   fontFamily: 'var(--font-dm-mono)',
-                  fontSize: 11,
+                  fontSize: 16,
                   letterSpacing: '0.08em',
                   padding: '6px 0',
                   outline: 'none',
@@ -313,8 +365,8 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
               />
             </div>
             <div style={{ maxHeight: 260, overflowY: 'auto', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {orderedKeys.length === 0 && (
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow }}>No match.</span>
+              {orderedKeys.length === 0 && !query.trim() && (
+                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow }}>Type to search.</span>
               )}
               {orderedKeys.map((key) => {
                 const items = grouped.get(key) ?? [];
@@ -349,6 +401,38 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
                   </div>
                 );
               })}
+
+              {/* Custom entry — always show when there's a query */}
+              {query.trim().length > 0 && (
+                <div style={{ borderTop: `1px solid ${C.line}`, paddingTop: 12 }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const name = query.trim();
+                      if (!name) return;
+                      if (customEntries.some((c) => c.name.toLowerCase() === name.toLowerCase())) return;
+                      setCustomEntries((prev) => [...prev, { localId: Date.now(), name }]);
+                      setQuery('');
+                    }}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      borderLeft: `2px solid ${C.midLow}`,
+                      padding: '7px 12px',
+                      color: C.mid,
+                      fontFamily: 'var(--font-bebas)',
+                      fontSize: 12,
+                      letterSpacing: '0.16em',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    + ADD &ldquo;{query.trim()}&rdquo; — SUBMIT FOR REVIEW
+                  </button>
+                  <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.08em', marginTop: 6, paddingLeft: 14 }}>
+                    Not in the library yet. We&apos;ll review it.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -395,6 +479,109 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
               <FlatField label="WHAT IT FELT LIKE">
                 <textarea name={`rolls[${idx}].felt`} maxLength={2000} placeholder="lost guard early · swept twice" rows={2} style={{ ...flatInputStyle, resize: 'none' }} />
               </FlatField>
+
+              {/* ── Submission chain ── */}
+              {(rollChains[r.id] ?? []).map((step, sIdx) => (
+                <div key={step.id} style={{ display: 'none' }}>
+                  <input type="hidden" name={`rolls[${idx}].chain[${sIdx}].position`} value={step.position} />
+                  <input type="hidden" name={`rolls[${idx}].chain[${sIdx}].technique`} value={step.technique} />
+                  <input type="hidden" name={`rolls[${idx}].chain[${sIdx}].result`} value={step.result} />
+                </div>
+              ))}
+              <div style={{ borderTop: `1px solid ${C.line}`, marginTop: 4, paddingTop: 12 }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setChainOpen(prev => ({ ...prev, [r.id]: !prev[r.id] }));
+                    if (!(rollChains[r.id] ?? []).length) addChainStep(r.id);
+                  }}
+                  style={{
+                    background: 'transparent', border: 'none',
+                    borderLeft: `2px solid ${chainOpen[r.id] ? C.amberLow : C.lineHard}`,
+                    padding: '6px 12px',
+                    color: chainOpen[r.id] ? C.amber : C.midLow,
+                    fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.18em', cursor: 'pointer',
+                  }}
+                >
+                  {chainOpen[r.id]
+                    ? '— HIDE CHAIN'
+                    : `+ LOG SUBMISSION CHAIN${(rollChains[r.id] ?? []).length > 0 ? ` · ${rollChains[r.id].length} STEPS` : ''}`}
+                </button>
+
+                {chainOpen[r.id] && (
+                  <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {(rollChains[r.id] ?? []).map((step, sIdx) => (
+                      <div key={step.id} style={{ background: C.bgSunk, padding: '12px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.14em' }}>
+                            STEP {String(sIdx + 1).padStart(2, '0')}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => removeChainStep(r.id, step.id)}
+                            style={{ background: 'none', border: 'none', color: C.brick, fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', cursor: 'pointer' }}
+                          >
+                            REMOVE
+                          </button>
+                        </div>
+                        <FlatField label="STARTING POSITION">
+                          <input
+                            type="text"
+                            value={step.position}
+                            onChange={e => updateChainStep(r.id, step.id, 'position', e.target.value)}
+                            placeholder="half guard, mount, back..."
+                            maxLength={120}
+                            style={flatInputStyle}
+                          />
+                        </FlatField>
+                        <FlatField label="TECHNIQUE">
+                          <input
+                            type="text"
+                            value={step.technique}
+                            onChange={e => updateChainStep(r.id, step.id, 'technique', e.target.value)}
+                            placeholder="kimura, rear naked choke, heel hook..."
+                            maxLength={120}
+                            style={flatInputStyle}
+                          />
+                        </FlatField>
+                        <div>
+                          <span style={labelStyle}>RESULT</span>
+                          <div style={{ display: 'flex', background: C.bgRaised, gap: 1, marginTop: 6 }}>
+                            {CHAIN_RESULTS.map(o => (
+                              <button
+                                key={o.value}
+                                type="button"
+                                onClick={() => updateChainStep(r.id, step.id, 'result', o.value)}
+                                style={{
+                                  flex: 1, padding: '10px 2px',
+                                  background: step.result === o.value ? C.amber : 'transparent',
+                                  color: step.result === o.value ? C.bg : C.midLow,
+                                  fontFamily: 'var(--font-bebas)', fontSize: 10, letterSpacing: '0.10em',
+                                  border: 'none', cursor: 'pointer', transition: 'background 100ms, color 100ms',
+                                }}
+                              >
+                                {o.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => addChainStep(r.id)}
+                      style={{
+                        background: 'transparent', border: 'none',
+                        borderLeft: `2px solid ${C.amberLow}`,
+                        padding: '7px 12px', color: C.mid,
+                        fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.18em', cursor: 'pointer',
+                      }}
+                    >
+                      + ADD STEP
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>
