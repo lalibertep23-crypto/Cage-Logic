@@ -100,7 +100,7 @@ export default async function BreathworkPage() {
   const phase1Pct = Math.min(100, (phase1Sessions / PHASE_1_TARGET) * 100);
   const phase1Done = phase1Sessions >= PHASE_1_TARGET;
 
-  const sessions = (recent ?? []).map((r) => ({
+  const sessions = (recent ?? []).map((r: any) => ({
     id:          r.id as string,
     pattern:     r.pattern as string,
     durationMin: r.duration_min as number,
