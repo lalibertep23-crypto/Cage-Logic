@@ -14,6 +14,7 @@ const Schema = z.object({
   startTime: z.string().regex(/^\d{2}:\d{2}$/, 'Pick a start time.').optional(),
   sessionType: z.enum(SESSION_TYPES),
   durationMinutes: z.coerce.number().int().min(1).max(600),
+  instructorName: z.string().trim().max(120).optional(),
   energy: z.coerce.number().int().min(1).max(10),
   intensity: z.coerce.number().int().min(1).max(10),
   whatClicked: z.string().trim().max(2000).optional(),
@@ -44,6 +45,7 @@ export async function logSessionAction(
     startTime: emptyToUndefined(formData.get('startTime')),
     sessionType: formData.get('sessionType'),
     durationMinutes: formData.get('durationMinutes'),
+    instructorName: emptyToUndefined(formData.get('instructorName')),
     energy: formData.get('energy'),
     intensity: formData.get('intensity'),
     whatClicked: emptyToUndefined(formData.get('whatClicked')),
@@ -105,6 +107,7 @@ export async function logSessionAction(
       start_time: parsed.data.startTime ?? null,
       duration_minutes: parsed.data.durationMinutes,
       session_type: parsed.data.sessionType,
+      instructor_name: parsed.data.instructorName ?? null,
       energy_1_10: parsed.data.energy,
       intensity_1_10: parsed.data.intensity,
     })

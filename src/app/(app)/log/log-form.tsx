@@ -222,6 +222,13 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
             </p>
           )}
         </div>
+
+        {/* Who taught */}
+        <div style={{ marginTop: 20 }}>
+          <FlatField label="WHO TAUGHT">
+            <input id="instructorName" name="instructorName" type="text" maxLength={120} placeholder="e.g. Chris, Coach Mike" style={flatInputStyle} />
+          </FlatField>
+        </div>
       </LogSection>
 
       {/* ── 02 WHAT YOU WORKED ON ─────────────────────────────────────────── */}

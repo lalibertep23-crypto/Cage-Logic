@@ -55,6 +55,7 @@ type Props = {
     start_time: string;
     session_type: string;
     duration_minutes: number;
+    instructor_name: string | null;
     energy_1_10: number;
     intensity_1_10: number;
   };
@@ -128,6 +129,10 @@ export function EditForm({ id, session, reflection }: Props) {
             <div>
               <span style={labelStyle}>DURATION (MIN)</span>
               <input name="durationMinutes" type="number" min={1} max={600} defaultValue={session.duration_minutes} required style={inputStyle} />
+            </div>
+            <div>
+              <span style={labelStyle}>WHO TAUGHT</span>
+              <input name="instructorName" type="text" maxLength={120} defaultValue={session.instructor_name ?? ''} placeholder="e.g. Chris, Coach Mike" style={inputStyle} />
             </div>
           </div>
         </section>

@@ -9,6 +9,7 @@ const Schema = z.object({
   startTime:         z.string().optional(),
   sessionType:       z.string().min(1),
   durationMinutes:   z.coerce.number().int().min(1).max(600),
+  instructorName:    z.string().trim().max(120).optional(),
   energyLevel:       z.coerce.number().int().min(1).max(10),
   intensityLevel:    z.coerce.number().int().min(1).max(10),
   whatClicked:       z.string().max(2000).optional(),
@@ -28,6 +29,7 @@ export async function editSessionAction(
     startTime:        formData.get('startTime') || undefined,
     sessionType:      formData.get('sessionType'),
     durationMinutes:  formData.get('durationMinutes'),
+    instructorName:   formData.get('instructorName') || undefined,
     energyLevel:      formData.get('energyLevel'),
     intensityLevel:   formData.get('intensityLevel'),
     whatClicked:      formData.get('whatClicked') || undefined,
@@ -57,6 +59,7 @@ export async function editSessionAction(
       start_time:        d.startTime ?? null,
       session_type:      d.sessionType,
       duration_minutes:  d.durationMinutes,
+      instructor_name:   d.instructorName ?? null,
       energy_1_10:       d.energyLevel,
       intensity_1_10:    d.intensityLevel,
     })

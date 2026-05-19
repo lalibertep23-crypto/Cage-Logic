@@ -18,7 +18,7 @@ export default async function EditSessionPage({
 
   const { data: session } = await supabase
     .from('training_sessions')
-    .select('id, session_date, start_time, duration_minutes, session_type, energy_1_10, intensity_1_10')
+    .select('id, session_date, start_time, duration_minutes, session_type, instructor_name, energy_1_10, intensity_1_10')
     .eq('id', id)
     .eq('athlete_id', user.id)
     .maybeSingle();
@@ -39,6 +39,7 @@ export default async function EditSessionPage({
         start_time:       (session.start_time as string | null) ?? '',
         session_type:     (session.session_type as string | null) ?? 'gi',
         duration_minutes: (session.duration_minutes as number | null) ?? 60,
+        instructor_name:  (session.instructor_name as string | null) ?? null,
         energy_1_10:      (session.energy_1_10 as number | null) ?? 5,
         intensity_1_10:   (session.intensity_1_10 as number | null) ?? 5,
       }}
