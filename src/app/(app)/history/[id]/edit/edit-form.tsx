@@ -14,7 +14,7 @@ const C = {
   mid:      '#D8D2C8',
   midLow:   '#B8B2A8',
   brick:    '#A83030',
-  line:     'rgba(245,240,232,0.08)',
+  line:     'rgba(245,240,232,0.5)',
   lineHard: 'rgba(245,240,232,0.16)',
 };
 
@@ -48,6 +48,9 @@ const labelStyle: React.CSSProperties = {
   marginBottom: 6,
 };
 
+type TagOption = { id: string; label: string; position: string | null };
+type RollOption = { id: string; round_number: number | null; partner_label: string | null; felt: string };
+
 type Props = {
   id: string;
   session: {
@@ -64,15 +67,23 @@ type Props = {
     what_didnt: string;
     question_for_coach: string;
   };
+  allTags: TagOption[];
+  selectedTagIds: string[];
+  rolls: RollOption[];
 };
 
-export function EditForm({ id, session, reflection }: Props) {
+export function EditForm({ id, session, reflection, allTags, selectedTagIds, rolls }: Props) {
   const boundAction = editSessionAction.bind(null, id);
   const [state, formAction, pending] = useActionState(boundAction, {});
 
   const [sessionType, setSessionType] = useState(session.session_type);
   const [energy, setEnergy] = useState(session.energy_1_10);
   const [intensity, setIntensity] = useState(session.intensity_1_10);
+  const [tagIds, setTagIds] = useState<string[]>(selectedTagIds);
+
+  function toggleTag(tagId: string) {
+    setTagIds((prev) => prev.includes(tagId) ? prev.filter((x) => x !== tagId) : [...prev, tagId]);
+  }
 
   return (
     <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
@@ -165,61 +176,44 @@ export function EditForm({ id, session, reflection }: Props) {
           </div>
         </section>
 
-        {state.error && (
-          <p style={{ padding: '0 22px', fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.brick }}>
-            {state.error}
-          </p>
+        {/* 04 — TECHNIQUES */}
+        {allTags.length > 0 && (
+          <section style={{ borderTop: `1px solid ${C.line}`, padding: '22px 22px' }}>
+            <SectionHeader number="04" title="TECHNIQUES" />
+            {/* Hidden inputs for selected tags */}
+            {tagIds.map((tid) => (
+              <input key={tid} type="hidden" name="tagIds" value={tid} />
+            ))}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {allTags.map((t) => {
+                const active = tagIds.includes(t.id);
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => toggleTag(t.id)}
+                    style={{
+                      padding: '7px 12px',
+                      background: active ? C.amber : C.bgRaised,
+                      color: active ? C.bg : C.mid,
+                      border: `1px solid ${active ? C.amber : C.line}`,
+                      fontFamily: 'var(--font-bebas)',
+                      fontSize: 11,
+                      letterSpacing: '0.14em',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {t.label}
+                    {t.position && (
+                      <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, marginLeft: 5, opacity: 0.6 }}>
+                        {t.position.toUpperCase()}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
         )}
 
-        {/* Save */}
-        <div style={{ padding: '0 22px', marginTop: 8 }}>
-          <button type="submit" disabled={pending} style={{
-            width: '100%', background: pending ? C.amberLow : C.amber,
-            color: C.bg, border: 'none', padding: '18px 24px',
-            fontFamily: 'var(--font-anton)', fontSize: 20, letterSpacing: '0.08em',
-            cursor: pending ? 'not-allowed' : 'pointer',
-          }}>
-            {pending ? 'SAVING...' : 'SAVE CHANGES'}
-          </button>
-        </div>
-
-      </form>
-    </main>
-  );
-}
-
-function SectionHeader({ number, title }: { number: string; title: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-      <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.amber, letterSpacing: '0.1em' }}>{number}</span>
-      <div style={{ height: 1, width: 12, background: C.amberLow }} />
-      <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 16, letterSpacing: '0.2em', color: C.mid }}>{title}</span>
-    </div>
-  );
-}
-
-function TapScale({ label, name, value, onChange, color }: {
-  label: string; name: string; value: number; onChange: (v: number) => void; color: string;
-}) {
-  return (
-    <div>
-      <input type="hidden" name={name} value={value} />
-      <span style={labelStyle}>{label}</span>
-      <div style={{ display: 'flex', gap: 2 }}>
-        {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-          <button key={n} type="button" onClick={() => onChange(n)}
-            style={{
-              flex: 1, height: 38,
-              background: n <= value ? color : C.bgSunk,
-              border: 'none', cursor: 'pointer',
-              fontFamily: 'var(--font-dm-mono)', fontSize: 9,
-              color: n <= value ? C.bg : C.midLow,
-              transition: 'background 80ms',
-            }}>
-            {n}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
+        {/* 05 — ROLL COMM

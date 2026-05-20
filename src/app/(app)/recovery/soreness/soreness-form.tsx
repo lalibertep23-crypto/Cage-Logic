@@ -8,7 +8,7 @@ const C = {
   bg:      '#1A1713',
   bgSunk:  '#13110E',
   surface: '#252118',
-  border:  'rgba(245,240,232,0.08)',
+  border:  'rgba(245,240,232,0.5)',
   text:    '#F5F0E8',
   dim:     'rgba(245,240,232,0.38)',
   dimmer:  'rgba(245,240,232,0.22)',
@@ -162,30 +162,20 @@ export function SorenessForm({ defaults }: { defaults: Defaults }) {
         ))}
       </div>
 
-      {state.error && (
-        <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.brick }}>
-          {state.error}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={pending || overall === null}
-        style={{
-          width: '100%',
-          background: overall !== null && !pending ? C.amber : C.amberLow,
-          color: C.bg,
-          border: 'none',
-          padding: '18px 24px',
-          fontFamily: 'var(--font-anton)',
-          fontSize: 20,
-          letterSpacing: '0.08em',
-          cursor: overall !== null && !pending ? 'pointer' : 'not-allowed',
-          transition: 'background 120ms',
-        }}
-      >
-        {pending ? 'SAVING...' : 'SAVE →'}
-      </button>
-    </form>
-  );
-}
+      {/* ── Notes (optional) ─────────────────────────────────────────── */}
+      <div>
+        <span style={{
+          fontFamily: 'var(--font-bebas)', fontSize: 13, letterSpacing: '0.22em',
+          color: C.midLow, display: 'block', marginBottom: 10,
+        }}>
+          CAUSE <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: C.dimmer }}>— optional</span>
+        </span>
+        <textarea
+          name="notes"
+          maxLength={500}
+          rows={2}
+          placeholder="e.g. pulled hip flexor drilling singles"
+          style={{
+            background: C.bgSunk,
+            border: 'none',
+          

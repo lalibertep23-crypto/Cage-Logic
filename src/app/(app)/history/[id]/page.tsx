@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
 import { parseISO, format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
+import { DeleteButton } from './delete-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +13,7 @@ export const dynamic = 'force-dynamic';
 const C = {
   bg:       '#1A1713',
   surface:  '#252118',
-  border:   'rgba(245,240,232,0.08)',
+  border:   'rgba(245,240,232,0.5)',
   borderMid:'rgba(245,240,232,0.14)',
   text:     '#F5F0E8',
   dim:      'rgba(245,240,232,0.38)',
@@ -159,6 +160,7 @@ export default async function SessionDetailPage({
           <Link href={`/history/${id}/edit`} style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.amber, textDecoration: 'none', borderBottom: `1px solid ${C.amberLow}`, paddingBottom: 1 }}>
             EDIT
           </Link>
+          <DeleteButton id={id} />
           <Link href="/history" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.dimmer, textDecoration: 'none' }}>
             ← HISTORY
           </Link>
@@ -322,13 +324,4 @@ export default async function SessionDetailPage({
 
 function ReflectionField({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ background: C.surface, borderLeft: `2px solid ${C.amberLow}`, padding: '12px 14px', marginBottom: 2 }}>
-      <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 11, letterSpacing: '0.22em', color: C.amber, marginBottom: 6 }}>
-        {label}
-      </div>
-      <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dim, margin: 0, whiteSpace: 'pre-wrap' }}>
-        {value}
-      </p>
-    </div>
-  );
-}
+    <div style={{ background: C.surface, bor

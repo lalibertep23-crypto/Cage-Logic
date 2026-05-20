@@ -29,6 +29,7 @@ const Schema = z.object({
     .min(0, 'Pick a value.')
     .max(10),
   regions: z.array(z.enum(REGIONS)).default([]),
+  notes: z.string().max(500).optional(),
 });
 
 export type SorenessState = {
@@ -55,6 +56,7 @@ export async function logSorenessAction(
   const parsed = Schema.safeParse({
     overall: formData.get('overall'),
     regions: cleanRegions,
+    notes: (formData.get('notes') as string) || undefined,
   });
 
   if (!parsed.success) {
@@ -79,11 +81,4 @@ export async function logSorenessAction(
       log_date: localDateString(new Date()),
       overall_soreness_0_10: parsed.data.overall,
       body_regions: parsed.data.regions,
-    },
-    { onConflict: 'athlete_id,log_date' }
-  );
-
-  if (error) return { error: error.message };
-
-  redirect('/recovery');
-}
+      notes: parsed.data.note

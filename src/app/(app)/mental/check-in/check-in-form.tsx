@@ -7,7 +7,7 @@ import { submitCheckInAction, type CheckInState } from './actions';
 const C = {
   bg:      '#1A1713',
   bgSunk:  '#13110E',
-  border:  'rgba(245,240,232,0.08)',
+  border:  'rgba(245,240,232,0.5)',
   text:    '#F5F0E8',
   dim:     'rgba(245,240,232,0.38)',
   dimmer:  'rgba(245,240,232,0.22)',
@@ -101,38 +101,4 @@ export function CheckInForm() {
           placeholder="Anything worth noting before you train."
           style={{
             background: C.bgSunk,
-            border: 'none',
-            borderBottom: `1px solid rgba(245,240,232,0.16)`,
-            padding: '10px 12px',
-            color: C.text,
-            fontFamily: 'var(--font-dm-mono)',
-            fontSize: 16,
-            letterSpacing: '0.04em',
-            outline: 'none',
-            width: '100%',
-            resize: 'none',
-          }}
-        />
-      </div>
-
-      <button
-        type="submit"
-        disabled={pending || !selected}
-        style={{
-          width: '100%',
-          background: selected && !pending ? C.amber : C.amberLow,
-          color: C.bg,
-          border: 'none',
-          padding: '18px 24px',
-          fontFamily: 'var(--font-anton)',
-          fontSize: 20,
-          letterSpacing: '0.08em',
-          cursor: selected && !pending ? 'pointer' : 'not-allowed',
-          transition: 'background 120ms',
-        }}
-      >
-        {pending ? 'SAVING...' : 'LOG IT →'}
-      </button>
-    </form>
-  );
-}
+            

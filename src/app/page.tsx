@@ -124,28 +124,4 @@ export default async function WelcomePage() {
                   {isSignedIn ? 'WELCOME BACK' : 'READY TO ROLL?'}
                 </div>
                 <span style={{ fontFamily: 'var(--font-anton)', fontSize: 22, letterSpacing: '0.06em' }}>
-                  {isSignedIn ? 'GO TO HOME' : 'GET STARTED'}
-                </span>
-              </div>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 16, color: '#D4922E' }}>→</span>
-            </div>
-          </Link>
-
-          {!isSignedIn && (
-            <Link href="/login" style={{
-              textDecoration: 'none',
-              fontFamily: 'var(--font-dm-mono)',
-              fontSize: 10,
-              letterSpacing: '0.2em',
-              color: 'rgba(245,240,232,0.35)',
-              padding: '8px 0',
-              display: 'block',
-            }}>
-              ALREADY HAVE AN ACCOUNT →
-            </Link>
-          )}
-        </div>
-      </div>
-    </main>
-  );
-}
+                  {isSignedIn ?

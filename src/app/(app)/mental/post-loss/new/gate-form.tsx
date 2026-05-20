@@ -6,7 +6,7 @@ import { createLossEventAction, type GateState } from './actions';
 const C = {
   bg:      '#1A1713',
   surface: '#252118',
-  border:  'rgba(245,240,232,0.08)',
+  border:  'rgba(245,240,232,0.5)',
   text:    '#F5F0E8',
   dim:     'rgba(245,240,232,0.38)',
   dimmer:  'rgba(245,240,232,0.22)',

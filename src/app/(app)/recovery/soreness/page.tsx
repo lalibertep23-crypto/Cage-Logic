@@ -36,7 +36,7 @@ export default async function SorenessPage() {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 22px 14px',
-        borderBottom: '1px solid rgba(245,240,232,0.08)',
+        borderBottom: '1px solid rgba(245,240,232,0.5)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 3, height: 22, background: '#D4922E' }} />

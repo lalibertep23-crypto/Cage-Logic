@@ -82,7 +82,7 @@ export function NavBar() {
   return (
     <nav
       aria-label="Primary"
-      style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, borderTop: '1px solid rgba(245,240,232,0.08)', background: '#13110E' }}
+      style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, borderTop: '1px solid rgba(245,240,232,0.5)', background: '#13110E' }}
     >
       <ul style={{ margin: '0 auto', display: 'flex', width: '100%', maxWidth: 430, listStyle: 'none', padding: 0, paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {TABS.map((t) => {

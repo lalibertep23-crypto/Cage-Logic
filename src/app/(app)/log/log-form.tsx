@@ -16,7 +16,7 @@ const C = {
   mid:      '#D8D2C8',
   midLow:   '#B8B2A8',
   brick:    '#A83030',
-  line:     'rgba(245,240,232,0.08)',
+  line:     'rgba(245,240,232,0.5)',
   lineHard: 'rgba(245,240,232,0.16)',
 };
 
@@ -126,7 +126,9 @@ const initialState: LogState = {};
 type RollRow = { id: number };
 
 // ── Main form ────────────────────────────────────────────────────────────────
-export function LogForm({ tags }: { tags: TagOption[] }) {
+type ActiveInjury = { id: string; body_region: string; side: string | null };
+
+export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; activeInjuries?: ActiveInjury[] }) {
   type ChainStep = { id: number; position: string; technique: string; result: string };
   type CustomEntry = { localId: number; name: string };
 
@@ -192,6 +194,25 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
 
   return (
     <form action={formAction} style={{ display: 'flex', flexDirection: 'column', background: C.bg, minHeight: '100vh' }}>
+
+      {/* ── Injury follow-up banner ───────────────────────────────────────── */}
+      {activeInjuries.length > 0 && (
+        <div style={{
+          margin: '16px 22px 0',
+          borderLeft: `3px solid ${C.brick}`,
+          background: 'rgba(168,48,48,0.12)',
+          padding: '12px 14px',
+        }}>
+          <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.2em', color: C.brick, marginBottom: 6 }}>
+            ACTIVE {activeInjuries.length === 1 ? 'INJURY' : 'INJURIES'} — CHECK IN
+          </div>
+          {activeInjuries.map((inj) => (
+            <p key={inj.id} style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.04em', lineHeight: 1.6, color: C.midLow, margin: '0 0 2px' }}>
+              {inj.body_region.replace(/_/g, ' ').toUpperCase()}{inj.side && inj.side !== 'na' ? ` · ${inj.side.toUpperCase()}` : ''} — still feeling this?
+            </p>
+          ))}
+        </div>
+      )}
 
       {/* ── 01 WHEN + WHERE ───────────────────────────────────────────────── */}
       <LogSection number="01" title="WHEN + WHERE">
@@ -493,23 +514,4 @@ export function LogForm({ tags }: { tags: TagOption[] }) {
                   type="button"
                   onClick={() => {
                     setChainOpen(prev => ({ ...prev, [r.id]: !prev[r.id] }));
-                    if (!(rollChains[r.id] ?? []).length) addChainStep(r.id);
-                  }}
-                  style={{
-                    background: 'transparent', border: 'none',
-                    borderLeft: `2px solid ${chainOpen[r.id] ? C.amberLow : C.lineHard}`,
-                    padding: '6px 12px',
-                    color: chainOpen[r.id] ? C.amber : C.midLow,
-                    fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.18em', cursor: 'pointer',
-                  }}
-                >
-                  {chainOpen[r.id]
-                    ? '— HIDE CHAIN'
-                    : `+ LOG SUBMISSION CHAIN${(rollChains[r.id] ?? []).length > 0 ? ` · ${rollChains[r.id].length} STEPS` : ''}`}
-                </button>
-
-                {chainOpen[r.id] && (
-                  <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    {(rollChains[r.id] ?? []).map((step, sIdx) => (
-                      <div key={step.id} style={{ background: C.bgSunk, padding: '12px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignIte
+                    if (!(

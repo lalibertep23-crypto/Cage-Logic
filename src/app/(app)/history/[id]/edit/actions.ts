@@ -15,6 +15,8 @@ const Schema = z.object({
   whatClicked:       z.string().max(2000).optional(),
   whatDidnt:         z.string().max(2000).optional(),
   questionForCoach:  z.string().max(500).optional(),
+  tagIds:            z.array(z.string().uuid()).default([]),
+  rollCount:         z.coerce.number().int().min(0).default(0),
 });
 
 export type EditState = { error?: string; fieldErrors?: Record<string, string> };
@@ -35,6 +37,8 @@ export async function editSessionAction(
     whatClicked:      formData.get('whatClicked') || undefined,
     whatDidnt:        formData.get('whatDidnt') || undefined,
     questionForCoach: formData.get('questionForCoach') || undefined,
+    tagIds:           formData.getAll('tagIds').map(String),
+    rollCount:        formData.get('rollCount') || 0,
   });
 
   if (!parsed.success) {
@@ -75,12 +79,4 @@ export async function editSessionAction(
     const { error: reflErr } = await supabase.from('session_reflections').insert({
       session_id:         id,
       athlete_id:         user.id,
-      what_clicked:       d.whatClicked ?? null,
-      what_didnt:         d.whatDidnt ?? null,
-      question_for_coach: d.questionForCoach ?? null,
-    });
-    if (reflErr) return { error: reflErr.message };
-  }
-
-  redirect(`/history/${id}`);
-}
+      w

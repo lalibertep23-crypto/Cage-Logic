@@ -34,6 +34,19 @@ export default async function LogPage() {
     side: (r.side as string | null) ?? 'neutral',
   }));
 
+  // Active injuries: anything not resolved
+  const { data: injuryRows } = await supabase
+    .from('injury_reports')
+    .select('id, body_region, side')
+    .eq('athlete_id', user.id)
+    .neq('stage', 'resolved');
+
+  const activeInjuries = (injuryRows ?? []).map((r) => ({
+    id: r.id as string,
+    body_region: r.body_region as string,
+    side: (r.side as string | null) ?? null,
+  }));
+
   return (
     <main style={{ background: '#1A1713', minHeight: '100vh', color: '#F5F0E8' }}>
       {/* ── Hero — image + title merged ───────────────────────────── */}
@@ -60,11 +73,4 @@ export default async function LogPage() {
             <div style={{ width: 3, height: 28, background: '#D4922E', flexShrink: 0 }} />
             <div>
               <div style={{ fontFamily: 'var(--font-anton)', fontSize: 28, letterSpacing: '0.08em', lineHeight: 1, color: '#F5F0E8' }}>LOG SESSION</div>
-              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: 'rgba(201,130,42,0.6)', marginTop: 3 }}>PUNCH IN</div>
-            </div>
-          </div>
-          <Link
-            href="/home"
-            style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.14em', color: '#B8B2A8', textDecoration: 'none', paddingBottom: 2 }}
-          >
-            CANCEL ×
+              <div style={{ fontFami

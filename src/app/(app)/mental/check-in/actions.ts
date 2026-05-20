@@ -49,11 +49,4 @@ export async function submitCheckInAction(
   const { error } = await supabase.from('psych_assessments').insert({
     athlete_id: user.id,
     instrument: 'daily_prompt',
-    score: parsed.data.mood,
-    raw_responses_encrypted: parsed.data.notes ?? null,
-  });
-
-  if (error) return { error: error.message };
-
-  redirect('/home');
-}
+    score:
