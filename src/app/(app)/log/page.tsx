@@ -65,14 +65,6 @@ export default async function LogPage() {
           </div>
           <Link
             href="/home"
-            style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.14em', color: '#7A6E60', textDecoration: 'none', paddingBottom: 2 }}
+            style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.14em', color: '#B8B2A8', textDecoration: 'none', paddingBottom: 2 }}
           >
             CANCEL ×
-          </Link>
-        </div>
-      </div>
-
-      <LogForm tags={tags} />
-    </main>
-  );
-}

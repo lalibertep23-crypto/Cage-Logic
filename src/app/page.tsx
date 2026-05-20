@@ -1,8 +1,13 @@
 // Landing screen — Rio fight club. Graffiti wall. Text over image. No boxes.
 
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
 
-export default function WelcomePage() {
+export default async function WelcomePage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isSignedIn = !!user;
+
   return (
     <main style={{
       minHeight: '100vh',
@@ -20,14 +25,14 @@ export default function WelcomePage() {
         backgroundImage: 'url(/hero-mobile.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center center',
-        opacity: 0.85,
-        filter: 'saturate(1.2) contrast(1.05)',
+        opacity: 1.0,
+        filter: 'saturate(1.3) contrast(1.1) brightness(1.15)',
       }}/>
 
       {/* ── Dark vignette — bottom fades to dark, top stays open ─────────── */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: 'linear-gradient(to bottom, rgba(15,13,11,0.1) 0%, rgba(15,13,11,0.3) 45%, rgba(15,13,11,0.88) 70%, #1A1713 100%)',
+        background: 'linear-gradient(to bottom, rgba(15,13,11,0.05) 0%, rgba(15,13,11,0.25) 45%, rgba(15,13,11,0.82) 70%, #1A1713 100%)',
       }}/>
 
       {/* ── Paint streak top ─────────────────────────────────────────────── */}
@@ -48,18 +53,27 @@ export default function WelcomePage() {
               CAGE LOGIC · V1
             </span>
           </div>
-          <Link href="/login" style={{
-            fontFamily: 'var(--font-dm-mono)', fontSize: 9,
-            letterSpacing: '0.18em', color: 'rgba(245,240,232,0.5)', textDecoration: 'none',
-            borderBottom: '1px solid rgba(245,240,232,0.2)', paddingBottom: 1,
-          }}>
-            SIGN IN
-          </Link>
+          {isSignedIn ? (
+            <Link href="/home" style={{
+              fontFamily: 'var(--font-dm-mono)', fontSize: 9,
+              letterSpacing: '0.18em', color: 'rgba(245,240,232,0.5)', textDecoration: 'none',
+              borderBottom: '1px solid rgba(245,240,232,0.2)', paddingBottom: 1,
+            }}>
+              BACK IN →
+            </Link>
+          ) : (
+            <Link href="/login" style={{
+              fontFamily: 'var(--font-dm-mono)', fontSize: 9,
+              letterSpacing: '0.18em', color: 'rgba(245,240,232,0.5)', textDecoration: 'none',
+              borderBottom: '1px solid rgba(245,240,232,0.2)', paddingBottom: 1,
+            }}>
+              SIGN IN
+            </Link>
+          )}
         </div>
 
-        {/* Graffiti wordmark — CSS text treatment, Anton + outline + 3D step shadow */}
+        {/* Graffiti wordmark */}
         <div style={{ marginTop: 28, transform: 'rotate(-2deg)', transformOrigin: 'left center' }}>
-          {/* CAGE — amber fill */}
           <div style={{
             fontFamily: 'var(--font-anton)',
             fontSize: 'clamp(64px, 21vw, 88px)',
@@ -68,15 +82,8 @@ export default function WelcomePage() {
             color: '#D4922E',
             WebkitTextStroke: '4px #13110E',
             paintOrder: 'stroke fill',
-            textShadow: `
-              2px 2px 0 #000,
-              4px 4px 0 #000,
-              6px 6px 0 #000,
-              8px 8px 0 rgba(0,0,0,0.55),
-              10px 10px 18px rgba(0,0,0,0.35)
-            `,
+            textShadow: `2px 2px 0 #000, 4px 4px 0 #000, 6px 6px 0 #000, 8px 8px 0 rgba(0,0,0,0.55), 10px 10px 18px rgba(0,0,0,0.35)`,
           }}>CAGE</div>
-          {/* LOGIC — cream fill, offset right */}
           <div style={{
             fontFamily: 'var(--font-anton)',
             fontSize: 'clamp(64px, 21vw, 88px)',
@@ -86,31 +93,24 @@ export default function WelcomePage() {
             WebkitTextStroke: '4px #13110E',
             paintOrder: 'stroke fill',
             marginLeft: 'clamp(10px, 3vw, 20px)',
-            textShadow: `
-              2px 2px 0 #7A4F1A,
-              4px 4px 0 #7A4F1A,
-              6px 6px 0 #000,
-              8px 8px 0 rgba(0,0,0,0.55),
-              10px 10px 18px rgba(0,0,0,0.35)
-            `,
+            textShadow: `2px 2px 0 #7A4F1A, 4px 4px 0 #7A4F1A, 6px 6px 0 #000, 8px 8px 0 rgba(0,0,0,0.55), 10px 10px 18px rgba(0,0,0,0.35)`,
           }}>LOGIC</div>
         </div>
 
-        {/* Tagline below the wordmark */}
+        {/* Tagline */}
         <div style={{ marginTop: 8, paddingLeft: 2 }}>
           <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.28em', color: 'rgba(201,130,42,0.65)' }}>
             LOG. SCORE. IMPROVE.
           </div>
         </div>
 
-        {/* Spacer — image shows through the middle */}
+        {/* Spacer */}
         <div style={{ flex: 1 }}/>
 
-        {/* ── CTAs — no boxes, just text links + one amber bar ─────────── */}
+        {/* ── CTAs ─────────────────────────────────────────────────────────── */}
         <div style={{ paddingBottom: 56, display: 'flex', flexDirection: 'column', gap: 12 }}>
 
-          {/* Primary — ghost outline, not solid amber */}
-          <Link href="/signup" style={{ textDecoration: 'none', display: 'block' }}>
+          <Link href={isSignedIn ? '/home' : '/signup'} style={{ textDecoration: 'none', display: 'block' }}>
             <div style={{
               background: 'rgba(15,13,11,0.5)',
               border: '1px solid rgba(201,130,42,0.6)',
@@ -119,25 +119,31 @@ export default function WelcomePage() {
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               backdropFilter: 'blur(4px)',
             }}>
-              <span style={{ fontFamily: 'var(--font-anton)', fontSize: 22, letterSpacing: '0.06em' }}>
-                GET STARTED
-              </span>
+              <div>
+                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.22em', color: 'rgba(201,130,42,0.8)', marginBottom: 4 }}>
+                  {isSignedIn ? 'WELCOME BACK' : 'READY TO ROLL?'}
+                </div>
+                <span style={{ fontFamily: 'var(--font-anton)', fontSize: 22, letterSpacing: '0.06em' }}>
+                  {isSignedIn ? 'GO TO HOME' : 'GET STARTED'}
+                </span>
+              </div>
               <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 16, color: '#D4922E' }}>→</span>
             </div>
           </Link>
 
-          {/* Secondary — plain text */}
-          <Link href="/login" style={{
-            textDecoration: 'none',
-            fontFamily: 'var(--font-dm-mono)',
-            fontSize: 10,
-            letterSpacing: '0.2em',
-            color: 'rgba(245,240,232,0.35)',
-            padding: '8px 0',
-            display: 'block',
-          }}>
-            ALREADY HAVE AN ACCOUNT →
-          </Link>
+          {!isSignedIn && (
+            <Link href="/login" style={{
+              textDecoration: 'none',
+              fontFamily: 'var(--font-dm-mono)',
+              fontSize: 10,
+              letterSpacing: '0.2em',
+              color: 'rgba(245,240,232,0.35)',
+              padding: '8px 0',
+              display: 'block',
+            }}>
+              ALREADY HAVE AN ACCOUNT →
+            </Link>
+          )}
         </div>
       </div>
     </main>

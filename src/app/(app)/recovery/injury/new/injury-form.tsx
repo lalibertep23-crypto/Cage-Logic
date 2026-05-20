@@ -17,7 +17,7 @@ const C = {
   amberLow:'rgba(201,130,42,0.35)',
   brick:   '#8B3A1E',
   brickLow:'rgba(139,58,30,0.4)',
-  midLow:  '#7A6E60',
+  midLow:  '#B8B2A8',
 };
 
 const flatInput: React.CSSProperties = {

@@ -106,7 +106,7 @@ export function NavBar() {
               <Link
                 href={t.href}
                 aria-current={active ? 'page' : undefined}
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, paddingTop: 12, paddingBottom: 12, textDecoration: 'none', color: active ? '#D4922E' : '#7A6E60' }}
+                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, paddingTop: 12, paddingBottom: 12, textDecoration: 'none', color: active ? '#D4922E' : '#B8B2A8' }}
               >
                 {ICONS[t.id](active)}
                 <span

@@ -20,8 +20,8 @@ const C = {
   amberLow: '#7A4F1A',
   green:    '#3D8B55',
   text:     '#F5F0E8',
-  mid:      '#D0C4B0',
-  midLow:   '#B0A494',
+  mid:      '#D8D2C8',
+  midLow:   '#B8B2A8',
   brick:    '#A83030',
   line:     'rgba(245,240,232,0.13)',
   lineHard: 'rgba(245,240,232,0.22)',
@@ -115,10 +115,10 @@ export default async function HomePage() {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ textAlign: 'right' }}>
-            <Link href="/profile" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.08em', color: C.amber, textDecoration: 'none' }}>
+            <Link href="/profile" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 14, letterSpacing: '0.08em', color: C.amber, textDecoration: 'none', fontWeight: 600 }}>
               {displayName ?? 'PROFILE'} ↗
             </Link>
-            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.08em', color: C.mid, marginTop: 2 }}>
+            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.08em', color: C.mid, marginTop: 2 }}>
               {streaks.training}D STREAK
             </div>
           </div>
@@ -151,7 +151,7 @@ export default async function HomePage() {
       {/* ── Score hero ───────────────────────────────────────────────────── */}
       <div style={{ padding: '18px 22px 14px', position: 'relative', overflow: 'hidden' }}>
         {/* Wall texture */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/home-score_bright.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.32 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/home-score_bright.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.55, filter: 'brightness(1.2) saturate(1.3)' }} />
         {/* Content float above texture */}
         <div style={{ position: 'relative', zIndex: 1 }}>
         {/* Label row */}
@@ -472,3 +472,4 @@ export default async function HomePage() {
     </main>
   );
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

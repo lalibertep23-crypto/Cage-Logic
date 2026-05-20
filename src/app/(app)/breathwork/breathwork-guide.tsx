@@ -22,8 +22,8 @@ const C = {
   amberDim:'rgba(201,130,42,0.10)',
   green:   '#3D8B55',
   greenLow:'rgba(42,92,63,0.35)',
-  mid:     '#AA9A88',
-  midLow:  '#7A6E60',
+  mid:     '#D8D2C8',
+  midLow:  '#B8B2A8',
 };
 
 // ── Octagon geometry (SVG 220×220, center 110,110) ───────────────────────────
