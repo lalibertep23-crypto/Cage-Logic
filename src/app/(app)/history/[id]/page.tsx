@@ -324,4 +324,25 @@ export default async function SessionDetailPage({
 
 function ReflectionField({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ background: C.surface, bor
+    <div style={{
+      background: C.surface,
+      borderLeft: `3px solid rgba(245,240,232,0.1)`,
+      padding: '14px 16px 14px 13px',
+      marginBottom: 1,
+    }}>
+      <div style={{
+        fontFamily: 'var(--font-dm-mono)', fontSize: 8,
+        letterSpacing: '0.16em', color: C.dimmer, marginBottom: 6,
+      }}>
+        {label}
+      </div>
+      <p style={{
+        fontFamily: 'var(--font-dm-mono)', fontSize: 11,
+        letterSpacing: '0.03em', lineHeight: 1.7,
+        color: C.text, margin: 0,
+      }}>
+        {value}
+      </p>
+    </div>
+  );
+}

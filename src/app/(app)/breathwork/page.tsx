@@ -377,4 +377,6 @@ export default async function BreathworkPage() {
         )}
 
       </div>
- 
+     </main>
+  );
+}
