@@ -514,4 +514,209 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
                   type="button"
                   onClick={() => {
                     setChainOpen(prev => ({ ...prev, [r.id]: !prev[r.id] }));
-                    if (!(
+                    if (!(rollChains[r.id] ?? []).length) addChainStep(r.id);
+                  }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    borderLeft: `2px solid ${C.midLow}`,
+                    padding: '6px 12px',
+                    color: C.mid,
+                    fontFamily: 'var(--font-bebas)',
+                    fontSize: 11,
+                    letterSpacing: '0.14em',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {chainOpen[r.id] ? 'HIDE CHAIN' : '+ SUBMISSION CHAIN'}
+                </button>
+
+                {chainOpen[r.id] && (
+                  <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {(rollChains[r.id] ?? []).map((step, sIdx) => (
+                      <div key={step.id} style={{ background: C.bgSunk, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.12em' }}>STEP {sIdx + 1}</span>
+                          <button type="button" onClick={() => removeChainStep(r.id, step.id)} style={{ background: 'none', border: 'none', color: C.brick, fontFamily: 'var(--font-dm-mono)', fontSize: 9, cursor: 'pointer', letterSpacing: '0.1em' }}>REMOVE</button>
+                        </div>
+                        <select value={step.result} onChange={(e) => updateChainStep(r.id, step.id, 'result', e.target.value)} style={{ ...flatInputStyle, fontSize: 13 }}>
+                          {CHAIN_RESULTS.map((cr) => <option key={cr.value} value={cr.value}>{cr.label}</option>)}
+                        </select>
+                      </div>
+                    ))}
+                    <button type="button" onClick={() => addChainStep(r.id)} style={{ background: 'transparent', border: 'none', borderLeft: `2px solid ${C.midLow}`, padding: '6px 12px', color: C.mid, fontFamily: 'var(--font-bebas)', fontSize: 11, letterSpacing: '0.14em', cursor: 'pointer' }}>+ ADD STEP</button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setRolls((rs) => [...rs, { id: Date.now() }])}
+          style={{
+            marginTop: 10,
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            background: 'transparent',
+            border: 'none',
+            borderLeft: `2px solid ${C.amberLow}`,
+            padding: '8px 14px',
+            color: C.mid,
+            fontFamily: 'var(--font-bebas)',
+            fontSize: 13,
+            letterSpacing: '0.18em',
+            cursor: 'pointer',
+          }}
+        >
+          + ADD ROLL
+        </button>
+      </LogSection>
+
+      {/* ── 04 HOW IT FELT ────────────────────────────────────────────────── */}
+      <LogSection number="04" title="HOW IT FELT">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <TapScale label="ENERGY" name="energyLevel" value={energy} onChange={setEnergy} color={C.amber} />
+          <TapScale label="INTENSITY" name="intensityLevel" value={intensity} onChange={setIntensity} color={C.brick} />
+        </div>
+      </LogSection>
+
+      {/* ── 05 REFLECTION ─────────────────────────────────────────────────── */}
+      <LogSection number="05" title="REFLECTION" optional>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <FlatField label="WHAT CLICKED">
+            <textarea name="whatClicked" maxLength={2000} placeholder="One technique or concept that landed." rows={2} style={{ ...flatInputStyle, resize: 'none' }} />
+          </FlatField>
+          <FlatField label="WHAT TO FIX">
+            <textarea name="whatDidnt" maxLength={2000} placeholder="One thing that broke down — be specific." rows={2} style={{ ...flatInputStyle, resize: 'none' }} />
+          </FlatField>
+          <FlatField label="QUESTION FOR COACH">
+            <textarea name="questionForCoach" maxLength={500} placeholder="Something to ask next time." rows={1} style={{ ...flatInputStyle, resize: 'none' }} />
+          </FlatField>
+          <FlatField label="FOLLOW-UP NOTES">
+            <textarea name="followUpNotes" maxLength={2000} placeholder="Anything else worth noting." rows={2} style={{ ...flatInputStyle, resize: 'none' }} />
+          </FlatField>
+        </div>
+      </LogSection>
+
+      {state.error && (
+        <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.brick, padding: '0 22px 16px' }}>
+          {state.error}
+        </p>
+      )}
+
+      {/* ── Submit ────────────────────────────────────────────────────────── */}
+      <div style={{ padding: '8px 22px 40px' }}>
+        <button
+          type="submit"
+          disabled={pending}
+          style={{
+            width: '100%',
+            padding: '16px',
+            background: pending ? 'rgba(201,130,42,0.4)' : C.amber,
+            color: C.bg,
+            border: 'none',
+            fontFamily: 'var(--font-bebas)',
+            fontSize: 18,
+            letterSpacing: '0.22em',
+            cursor: pending ? 'default' : 'pointer',
+            transition: 'background 120ms',
+          }}
+        >
+          {pending ? 'SAVING…' : 'LOG SESSION'}
+        </button>
+      </div>
+
+    </form>
+  );
+}
+
+// ── Helper sub-components ────────────────────────────────────────────────────
+
+function LogSection({ number, title, optional, children }: { number: string; title: string; optional?: boolean; children: React.ReactNode }) {
+  return (
+    <section style={{ borderTop: `1px solid ${C.line}`, padding: '22px 22px 26px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+        <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.18em', color: C.midLow }}>{number}</span>
+        <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.22em', color: C.text }}>{title}</span>
+        {optional && <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.12em', color: C.midLow }}>OPTIONAL</span>}
+        <div style={{ flex: 1, height: 1, background: C.lineHard }} />
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function FlatField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <span style={labelStyle}>{label}</span>
+      {children}
+    </div>
+  );
+}
+
+function RollSegment({ name, options, defaultValue }: { name: string; options: { value: string; label: string }[]; defaultValue: string }) {
+  const [selected, setSelected] = useState(defaultValue);
+  return (
+    <>
+      <div style={{ display: 'flex', background: C.bgSunk, gap: 1 }}>
+        {options.map((o) => (
+          <button
+            key={o.value}
+            type="button"
+            onClick={() => setSelected(o.value)}
+            style={{
+              flex: 1,
+              padding: '10px 4px',
+              background: selected === o.value ? C.amber : 'transparent',
+              color: selected === o.value ? C.bg : C.midLow,
+              border: 'none',
+              fontFamily: 'var(--font-bebas)',
+              fontSize: 11,
+              letterSpacing: '0.12em',
+              cursor: 'pointer',
+              transition: 'background 80ms, color 80ms',
+            }}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+      <input type="hidden" name={name} value={selected} />
+    </>
+  );
+}
+
+function TapScale({ label, name, value, onChange, color }: { label: string; name: string; value: number; onChange: (v: number) => void; color: string }) {
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+        <span style={labelStyle}>{label}</span>
+        <span style={{ fontFamily: 'var(--font-anton)', fontSize: 22, color, letterSpacing: '0.04em', lineHeight: 1 }}>{value}</span>
+      </div>
+      <div style={{ display: 'flex', background: C.bgSunk, gap: 1 }}>
+        {[1,2,3,4,5,6,7,8,9,10].map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => onChange(n)}
+            style={{
+              flex: 1, height: 40,
+              background: n === value ? color : 'transparent',
+              color: n === value ? C.bg : C.midLow,
+              border: 'none',
+              fontFamily: 'var(--font-dm-mono)',
+              fontSize: 10,
+              cursor: 'pointer',
+              transition: 'background 80ms',
+            }}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+      <input type="hidden" name={name} value={value} />
+    </div>
+  );
+}

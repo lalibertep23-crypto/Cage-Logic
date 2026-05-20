@@ -79,4 +79,20 @@ export async function editSessionAction(
     const { error: reflErr } = await supabase.from('session_reflections').insert({
       session_id:         id,
       athlete_id:         user.id,
-      w
+      what_clicked:       d.whatClicked ?? null,
+      what_didnt:         d.whatDidnt ?? null,
+      question_for_coach: d.questionForCoach ?? null,
+    });
+    if (reflErr) return { error: reflErr.message };
+  }
+
+  // Replace technique tags
+  await supabase.from('session_techniques').delete().eq('session_id', id);
+  if (d.tagIds.length > 0) {
+    await supabase.from('session_techniques').insert(
+      d.tagIds.map((tagId) => ({ session_id: id, technique_id: tagId, athlete_id: user.id }))
+    );
+  }
+
+  redirect(`/history/${id}`);
+}

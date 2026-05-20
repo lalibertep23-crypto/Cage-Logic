@@ -81,4 +81,11 @@ export async function logSorenessAction(
       log_date: localDateString(new Date()),
       overall_soreness_0_10: parsed.data.overall,
       body_regions: parsed.data.regions,
-      notes: parsed.data.note
+      notes: parsed.data.notes,
+    },
+    { onConflict: 'athlete_id,log_date' }
+  );
+
+  if (error) return { error: error.message };
+  redirect('/recovery');
+}
