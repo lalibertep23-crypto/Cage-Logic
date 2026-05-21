@@ -25,7 +25,7 @@ export default async function NewInjuryPage() {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 22px 14px',
-        borderBottom: '1px solid rgba(245,240,232,0.5)',
+        borderBottom: '1px solid rgba(245,240,232,0.13)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 3, height: 22, background: '#8B3A1E' }} />
@@ -40,7 +40,7 @@ export default async function NewInjuryPage() {
 
       <div style={{ padding: '24px 22px 0' }}>
         <div style={{ borderLeft: '3px solid rgba(139,58,30,0.4)', padding: '14px 14px 14px 12px', background: '#252118', marginBottom: 24 }}>
-          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.04em', lineHeight: 1.7, color: 'rgba(245,240,232,0.38)', margin: 0 }}>
+          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.04em', lineHeight: 1.7, color: 'rgba(245,240,232,0.55)', margin: 0 }}>
             Something more than sore. Log what happened. Reporting this puts you in modified training mode. Soreness logging continues separately.
           </p>
         </div>

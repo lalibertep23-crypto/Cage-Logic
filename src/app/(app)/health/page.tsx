@@ -16,7 +16,7 @@ const C = {
   surface:'#252118',
   border: 'rgba(245,240,232,0.13)',
   text:   '#F5F0E8',
-  dim:    'rgba(245,240,232,0.38)',
+  dim:    'rgba(245,240,232,0.55)',
   dimmer: 'rgba(245,240,232,0.22)',
   amber:  '#D4922E',
 };
@@ -188,7 +188,7 @@ export default async function HealthPage() {
         {/* ── Injury nav shortcut ───────────────────────────────────── */}
         {activeInjuries.length > 0 && (
           <div style={{ marginTop: 24 }}>
-            <Link href="/injury" style={{
+            <Link href="/recovery" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               background: C.surface,
               borderLeft: '3px solid #8B3A1E',
@@ -216,4 +216,3 @@ export default async function HealthPage() {
       </div>
     </main>
   );
-}

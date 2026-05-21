@@ -17,7 +17,7 @@ export default async function CheckInPage() {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 22px 14px',
-        borderBottom: '1px solid rgba(245,240,232,0.5)',
+        borderBottom: '1px solid rgba(245,240,232,0.13)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 3, height: 22, background: '#D4922E' }} />
@@ -32,7 +32,7 @@ export default async function CheckInPage() {
 
       <div style={{ padding: '24px 22px 0' }}>
         <div style={{ borderLeft: '3px solid rgba(201,130,42,0.35)', padding: '14px 14px 14px 12px', background: '#252118', marginBottom: 24 }}>
-          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.04em', lineHeight: 1.7, color: 'rgba(245,240,232,0.38)', margin: 0 }}>
+          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.04em', lineHeight: 1.7, color: 'rgba(245,240,232,0.55)', margin: 0 }}>
             Where&apos;s your head at today. One tap. 10 seconds. Builds the Mental domain — daily moves it faster than weekly.
           </p>
         </div>

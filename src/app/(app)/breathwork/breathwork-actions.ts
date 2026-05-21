@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 
-export async function logBreathworkSession(pattern: string, durationMin: number) {
+export async function logBreathworkSession(pattern: string, durationMin: number, comfortRating?: number) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -14,6 +14,7 @@ export async function logBreathworkSession(pattern: string, durationMin: number)
     athlete_id: user.id,
     pattern,
     duration_min: durationMin,
+    ...(comfortRating != null ? { comfort_0_10: comfortRating } : {}),
   });
 
   if (error) {
@@ -34,10 +35,4 @@ export async function getBreathworkSessions(athleteId: string) {
     .from('breathwork_sessions' as any)
     .select('id', { count: 'exact', head: true })
     .eq('athlete_id', athleteId)
-    .eq('pattern', 'phase_1');
-
-  return {
-    total: totalCount ?? 0,
-    phase1: phase1Count ?? 0,
-  };
-}
+    .eq('patt

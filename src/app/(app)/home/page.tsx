@@ -8,6 +8,7 @@ import { differenceInCalendarDays, format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
 import { loadHomeData } from '@/lib/score/loadHomeData';
 import { RAMPING_DAYS } from '@/lib/score/computeInvestmentScore';
+import { getTodayQuote } from '@/lib/daily-quotes';
 
 export const dynamic = 'force-dynamic';
 
@@ -91,6 +92,7 @@ export default async function HomePage() {
   const stripeTimeReady = daysInCurrentPhase >= STRIPE_THRESHOLD;
   const scoreReady = !score.isRamping && (score.score ?? 0) >= 65;
 
+  const todayQuote = getTodayQuote();
   const dayLabel = `Day ${Math.min(daysSinceSignup + 1, RAMPING_DAYS)} of ${RAMPING_DAYS}`;
   const dateStr = format(new Date(), 'EEE · dd MMM').toUpperCase();
   const roundedScore = Math.round(score.score ?? 0);
@@ -459,16 +461,15 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* ── Footer ────────────────────────────────────────────────────────── */}
-      <div style={{ borderTop: `1px solid ${C.line}`, padding: '14px 22px', display: 'flex', justifyContent: 'space-between' }}>
-        <Link href="/health" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.12em', textDecoration: 'none' }}>
-          APP HEALTH
-        </Link>
-        <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.12em' }}>
-          CAGE LOGIC v1
-        </span>
-      </div>
-
-    </main>
-  );
-}
+      {/* ── Daily quote ──────────────────────────────────────────────────── */}
+      <div style={{ borderTop: `1px solid ${C.line}`, padding: '18px 22px' }}>
+        <p style={{
+          fontFamily: 'var(--font-dm-mono)', fontSize: 11,
+          letterSpacing: '0.04em', lineHeight: 1.75,
+          color: C.mid, margin: '0 0 10px',
+          fontStyle: 'italic',
+        }}>
+          &ldquo;{todayQuote.text}&rdquo;
+        </p>
+        <span style={{
+          fontFamily: 'var(--font-bebas)', fontSize: 11,

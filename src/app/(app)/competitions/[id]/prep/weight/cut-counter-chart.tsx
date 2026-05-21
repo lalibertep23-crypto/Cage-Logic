@@ -17,8 +17,8 @@ import {
 import { format, parseISO } from 'date-fns';
 
 const C = {
-  bg: '#1A1713', surface: '#252118', border: 'rgba(245,240,232,0.5)',
-  text: '#F5F0E8', dim: 'rgba(245,240,232,0.38)', dimmer: 'rgba(245,240,232,0.22)',
+  bg: '#1A1713', surface: '#252118', border:  'rgba(245,240,232,0.13)',
+  text: '#F5F0E8', dim: 'rgba(245,240,232,0.55)', dimmer: 'rgba(245,240,232,0.22)',
   amber: '#D4922E', green: '#3D8B55',
 };
 
@@ -96,13 +96,13 @@ export function CutCounterChart({
             <BarChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <XAxis
                 dataKey="date"
-                tick={{ fontSize: 9, fill: 'rgba(245,240,232,0.38)', fontFamily: 'var(--font-dm-mono)' }}
+                tick={{ fontSize: 9, fill: 'rgba(245,240,232,0.55)', fontFamily: 'var(--font-dm-mono)' }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
                 domain={[minY, maxY]}
-                tick={{ fontSize: 9, fill: 'rgba(245,240,232,0.38)', fontFamily: 'var(--font-dm-mono)' }}
+                tick={{ fontSize: 9, fill: 'rgba(245,240,232,0.55)', fontFamily: 'var(--font-dm-mono)' }}
                 axisLine={false}
                 tickLine={false}
                 width={40}

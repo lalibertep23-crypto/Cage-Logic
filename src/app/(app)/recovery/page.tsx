@@ -15,7 +15,7 @@ const C = {
   surface:   '#252118',
   border:    'rgba(245,240,232,0.13)',
   text:      '#F5F0E8',
-  dim:       'rgba(245,240,232,0.38)',
+  dim:       'rgba(245,240,232,0.55)',
   dimmer:    'rgba(245,240,232,0.22)',
   amber:     '#D4922E',
   amberLow:  'rgba(201,130,42,0.35)',
@@ -143,7 +143,7 @@ export default async function RecoveryPage() {
         {injuries.length > 0 && (
           <div style={{ marginTop: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.16em', color: C.brickLow }}>
+              <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.16em', color: C.brick }}>
                 ACTIVE INJURIES
               </span>
               <div style={{ flex: 1, height: 1, background: C.border }} />
@@ -337,4 +337,4 @@ export default async function RecoveryPage() {
       </div>
     </main>
   );
-}
+}   

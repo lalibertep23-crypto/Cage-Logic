@@ -13,9 +13,9 @@ const C = {
   bg:      '#1A1713',
   surface: '#252118',
   bgSunk:  '#13110E',
-  border:  'rgba(245,240,232,0.5)',
+  border:  'rgba(245,240,232,0.13)',
   text:    '#F5F0E8',
-  dim:     'rgba(245,240,232,0.38)',
+  dim:     'rgba(245,240,232,0.55)',
   dimmer:  'rgba(245,240,232,0.22)',
   amber:   '#D4922E',
   amberLow:'rgba(201,130,42,0.35)',
@@ -130,6 +130,8 @@ export function BreathworkGuide({ onComplete }: { onComplete?: () => void }) {
   const [durationMin, setDurationMin] = useReducer((_: number, n: number) => n, 5);
   const [timer, dispatch] = useReducer(timerReducer, INITIAL_STATE);
   const [, startTransition] = useTransition();
+  const [comfortRating, setComfortRating] = useReducer((_: number | null, n: number | null) => n, null);
+  const [logged, setLogged] = useReducer((_: boolean, v: boolean) => v, false);
 
   const steps = PHASE_1_STEPS;
   const totalSeconds = durationMin * 60;
@@ -144,18 +146,22 @@ export function BreathworkGuide({ onComplete }: { onComplete?: () => void }) {
     return () => clearInterval(id);
   }, [timer.running, totalSeconds]);
 
-  // Log on done
+  // Log only after comfort rating is submitted
   const loggedRef = useRef(false);
+  function submitWithRating(rating: number) {
+    if (loggedRef.current) return;
+    loggedRef.current = true;
+    setLogged(true);
+    startTransition(async () => {
+      await logBreathworkSession('phase_1', durationMin, rating);
+      onComplete?.();
+    });
+  }
+
+  // Reset logged ref when timer resets
   useEffect(() => {
-    if (timer.done && !loggedRef.current) {
-      loggedRef.current = true;
-      startTransition(async () => {
-        await logBreathworkSession('phase_1', durationMin);
-        onComplete?.();
-      });
-    }
-    if (!timer.done) loggedRef.current = false;
-  }, [timer.done, durationMin, onComplete]);
+    if (!timer.done) { loggedRef.current = false; setLogged(false); setComfortRating(null); }
+  }, [timer.done]);
 
   // ── Octagon scale logic ───────────────────────────────────────────────────
   // Idle: 0.55. IN: expand to 1.0. PAUSE: hold 1.0. OUT: contract to 0.55.
@@ -385,47 +391,37 @@ export function BreathworkGuide({ onComplete }: { onComplete?: () => void }) {
 
           {/* Done state */}
           {timer.done ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%', maxWidth: 300 }}>
               <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 16, letterSpacing: '0.18em', color: C.amber, margin: 0 }}>
-                {durationMin} MIN. {timer.roundsComplete} BREATHS. LOGGED.
+                {durationMin} MIN. {timer.roundsComplete} BREATHS.
               </p>
-              <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.08em', lineHeight: 1.7, color: C.dim, margin: 0, textAlign: 'center' }}>
-                Session counts toward Phase 1 completion.
-              </p>
-              <button
-                onClick={() => dispatch({ type: 'RESET' })}
-                style={{
-                  border: `1px solid ${C.amberLow}`, background: 'transparent', color: C.amber,
-                  padding: '8px 24px 6px', fontFamily: 'var(--font-bebas)', fontSize: 14,
-                  letterSpacing: '0.16em', cursor: 'pointer',
-                }}
-              >
-                GO AGAIN →
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, width: '100%', maxWidth: 260 }}>
-              <div style={{ width: '100%', height: 2, background: C.border }}>
-                <div style={{ height: '100%', width: `${sessionPct}%`, background: C.amberLow, transition: 'width 1s linear' }} />
-              </div>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.18em', color: C.dimmer }}>
-                {minsLeft} {minsLeft === 1 ? 'MIN' : 'MINS'} REMAINING
-              </span>
-              <button
-                onClick={() => dispatch({ type: 'STOP' })}
-                style={{
-                  border: `1px solid ${C.border}`, background: 'transparent', color: C.dim,
-                  padding: '8px 24px 6px', fontFamily: 'var(--font-bebas)', fontSize: 13,
-                  letterSpacing: '0.16em', cursor: 'pointer',
-                }}
-              >
-                STOP
-              </button>
-            </div>
-          )}
-          </div>{/* /content zIndex wrapper */}
-        </div>
-      )}
-    </div>
-  );
-}
+
+              {!logged ? (
+                <>
+                  <div style={{ width: '100%' }}>
+                    <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.22em', color: C.midLow, display: 'block', marginBottom: 8, textAlign: 'center' }}>
+                      COMFORT RATING
+                    </span>
+                    <div style={{ display: 'flex', gap: 2 }}>
+                      {[1,2,3,4,5,6,7,8,9,10].map((n) => (
+                        <button
+                          key={n}
+                          onClick={() => setComfortRating(n)}
+                          style={{
+                            flex: 1, padding: '10px 0',
+                            background: comfortRating === n ? C.amber : comfortRating != null && n <= comfortRating ? C.amberLow : C.bgSunk,
+                            color: comfortRating === n ? C.bg : C.midLow,
+                            fontFamily: 'var(--font-dm-mono)', fontSize: 10,
+                            border: 'none', cursor: 'pointer',
+                            transition: 'background 80ms',
+                          }}
+                        >
+                          {n}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => comfortRating != null && submitWithRating(comfortRating)}
+                    disabled={comfortRating == null}
+                    style={{

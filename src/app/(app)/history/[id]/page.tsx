@@ -16,7 +16,7 @@ const C = {
   border:   'rgba(245,240,232,0.13)',
   borderMid:'rgba(245,240,232,0.14)',
   text:     '#F5F0E8',
-  dim:      'rgba(245,240,232,0.38)',
+  dim:      'rgba(245,240,232,0.55)',
   dimmer:   'rgba(245,240,232,0.22)',
   amber:    '#D4922E',
   amberLow: 'rgba(201,130,42,0.35)',
@@ -314,40 +314,4 @@ export default async function SessionDetailPage({
                       <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dim, margin: 0 }}>
                         {r.felt}
                       </p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-      </div>
-    </main>
-  );
-}
-
-function ReflectionField({ label, value, accent }: { label: string; value: string; accent?: string }) {
-  return (
-    <div style={{
-      background: C.surface,
-      borderLeft: `3px solid ${accent ?? 'rgba(245,240,232,0.1)'}`,
-      padding: '14px 16px 14px 13px',
-      marginBottom: 1,
-    }}>
-      <div style={{
-        fontFamily: 'var(--font-dm-mono)', fontSize: 8,
-        letterSpacing: '0.16em', color: accent ?? C.dimmer, marginBottom: 6,
-      }}>
-        {label}
-      </div>
-      <p style={{
-        fontFamily: 'var(--font-dm-mono)', fontSize: 11,
-        letterSpacing: '0.03em', lineHeight: 1.7,
-        color: C.text, margin: 0,
-      }}>
-        {value}
-      </p>
-    </div>
-  );
-}
+      

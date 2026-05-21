@@ -7,9 +7,9 @@ import { submitCheckInAction, type CheckInState } from './actions';
 const C = {
   bg:      '#1A1713',
   bgSunk:  '#13110E',
-  border:  'rgba(245,240,232,0.5)',
+  border:  'rgba(245,240,232,0.13)',
   text:    '#F5F0E8',
-  dim:     'rgba(245,240,232,0.38)',
+  dim:     'rgba(245,240,232,0.55)',
   dimmer:  'rgba(245,240,232,0.22)',
   amber:   '#D4922E',
   amberLow:'rgba(201,130,42,0.35)',
@@ -101,40 +101,4 @@ export function CheckInForm() {
           placeholder="Anything worth noting before you train."
           style={{
             background: C.bgSunk,
-            border: 'none',
-            color: '#F5F0E8',
-            fontFamily: 'var(--font-dm-mono)',
-            fontSize: 11,
-            letterSpacing: '0.03em',
-            lineHeight: 1.7,
-            padding: '12px 14px',
-            width: '100%',
-            resize: 'none',
-            outline: 'none',
-            boxSizing: 'border-box',
-          }}
-        />
-      </div>
-
-      <button
-        type="submit"
-        disabled={pending}
-        style={{
-          width: '100%',
-          padding: '15px',
-          background: pending ? 'rgba(201,130,42,0.4)' : '#D4922E',
-          color: '#1A1713',
-          border: 'none',
-          fontFamily: 'var(--font-bebas)',
-          fontSize: 16,
-          letterSpacing: '0.22em',
-          cursor: pending ? 'default' : 'pointer',
-          transition: 'background 120ms',
-        }}
-      >
-        {pending ? 'SAVING…' : 'LOG CHECK-IN'}
-      </button>
-
-    </form>
-  );
-}
+            

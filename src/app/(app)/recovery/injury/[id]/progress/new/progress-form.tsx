@@ -5,8 +5,8 @@ import { useActionState } from 'react';
 import { logProgressAction, type ProgressState } from './actions';
 
 const C = {
-  bg: '#1A1713', surface: '#252118', border: 'rgba(245,240,232,0.5)',
-  text: '#F5F0E8', dim: 'rgba(245,240,232,0.38)', dimmer: 'rgba(245,240,232,0.22)',
+  bg: '#1A1713', surface: '#252118', border:  'rgba(245,240,232,0.13)',
+  text: '#F5F0E8', dim: 'rgba(245,240,232,0.55)', dimmer: 'rgba(245,240,232,0.22)',
   brick: '#8B3A1E', brickLow: 'rgba(139,58,30,0.35)',
   amber: '#D4922E', green: '#3D8B55',
 };

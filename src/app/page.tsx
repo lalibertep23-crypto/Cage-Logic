@@ -124,32 +124,4 @@ export default async function WelcomePage() {
                   {isSignedIn ? 'WELCOME BACK' : 'READY TO ROLL?'}
                 </div>
                 <span style={{ fontFamily: 'var(--font-anton)', fontSize: 22, letterSpacing: '0.06em' }}>
-                  {isSignedIn ? 'ENTER THE CAGE' : 'START TRAINING'}
-                </span>
-              </div>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 18, color: 'rgba(201,130,42,0.8)' }}>→</span>
-            </div>
-          </Link>
-
-          {!isSignedIn && (
-            <Link href="/login" style={{ textDecoration: 'none', display: 'block' }}>
-              <div style={{
-                background: 'transparent',
-                border: '1px solid rgba(245,240,232,0.18)',
-                color: 'rgba(245,240,232,0.55)',
-                padding: '13px 22px',
-                fontFamily: 'var(--font-dm-mono)',
-                fontSize: 10,
-                letterSpacing: '0.22em',
-                textAlign: 'center',
-              }}>
-                SIGN IN
-              </div>
-            </Link>
-          )}
-
-        </div>
-      </div>
-    </main>
-  );
-}
+                  {isSignedIn ?

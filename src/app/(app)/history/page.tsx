@@ -15,7 +15,7 @@ const C = {
   border:    'rgba(245,240,232,0.13)',
   borderMid: 'rgba(245,240,232,0.14)',
   text:      '#F5F0E8',
-  dim:       'rgba(245,240,232,0.38)',
+  dim:       'rgba(245,240,232,0.55)',
   dimmer:    'rgba(245,240,232,0.22)',
   amber:     '#D4922E',
   amberLow:  'rgba(201,130,42,0.35)',
@@ -275,21 +275,4 @@ export default async function HistoryPage() {
                           }}>
                             {typeLabel}
                           </span>
-                          <span style={{
-                            fontFamily: 'var(--font-dm-mono)',
-                            fontSize: 12,
-                            color: C.amberLow,
-                          }}>→</span>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
-          ))
-        )}
-      </div>
-    </main>
-  );
-}
+                          <span st
