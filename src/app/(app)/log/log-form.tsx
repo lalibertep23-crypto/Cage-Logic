@@ -527,7 +527,7 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
               </div>
 
               <FlatField label="WHAT IT FELT LIKE">
-                <textarea name={`rolls[${idx}].felt`} maxLength={2000} placeholder="lost guard early · swept twice" rows={2} style={{ ...flatInputStyle, resize: 'none' }} />
+                <textarea name={`rolls[${idx}].felt`} maxLength={2000} placeholder="lost guard early · swept twice" rows={4} style={{ ...flatInputStyle, resize: 'none' }} />
               </FlatField>
 
               {/* ── Submission chain ── */}
@@ -610,9 +610,23 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
         </div>
       </LogSection>
 
-      {/* ── 05 REFLECTION ─────────────────────────────────────────────────── */}
+      {/* ── 05 PROOF BANK + REFLECTION ────────────────────────────────────── */}
       <LogSection number="05" title="REFLECTION" optional>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <FlatField label="SKILLS EXECUTED WELL">
+            <textarea
+              name="skillsExecuted"
+              maxLength={2000}
+              placeholder="1–3 specific things you executed. Builds your pre-comp confidence file."
+              rows={3}
+              style={{ ...flatInputStyle, resize: 'none' }}
+            />
+          </FlatField>
+          <div style={{
+            height: 1,
+            background: 'rgba(245,240,232,0.08)',
+            margin: '4px 0',
+          }} />
           <FlatField label="WHAT CLICKED">
             <textarea name="whatClicked" maxLength={2000} placeholder="One technique or concept that landed." rows={2} style={{ ...flatInputStyle, resize: 'none' }} />
           </FlatField>

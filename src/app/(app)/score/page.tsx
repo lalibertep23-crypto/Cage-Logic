@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 const C = {
   bg:       '#1A1713',
   surface:  '#252118',
-  border:   'rgba(245,240,232,0.5)',
+  border:   'rgba(245,240,232,0.13)',
   text:     '#F5F0E8',
   dim:      'rgba(245,240,232,0.38)',
   dimmer:   'rgba(245,240,232,0.22)',
@@ -134,7 +134,7 @@ export default async function ScorePage() {
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{ width: 6, height: 6, background: color, flexShrink: 0 }} />
-                    <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.16em', color: '#FFD97A' }}>
+                    <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.16em', color: C.amber }}>
                       {d.label}
                     </span>
                     {isWeakest && (

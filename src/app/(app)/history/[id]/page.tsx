@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 const C = {
   bg:       '#1A1713',
   surface:  '#252118',
-  border:   'rgba(245,240,232,0.5)',
+  border:   'rgba(245,240,232,0.13)',
   borderMid:'rgba(245,240,232,0.14)',
   text:     '#F5F0E8',
   dim:      'rgba(245,240,232,0.38)',
@@ -50,6 +50,7 @@ type Reflection = {
   what_didnt:         string | null;
   question_for_coach: string | null;
   follow_up_notes:    string | null;
+  skills_executed:    string | null;
 };
 
 type Roll = {
@@ -99,7 +100,7 @@ export default async function SessionDetailPage({
   }
 
   const [reflRes, rollRes] = await Promise.all([
-    supabase.from('session_reflections').select('what_clicked, what_didnt, question_for_coach, follow_up_notes').eq('session_id', id),
+    supabase.from('session_reflections').select('what_clicked, what_didnt, question_for_coach, follow_up_notes, skills_executed').eq('session_id', id),
     supabase.from('roll_logs').select('id, round_number, partner_label, partner_relative_size, outcome, outcome_method, felt').eq('session_id', id).order('round_number', { ascending: true, nullsFirst: false }),
   ]);
 
@@ -108,6 +109,7 @@ export default async function SessionDetailPage({
     what_didnt:         (r.what_didnt as string | null) ?? null,
     question_for_coach: (r.question_for_coach as string | null) ?? null,
     follow_up_notes:    (r.follow_up_notes as string | null) ?? null,
+    skills_executed:    (r.skills_executed as string | null) ?? null,
   }));
 
   const rolls: Roll[] = (rollRes.data ?? []).map((r) => ({
@@ -254,6 +256,9 @@ export default async function SessionDetailPage({
           ) : (
             reflections.map((r, i) => (
               <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {r.skills_executed && (
+                  <ReflectionField label="SKILLS EXECUTED WELL" value={r.skills_executed} accent={C.amber} />
+                )}
                 {r.what_clicked && (
                   <ReflectionField label="WHAT CLICKED" value={r.what_clicked} />
                 )}
@@ -322,17 +327,17 @@ export default async function SessionDetailPage({
   );
 }
 
-function ReflectionField({ label, value }: { label: string; value: string }) {
+function ReflectionField({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (
     <div style={{
       background: C.surface,
-      borderLeft: `3px solid rgba(245,240,232,0.1)`,
+      borderLeft: `3px solid ${accent ?? 'rgba(245,240,232,0.1)'}`,
       padding: '14px 16px 14px 13px',
       marginBottom: 1,
     }}>
       <div style={{
         fontFamily: 'var(--font-dm-mono)', fontSize: 8,
-        letterSpacing: '0.16em', color: C.dimmer, marginBottom: 6,
+        letterSpacing: '0.16em', color: accent ?? C.dimmer, marginBottom: 6,
       }}>
         {label}
       </div>

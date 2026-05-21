@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 const C = {
   bg:        '#1A1713',
   surface:   '#252118',
-  border:    'rgba(245,240,232,0.5)',
+  border:    'rgba(245,240,232,0.13)',
   borderMid: 'rgba(245,240,232,0.14)',
   text:      '#F5F0E8',
   dim:       'rgba(245,240,232,0.38)',
@@ -131,14 +131,23 @@ export default async function HistoryPage() {
             FIGHT TAPE
           </span>
         </div>
-        <span style={{
-          fontFamily: 'var(--font-dm-mono)',
-          fontSize: 9,
-          letterSpacing: '0.18em',
-          color: C.dimmer,
-        }}>
-          30 DAYS
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <Link href="/history/proof-bank" style={{
+            fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em',
+            color: C.amber, textDecoration: 'none', border: `1px solid rgba(201,130,42,0.35)`,
+            padding: '3px 8px',
+          }}>
+            PROOF BANK →
+          </Link>
+          <span style={{
+            fontFamily: 'var(--font-dm-mono)',
+            fontSize: 9,
+            letterSpacing: '0.18em',
+            color: C.dimmer,
+          }}>
+            30 DAYS
+          </span>
+        </div>
       </div>
 
       {/* ── Body ──────────────────────────────────────────────────────── */}

@@ -20,6 +20,8 @@ const Schema = z.object({
   whatClicked: z.string().trim().max(2000).optional(),
   whatDidnt: z.string().trim().max(2000).optional(),
   questionForCoach: z.string().trim().max(1000).optional(),
+  followUpNotes: z.string().trim().max(2000).optional(),
+  skillsExecuted: z.string().trim().max(2000).optional(),
 });
 
 export type LogState = {
@@ -51,6 +53,8 @@ export async function logSessionAction(
     whatClicked: emptyToUndefined(formData.get('whatClicked')),
     whatDidnt: emptyToUndefined(formData.get('whatDidnt')),
     questionForCoach: emptyToUndefined(formData.get('questionForCoach')),
+    followUpNotes: emptyToUndefined(formData.get('followUpNotes')),
+    skillsExecuted: emptyToUndefined(formData.get('skillsExecuted')),
   });
 
   if (!parsed.success) {
@@ -155,13 +159,21 @@ export async function logSessionAction(
   }
 
   // 3) Insert session_reflections
-  if (parsed.data.whatClicked || parsed.data.whatDidnt || parsed.data.questionForCoach) {
+  if (
+    parsed.data.whatClicked ||
+    parsed.data.whatDidnt ||
+    parsed.data.questionForCoach ||
+    parsed.data.followUpNotes ||
+    parsed.data.skillsExecuted
+  ) {
     const { error: reflErr } = await supabase.from('session_reflections').insert({
       session_id: sessionId,
       athlete_id: user.id,
       what_clicked:       parsed.data.whatClicked ?? null,
       what_didnt:         parsed.data.whatDidnt ?? null,
       question_for_coach: parsed.data.questionForCoach ?? null,
+      follow_up_notes:    parsed.data.followUpNotes ?? null,
+      skills_executed:    parsed.data.skillsExecuted ?? null,
     });
     if (reflErr) return { error: `Saved session but reflection failed: ${reflErr.message}` };
   }
