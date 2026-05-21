@@ -153,17 +153,17 @@ export default async function SessionDetailPage({
             <div style={{ fontFamily: 'var(--font-anton)', fontSize: 22, letterSpacing: '0.08em' }}>
               {format(parseISO(sessionDate), 'EEE, MMM d').toUpperCase()}
             </div>
-            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: C.dimmer, marginTop: 2 }}>
+            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.18em', color: C.dimmer, marginTop: 2 }}>
               {typeLabel}
             </div>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href={`/history/${id}/edit`} style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.amber, textDecoration: 'none', borderBottom: `1px solid ${C.amberLow}`, paddingBottom: 1 }}>
+          <Link href={`/history/${id}/edit`} style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.12em', color: C.amber, textDecoration: 'none', borderBottom: `1px solid ${C.amberLow}`, paddingBottom: 1 }}>
             EDIT
           </Link>
           <DeleteButton id={id} />
-          <Link href="/history" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.dimmer, textDecoration: 'none' }}>
+          <Link href="/history" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.12em', color: C.dimmer, textDecoration: 'none' }}>
             ← HISTORY
           </Link>
         </div>
@@ -180,7 +180,7 @@ export default async function SessionDetailPage({
             { label: 'INTENSITY', value: intensity != null ? String(intensity) : null, isScore: true, raw: intensity },
           ].map((s) => (
             <div key={s.label} style={{ background: C.surface, padding: '14px 14px 12px' }}>
-              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: C.dimmer, marginBottom: 6 }}>
+              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.18em', color: C.dimmer, marginBottom: 6 }}>
                 {s.label}
               </div>
               {s.value != null ? (
@@ -193,7 +193,7 @@ export default async function SessionDetailPage({
                     {s.value}
                   </span>
                   {s.isScore && (
-                    <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dimmer }}>/10</span>
+                    <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dimmer }}>/10</span>
                   )}
                 </div>
               ) : (
@@ -205,22 +205,22 @@ export default async function SessionDetailPage({
 
         {notes && (
           <div style={{ marginTop: 2, background: C.surface, padding: '14px 14px' }}>
-            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dim, margin: 0 }}>{notes}</p>
+            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dim, margin: 0 }}>{notes}</p>
           </div>
         )}
 
         {/* ── Techniques ───────────────────────────────────────────────── */}
         <div style={{ marginTop: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.2em', color: C.dimmer }}>TECHNIQUES</span>
+            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 16, letterSpacing: '0.2em', color: C.dimmer }}>TECHNIQUES</span>
             <div style={{ flex: 1, height: 1, background: C.border }} />
-            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: C.dimmer }}>
+            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.1em', color: C.dimmer }}>
               {techniques.length > 0 ? `${techniques.length} TAGGED` : ''}
             </span>
           </div>
 
           {techniques.length === 0 ? (
-            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dimmer, letterSpacing: '0.08em' }}>None tagged.</p>
+            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, color: C.dimmer, letterSpacing: '0.08em' }}>None tagged.</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {techniques.map((t, i) => (
@@ -230,11 +230,11 @@ export default async function SessionDetailPage({
                   borderBottom: `1px solid ${C.border}`,
                   padding: '10px 0',
                 }}>
-                  <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.04em', color: C.text }}>
+                  <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 12, letterSpacing: '0.04em', color: C.text }}>
                     {t.label}
                   </span>
                   {t.position && (
-                    <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.14em', color: C.dimmer }}>
+                    <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.14em', color: C.dimmer }}>
                       {t.position.toUpperCase()}
                     </span>
                   )}
@@ -247,12 +247,12 @@ export default async function SessionDetailPage({
         {/* ── Reflection ───────────────────────────────────────────────── */}
         <div style={{ marginTop: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.2em', color: C.dimmer }}>REFLECTION</span>
+            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 16, letterSpacing: '0.2em', color: C.dimmer }}>REFLECTION</span>
             <div style={{ flex: 1, height: 1, background: C.border }} />
           </div>
 
           {reflections.length === 0 ? (
-            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dimmer, letterSpacing: '0.08em' }}>No reflection on this session.</p>
+            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, color: C.dimmer, letterSpacing: '0.08em' }}>No reflection on this session.</p>
           ) : (
             reflections.map((r, i) => (
               <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -280,9 +280,9 @@ export default async function SessionDetailPage({
         {rolls.length > 0 && (
           <div style={{ marginTop: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.2em', color: C.dimmer }}>ROLLS</span>
+              <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 16, letterSpacing: '0.2em', color: C.dimmer }}>ROLLS</span>
               <div style={{ flex: 1, height: 1, background: C.border }} />
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: C.dimmer }}>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.1em', color: C.dimmer }}>
                 {rolls.length} LOGGED
               </span>
             </div>
@@ -296,22 +296,54 @@ export default async function SessionDetailPage({
                 return (
                   <div key={r.id} style={{ background: C.surface, borderLeft: `2px solid ${C.border}`, padding: '14px 14px 12px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-                      <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.14em', color: C.amber }}>
+                      <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 16, letterSpacing: '0.14em', color: C.amber }}>
                         ROUND {String(r.round_number ?? i + 1).padStart(2, '0')}
                       </span>
                       {outcomeLabel && (
-                        <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.dim }}>
+                        <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.12em', color: C.dim }}>
                           {outcomeLabel}{r.outcome_method ? ` · ${r.outcome_method.toUpperCase()}` : ''}
                         </span>
                       )}
                     </div>
                     {partnerBits.length > 0 && (
-                      <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: C.dimmer, margin: '0 0 6px' }}>
+                      <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.1em', color: C.dimmer, margin: '0 0 8px' }}>
                         {partnerBits.join(' · ')}
                       </p>
                     )}
                     {r.felt && (
-                      <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dim, margin: 0 }}>
+                      <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dim, margin: 0 }}>
                         {r.felt}
                       </p>
-      
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+      </div>
+    </main>
+  );
+}
+
+// ── ReflectionField ──────────────────────────────────────────────────────────
+function ReflectionField({ label, value, accent }: { label: string; value: string; accent?: string }) {
+  const C = {
+    surface: '#252118',
+    border:  'rgba(245,240,232,0.13)',
+    text:    '#F5F0E8',
+    dim:     'rgba(245,240,232,0.55)',
+    dimmer:  'rgba(245,240,232,0.35)',
+  };
+  return (
+    <div style={{ background: C.surface, padding: '12px 14px', borderLeft: `2px solid ${accent ?? C.border}` }}>
+      <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.16em', color: accent ?? C.dimmer, marginBottom: 6 }}>
+        {label}
+      </div>
+      <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dim, margin: 0 }}>
+        {value}
+      </p>
+    </div>
+  );
+}
