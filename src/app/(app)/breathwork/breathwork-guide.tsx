@@ -423,5 +423,67 @@ export function BreathworkGuide({ onComplete }: { onComplete?: () => void }) {
                   </div>
                   <button
                     onClick={() => comfortRating != null && submitWithRating(comfortRating)}
-                    disabled={comfortRating == null}
                     style={{
+                      width: '100%',
+                      background: comfortRating != null ? C.amber : C.bgSunk,
+                      color: comfortRating != null ? C.bg : C.dimmer,
+                      border: 'none', padding: '16px 24px',
+                      fontFamily: 'var(--font-anton)', fontSize: 18, letterSpacing: '0.08em',
+                      cursor: comfortRating != null ? 'pointer' : 'default',
+                      transition: 'background 120ms',
+                    }}
+                  >
+                    LOG SESSION →
+                  </button>
+                </>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                  <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.08em', color: C.green, margin: 0 }}>
+                    Logged. Counts toward Phase 1 completion.
+                  </p>
+                  <button
+                    onClick={() => dispatch({ type: 'RESET' })}
+                    style={{
+                      background: 'transparent', border: `1px solid ${C.border}`,
+                      color: C.dimmer, padding: '12px 24px',
+                      fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.14em',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    GO AGAIN →
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, width: '100%' }}>
+              <div style={{ width: '100%', height: 3, background: C.bgSunk }}>
+                <div style={{
+                  height: '100%', width: `${sessionPct}%`,
+                  background: C.amber, transition: 'width 1s linear',
+                }} />
+              </div>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em', color: C.dimmer }}>
+                {minsLeft} MIN LEFT
+              </span>
+              <button
+                onClick={() => dispatch({ type: 'STOP' })}
+                style={{
+                  background: 'transparent', border: `1px solid ${C.border}`,
+                  color: C.dimmer, padding: '10px 24px',
+                  fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.16em',
+                  cursor: 'pointer',
+                }}
+              >
+                STOP
+              </button>
+            </div>
+          )}
+
+          </div>
+        </div>
+    )}
+
+  </div>
+  );
+}

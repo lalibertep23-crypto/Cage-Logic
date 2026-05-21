@@ -301,3 +301,16 @@ function TapScale({ label, name, value, onChange, color }: { label: string; name
               color: n === value ? C.bg : C.midLow,
               border: 'none',
               fontFamily: 'var(--font-dm-mono)',
+              fontSize: 10,
+              cursor: 'pointer',
+              transition: 'background 80ms',
+            }}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+      <input type="hidden" name={name} value={value} />
+    </div>
+  );
+}

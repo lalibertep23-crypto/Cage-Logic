@@ -123,7 +123,7 @@ const POSITION_LABEL: Record<string, string> = {
 };
 
 const initialState: LogState = {};
-type RollRow = { id: number; partner: string; felt: string };
+type RollRow = { id: number };
 
 // ── Main form ────────────────────────────────────────────────────────────────
 type ActiveInjury = { id: string; body_region: string; side: string | null };
@@ -145,9 +145,7 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
     } catch { return fallback; }
   }
 
-  const [rolls, setRolls]           = useState<RollRow[]>(() =>
-    (readDraft('rolls', []) as RollRow[]).map(r => ({ ...r, partner: r.partner ?? '', felt: r.felt ?? '' }))
-  );
+  const [rolls, setRolls]           = useState<RollRow[]>(() => readDraft('rolls', []));
   const [rollChains, setRollChains] = useState<Record<number, ChainStep[]>>(() => readDraft('rollChains', {}));
   const [chainOpen, setChainOpen]   = useState<Record<number, boolean>>({});
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -184,9 +182,6 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
       ...prev,
       [rollId]: (prev[rollId] ?? []).map(s => s.id === stepId ? { ...s, [field]: value } : s),
     }));
-  }
-  function updateRoll(id: number, field: 'partner' | 'felt', value: string) {
-    setRolls(rs => rs.map(r => r.id === id ? { ...r, [field]: value } : r));
   }
   const [query, setQuery]           = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>(() => readDraft('selectedIds', []));
@@ -518,15 +513,7 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
               </div>
 
               <FlatField label="PARTNER">
-                <input
-                  name={`rolls[${idx}].partner`}
-                  type="text"
-                  maxLength={80}
-                  placeholder="e.g. blue belt, bigger"
-                  value={r.partner}
-                  onChange={(e) => updateRoll(r.id, 'partner', e.target.value)}
-                  style={flatInputStyle}
-                />
+                <input name={`rolls[${idx}].partner`} type="text" maxLength={80} placeholder="e.g. blue belt, bigger" style={flatInputStyle} />
               </FlatField>
 
               <div>
@@ -540,15 +527,7 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
               </div>
 
               <FlatField label="WHAT IT FELT LIKE">
-                <textarea
-                  name={`rolls[${idx}].felt`}
-                  maxLength={2000}
-                  placeholder="lost guard early · swept twice"
-                  rows={4}
-                  value={r.felt}
-                  onChange={(e) => updateRoll(r.id, 'felt', e.target.value)}
-                  style={{ ...flatInputStyle, resize: 'none' }}
-                />
+                <textarea name={`rolls[${idx}].felt`} maxLength={2000} placeholder="lost guard early · swept twice" rows={4} style={{ ...flatInputStyle, resize: 'none' }} />
               </FlatField>
 
               {/* ── Submission chain ── */}
@@ -604,7 +583,7 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
 
         <button
           type="button"
-          onClick={() => setRolls((rs) => [...rs, { id: Date.now(), partner: '', felt: '' }])}
+          onClick={() => setRolls((rs) => [...rs, { id: Date.now() }])}
           style={{
             marginTop: 10,
             display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -704,4 +683,83 @@ function LogSection({ number, title, optional, children }: { number: string; tit
         <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.18em', color: C.midLow }}>{number}</span>
         <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.22em', color: C.text }}>{title}</span>
         {optional && <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.12em', color: C.midLow }}>OPTIONAL</span>}
-  
+        <div style={{ flex: 1, height: 1, background: C.lineHard }} />
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function FlatField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <span style={labelStyle}>{label}</span>
+      {children}
+    </div>
+  );
+}
+
+function RollSegment({ name, options, defaultValue }: { name: string; options: { value: string; label: string }[]; defaultValue: string }) {
+  const [selected, setSelected] = useState(defaultValue);
+  return (
+    <>
+      <div style={{ display: 'flex', background: C.bgSunk, gap: 1 }}>
+        {options.map((o) => (
+          <button
+            key={o.value}
+            type="button"
+            onClick={() => setSelected(o.value)}
+            style={{
+              flex: 1,
+              padding: '10px 4px',
+              background: selected === o.value ? C.amber : 'transparent',
+              color: selected === o.value ? C.bg : C.midLow,
+              border: 'none',
+              fontFamily: 'var(--font-bebas)',
+              fontSize: 11,
+              letterSpacing: '0.12em',
+              cursor: 'pointer',
+              transition: 'background 80ms, color 80ms',
+            }}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+      <input type="hidden" name={name} value={selected} />
+    </>
+  );
+}
+
+function TapScale({ label, name, value, onChange, color }: { label: string; name: string; value: number; onChange: (v: number) => void; color: string }) {
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+        <span style={labelStyle}>{label}</span>
+        <span style={{ fontFamily: 'var(--font-anton)', fontSize: 22, color, letterSpacing: '0.04em', lineHeight: 1 }}>{value}</span>
+      </div>
+      <div style={{ display: 'flex', background: C.bgSunk, gap: 1 }}>
+        {[1,2,3,4,5,6,7,8,9,10].map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => onChange(n)}
+            style={{
+              flex: 1, height: 40,
+              background: n === value ? color : 'transparent',
+              color: n === value ? C.bg : C.midLow,
+              border: 'none',
+              fontFamily: 'var(--font-dm-mono)',
+              fontSize: 10,
+              cursor: 'pointer',
+              transition: 'background 80ms',
+            }}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+      <input type="hidden" name={name} value={value} />
+    </div>
+  );
+}

@@ -56,4 +56,28 @@ export default async function EditSessionPage({
       id={id}
       session={{
         session_date:      session.session_date as string,
-        start_time:        (session.start_time as 
+        start_time:        (session.start_time as string) ?? null,
+        duration_minutes:  (session.duration_minutes as number) ?? null,
+        session_type:      (session.session_type as string) ?? null,
+        instructor_name:   (session.instructor_name as string) ?? null,
+        energy_1_10:       (session.energy_1_10 as number) ?? null,
+        intensity_1_10:    (session.intensity_1_10 as number) ?? null,
+        what_clicked:      (reflRows?.what_clicked as string) ?? null,
+        what_didnt:        (reflRows?.what_didnt as string) ?? null,
+        question_for_coach:(reflRows?.question_for_coach as string) ?? null,
+      }}
+      allTags={(allTagRows ?? []).map((t) => ({
+        id:       t.id as string,
+        label:    t.label as string,
+        position: (t.position as string) ?? null,
+      }))}
+      selectedTagIds={(selectedTagRows ?? []).map((r) => r.technique_id as string)}
+      rolls={(rollRows ?? []).map((r) => ({
+        id:            r.id as string,
+        round_number:  (r.round_number as number) ?? null,
+        partner_label: (r.partner_label as string) ?? null,
+        felt:          (r.felt as string) ?? null,
+      }))}
+    />
+  );
+}

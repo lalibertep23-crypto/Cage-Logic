@@ -34,5 +34,10 @@ export async function getBreathworkSessions(athleteId: string) {
   const { count: phase1Count } = await supabase
     .from('breathwork_sessions' as any)
     .select('id', { count: 'exact', head: true })
-    .eq('athlete_id', athleteId)
-    .eq('patt
+    .eq('pattern', 'phase_1');
+
+  return {
+    total: totalCount ?? 0,
+    phase1: phase1Count ?? 0,
+  };
+}

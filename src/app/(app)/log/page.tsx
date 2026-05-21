@@ -73,4 +73,34 @@ export default async function LogPage() {
             <div style={{ width: 3, height: 28, background: '#D4922E', flexShrink: 0 }} />
             <div>
               <div style={{ fontFamily: 'var(--font-anton)', fontSize: 28, letterSpacing: '0.08em', lineHeight: 1, color: '#F5F0E8' }}>LOG SESSION</div>
-              <div style={{ fontFami
+              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em', color: 'rgba(245,240,232,0.5)', marginTop: 4 }}>
+                WHAT DID YOU PUT IN TODAY
+              </div>
+            </div>
+          </div>
+          <Link href="/home" style={{
+            fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em',
+            color: 'rgba(245,240,232,0.3)', textDecoration: 'none',
+          }}>
+            ← HOME
+          </Link>
+        </div>
+      </div>
+
+      {/* Active injury banner */}
+      {activeInjuries.length > 0 && (
+        <div style={{
+          background: 'rgba(139,58,30,0.25)',
+          borderBottom: '1px solid rgba(139,58,30,0.5)',
+          padding: '10px 22px',
+          fontFamily: 'var(--font-dm-mono)', fontSize: 9,
+          letterSpacing: '0.1em', color: '#D4922E',
+        }}>
+          {activeInjuries.length} active injur{activeInjuries.length === 1 ? 'y' : 'ies'} on file — log how it felt today.
+        </div>
+      )}
+
+      <LogForm tags={tags} activeInjuries={activeInjuries} />
+    </main>
+  );
+}

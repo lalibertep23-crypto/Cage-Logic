@@ -216,3 +216,4 @@ export default async function HealthPage() {
       </div>
     </main>
   );
+}

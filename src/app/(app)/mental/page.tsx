@@ -13,10 +13,10 @@ const C = {
   bg:        '#1A1713',
   surface:   '#252118',
   border:    'rgba(245,240,232,0.13)',
-  borderMid: 'rgba(245,240,232,0.35)',
+  borderMid: 'rgba(245,240,232,0.22)',
   text:      '#F5F0E8',
-  dim:       'rgba(245,240,232,0.55)',
-  dimmer:    'rgba(245,240,232,0.35)',
+  dim:       'rgba(245,240,232,0.38)',
+  dimmer:    'rgba(245,240,232,0.22)',
   amber:     '#D4922E',
   amberLow:  'rgba(201,130,42,0.35)',
   green:     '#3D8B55',
@@ -446,4 +446,8 @@ export default async function MentalHubPage() {
               </Link>
             ))}
           </div>
-  
+        </div>
+      )}
+    </main>
+  );
+}

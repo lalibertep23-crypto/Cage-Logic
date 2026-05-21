@@ -337,4 +337,5 @@ export default async function RecoveryPage() {
       </div>
     </main>
   );
-}   
+
+}

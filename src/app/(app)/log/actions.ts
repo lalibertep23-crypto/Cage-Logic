@@ -143,4 +143,76 @@ export async function logSessionAction(
   if (techniqueIds.length > 0) {
     const techRows = techniqueIds.map((tid) => ({
       session_id: sessionId,
-      technique_id: tid
+      technique_id: tid,
+    }));
+    const { error: techErr } = await supabase.from('session_techniques').insert(techRows);
+    if (techErr) {
+      return { error: `Saved session but techniques failed: ${techErr.message}` };
+    }
+  }
+
+  // 2b) Insert custom technique submissions for review (non-blocking)
+  if (customTechniques.length > 0) {
+    await supabase.from('custom_technique_submissions').insert(
+      customTechniques.map((name) => ({ session_id: sessionId, athlete_id: user.id, name }))
+    );
+  }
+
+  // 3) Insert session_reflections
+  if (
+    parsed.data.whatClicked ||
+    parsed.data.whatDidnt ||
+    parsed.data.questionForCoach ||
+    parsed.data.followUpNotes ||
+    parsed.data.skillsExecuted
+  ) {
+    const { error: reflErr } = await supabase.from('session_reflections').insert({
+      session_id: sessionId,
+      athlete_id: user.id,
+      what_clicked:       parsed.data.whatClicked ?? null,
+      what_didnt:         parsed.data.whatDidnt ?? null,
+      question_for_coach: parsed.data.questionForCoach ?? null,
+      follow_up_notes:    parsed.data.followUpNotes ?? null,
+      skills_executed:    parsed.data.skillsExecuted ?? null,
+    });
+    if (reflErr) return { error: `Saved session but reflection failed: ${reflErr.message}` };
+  }
+
+  // 4) Insert roll_logs
+  if (rolls.length > 0) {
+    const rollRows = rolls.map((r, i) => ({
+      session_id: sessionId,
+      athlete_id: user.id,
+      round_number: i + 1,
+      partner_label: r.partner_label,
+      partner_relative_size: r.partner_relative_size,
+      outcome: r.outcome,
+      felt: r.felt,
+    }));
+    const { data: insertedRolls, error: rollErr } = await supabase
+      .from('roll_logs')
+      .insert(rollRows)
+      .select('id');
+    if (rollErr) return { error: `Saved session but rolls failed: ${rollErr.message}` };
+
+    // 5) Insert submission chain steps (non-blocking)
+    if (insertedRolls) {
+      for (let i = 0; i < insertedRolls.length; i++) {
+        const steps = rollChainSteps[i] ?? [];
+        if (!steps.length) continue;
+        await supabase.from('submission_chain_steps').insert(
+          steps.map((s, sIdx) => ({
+            roll_log_id: (insertedRolls[i] as { id: string }).id,
+            session_id: sessionId,
+            step_number: sIdx + 1,
+            position: s.position,
+            technique_custom: s.technique_custom,
+            result: s.result,
+          }))
+        );
+      }
+    }
+  }
+
+  redirect('/home');
+}
