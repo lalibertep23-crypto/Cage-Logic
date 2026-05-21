@@ -123,7 +123,7 @@ const POSITION_LABEL: Record<string, string> = {
 };
 
 const initialState: LogState = {};
-type RollRow = { id: number };
+type RollRow = { id: number; partner: string };
 
 // ── Main form ────────────────────────────────────────────────────────────────
 type ActiveInjury = { id: string; body_region: string; side: string | null };
@@ -513,7 +513,15 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
               </div>
 
               <FlatField label="PARTNER">
-                <input name={`rolls[${idx}].partner`} type="text" maxLength={80} placeholder="e.g. blue belt, bigger" style={flatInputStyle} />
+                <input
+                  name={`rolls[${idx}].partner`}
+                  type="text"
+                  maxLength={80}
+                  placeholder="e.g. blue belt, bigger"
+                  value={r.partner}
+                  onChange={(e) => setRolls((rs) => rs.map((x) => x.id === r.id ? { ...x, partner: e.target.value } : x))}
+                  style={flatInputStyle}
+                />
               </FlatField>
 
               <div>
@@ -583,7 +591,7 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
 
         <button
           type="button"
-          onClick={() => setRolls((rs) => [...rs, { id: Date.now() }])}
+          onClick={() => setRolls((rs) => [...rs, { id: Date.now(), partner: '' }])}
           style={{
             marginTop: 10,
             display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -748,7 +756,6 @@ function TapScale({ label, name, value, onChange, color }: { label: string; name
               flex: 1, height: 40,
               background: n === value ? color : 'transparent',
               color: n === value ? C.bg : C.midLow,
-              border: 'none',
               fontFamily: 'var(--font-dm-mono)',
               fontSize: 10,
               cursor: 'pointer',
