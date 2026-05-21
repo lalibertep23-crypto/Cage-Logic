@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useMemo, useState } from 'react';
+import { useActionState, useEffect, useMemo, useRef, useState } from 'react';
 import { logSessionAction, type LogState } from './actions';
 import { X } from 'lucide-react';
 
@@ -133,11 +133,40 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
   type CustomEntry = { localId: number; name: string };
 
   const [state, formAction, pending] = useActionState(logSessionAction, initialState);
-  const [rolls, setRolls]           = useState<RollRow[]>([]);
-  const [rollChains, setRollChains] = useState<Record<number, ChainStep[]>>({});
+
+  // Draft persistence — keyed by date so yesterday's draft never restores
+  const draftKey = `cl-log-draft-${new Date().toISOString().slice(0, 10)}`;
+  function readDraft<T>(field: string, fallback: T): T {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(draftKey) : null;
+      if (!raw) return fallback;
+      const parsed = JSON.parse(raw);
+      return field in parsed ? parsed[field] : fallback;
+    } catch { return fallback; }
+  }
+
+  const [rolls, setRolls]           = useState<RollRow[]>(() => readDraft('rolls', []));
+  const [rollChains, setRollChains] = useState<Record<number, ChainStep[]>>(() => readDraft('rollChains', {}));
   const [chainOpen, setChainOpen]   = useState<Record<number, boolean>>({});
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [customEntries, setCustomEntries] = useState<CustomEntry[]>([]);
+  const [customEntries, setCustomEntries] = useState<CustomEntry[]>(() => readDraft('customEntries', []));
+
+  // Save draft to localStorage on every relevant state change
+  useEffect(() => {
+    try {
+      localStorage.setItem(draftKey, JSON.stringify({
+        rolls, rollChains, customEntries, sessionType, energy, intensity, sessionTime, selectedIds,
+      }));
+    } catch {}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rolls, rollChains, customEntries, sessionType, energy, intensity, sessionTime, selectedIds]);
+
+  // Clear draft on successful submit
+  useEffect(() => {
+    if (state.ok) {
+      try { localStorage.removeItem(draftKey); } catch {}
+    }
+  }, [state.ok, draftKey]);
 
   function addChainStep(rollId: number) {
     setRollChains(prev => ({
@@ -155,14 +184,14 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
     }));
   }
   const [query, setQuery]           = useState('');
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [sessionType, setSessionType] = useState('gi');
-  const [energy, setEnergy]           = useState(6);
-  const [intensity, setIntensity]     = useState(6);
-  const [sessionTime, setSessionTime] = useState(() => {
+  const [selectedIds, setSelectedIds] = useState<string[]>(() => readDraft('selectedIds', []));
+  const [sessionType, setSessionType] = useState<string>(() => readDraft('sessionType', 'gi'));
+  const [energy, setEnergy]           = useState<number>(() => readDraft('energy', 6));
+  const [intensity, setIntensity]     = useState<number>(() => readDraft('intensity', 6));
+  const [sessionTime, setSessionTime] = useState<string>(() => readDraft('sessionTime', (() => {
     const now = new Date();
     return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-  });
+  })()));
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -576,8 +605,8 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
       {/* ── 04 HOW IT FELT ────────────────────────────────────────────────── */}
       <LogSection number="04" title="HOW IT FELT">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <TapScale label="ENERGY" name="energyLevel" value={energy} onChange={setEnergy} color={C.amber} />
-          <TapScale label="INTENSITY" name="intensityLevel" value={intensity} onChange={setIntensity} color={C.brick} />
+          <TapScale label="ENERGY" name="energy" value={energy} onChange={setEnergy} color={C.amber} />
+          <TapScale label="INTENSITY" name="intensity" value={intensity} onChange={setIntensity} color={C.brick} />
         </div>
       </LogSection>
 

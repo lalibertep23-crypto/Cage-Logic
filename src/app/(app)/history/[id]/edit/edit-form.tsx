@@ -218,17 +218,22 @@ export function EditForm({ id, session, allTags, selectedTagIds, rolls }: Props)
         {rolls.length > 0 && (
           <section style={{ borderTop: `1px solid ${C.line}`, padding: '22px 22px' }}>
             <SectionHeader number="05" title="ROLLS" />
+            <input type="hidden" name="rollCount" value={rolls.length} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {rolls.map((r, i) => (
                 <div key={r.id} style={{ background: C.bgRaised, borderLeft: `2px solid ${C.lineHard}`, padding: '12px 14px' }}>
-                  <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em', color: C.midLow, marginBottom: r.felt ? 6 : 0 }}>
+                  <input type="hidden" name={`rollId[${i}]`} value={r.id} />
+                  <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em', color: C.midLow, marginBottom: 8 }}>
                     ROLL {String(r.round_number ?? i + 1).padStart(2, '0')}{r.partner_label ? ` · ${r.partner_label}` : ''}
                   </div>
-                  {r.felt && (
-                    <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.mid, letterSpacing: '0.04em', lineHeight: 1.6, margin: 0 }}>
-                      {r.felt}
-                    </p>
-                  )}
+                  <textarea
+                    name={`rollFelt[${i}]`}
+                    defaultValue={r.felt ?? ''}
+                    rows={3}
+                    maxLength={2000}
+                    placeholder="How did it feel?"
+                    style={{ ...inputStyle, resize: 'none' }}
+                  />
                 </div>
               ))}
             </div>

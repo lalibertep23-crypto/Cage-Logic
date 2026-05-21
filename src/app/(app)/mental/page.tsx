@@ -166,19 +166,19 @@ function BrsPanel({
       borderBottom: `1px solid ${C.border}`,
       minHeight: 180,
     }}>
-      {/* Background image — anchored right */}
+      {/* Background image — shifted right so brain clears text zone */}
       <div style={{
         position: 'absolute', inset: 0,
         backgroundImage: 'url(/mental-brs_bright.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'right center',
+        backgroundSize: '130%',
+        backgroundPosition: '85% center',
         filter: 'saturate(1.5) contrast(1.1)',
         opacity: 0.7,
       }} />
-      {/* Overlay — solid on text side, clear on image side */}
+      {/* Overlay — opaque on text side, fades earlier to reveal more of image */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(90deg, rgba(15,13,11,0.97) 0%, rgba(15,13,11,0.97) 38%, rgba(15,13,11,0.55) 62%, rgba(15,13,11,0.05) 100%)',
+        background: 'linear-gradient(90deg, rgba(15,13,11,0.97) 0%, rgba(15,13,11,0.97) 30%, rgba(15,13,11,0.55) 55%, rgba(15,13,11,0.05) 100%)',
       }} />
       <div style={{
         position: 'relative', zIndex: 1,

@@ -358,9 +358,7 @@ export function TrainingAudit({
                 {[0,1,2,3,4,5,6,7].map((n) => (
                   <button
                     key={n}
-                    type="submit"
-                    name="weekly_lifting_days"
-                    value={n}
+                    type="button"
                     style={{
                       flex: 1, height: 40,
                       background: weeklyLiftingDays === n ? C.amber : 'transparent',
@@ -369,12 +367,13 @@ export function TrainingAudit({
                       fontFamily: 'var(--font-dm-mono)',
                       fontSize: 11, cursor: 'pointer',
                     }}
-                    formAction={async (fd) => {
+                    onClick={() => {
+                      const fd = new FormData();
                       fd.set('weekly_lifting_days', String(n));
                       fd.set('lifting_intensity', liftingIntensity ?? 'moderate');
-                      await formAction(fd);
+                      formAction(fd);
+                      setEditingProfile(false);
                     }}
-                    onClick={(e) => e.preventDefault()}
                   >
                     {n}
                   </button>
