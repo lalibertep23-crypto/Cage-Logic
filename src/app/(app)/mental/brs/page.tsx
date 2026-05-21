@@ -26,12 +26,12 @@ export default async function BrsPage() {
             <div style={{ fontFamily: 'var(--font-anton)', fontSize: 22, letterSpacing: '0.08em' }}>
               BOUNCE BACK
             </div>
-            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: 'rgba(245,240,232,0.22)', marginTop: 2 }}>
+            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: 'rgba(245,240,232,0.35)', marginTop: 2 }}>
               BRIEF RESILIENCE SCALE
             </div>
           </div>
         </div>
-        <Link href="/mental" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: 'rgba(245,240,232,0.22)', textDecoration: 'none' }}>
+        <Link href="/mental" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: 'rgba(245,240,232,0.35)', textDecoration: 'none' }}>
           ← MENTAL
         </Link>
       </div>

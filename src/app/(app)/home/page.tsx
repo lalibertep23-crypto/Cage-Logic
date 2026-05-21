@@ -25,7 +25,7 @@ const C = {
   midLow:   '#B8B2A8',
   brick:    '#A83030',
   line:     'rgba(245,240,232,0.13)',
-  lineHard: 'rgba(245,240,232,0.22)',
+  lineHard: 'rgba(245,240,232,0.35)',
 };
 
 function getBeltColor(color: string | null): string {

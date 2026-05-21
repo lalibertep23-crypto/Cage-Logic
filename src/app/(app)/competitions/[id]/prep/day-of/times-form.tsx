@@ -4,7 +4,7 @@ import { saveDayOfTimes } from './day-of-actions';
 
 const C = {
   bg: '#1A1713', surface: '#252118', border:  'rgba(245,240,232,0.13)',
-  text: '#F5F0E8', dim: 'rgba(245,240,232,0.55)', dimmer: 'rgba(245,240,232,0.22)',
+  text: '#F5F0E8', dim: 'rgba(245,240,232,0.55)', dimmer: 'rgba(245,240,232,0.35)',
   amber: '#D4922E',
 };
 

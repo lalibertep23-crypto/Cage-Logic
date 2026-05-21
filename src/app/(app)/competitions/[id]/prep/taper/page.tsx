@@ -133,7 +133,7 @@ export default async function TaperPlanPage({
     border:  'rgba(245,240,232,0.13)',
     text:    '#F5F0E8',
     dim:     'rgba(245,240,232,0.55)',
-    dimmer:  'rgba(245,240,232,0.22)',
+    dimmer:  'rgba(245,240,232,0.35)',
     amber:   '#D4922E',
     amberLow:'rgba(201,130,42,0.35)',
     green:   '#3D8B55',

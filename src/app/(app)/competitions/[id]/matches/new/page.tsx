@@ -33,7 +33,7 @@ export default async function NewMatchPage({
     border:  'rgba(245,240,232,0.13)',
     text:    '#F5F0E8',
     dim:     'rgba(245,240,232,0.55)',
-    dimmer:  'rgba(245,240,232,0.22)',
+    dimmer:  'rgba(245,240,232,0.35)',
     amber:   '#D4922E',
   };
 

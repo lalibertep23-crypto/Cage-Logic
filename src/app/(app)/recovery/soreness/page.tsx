@@ -44,7 +44,7 @@ export default async function SorenessPage() {
             SORENESS
           </span>
         </div>
-        <Link href="/recovery" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: 'rgba(245,240,232,0.22)', textDecoration: 'none' }}>
+        <Link href="/recovery" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: 'rgba(245,240,232,0.35)', textDecoration: 'none' }}>
           ← RECOVERY
         </Link>
       </div>
