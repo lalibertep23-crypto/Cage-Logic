@@ -472,4 +472,73 @@ export default async function HomePage() {
           &ldquo;{todayQuote.text}&rdquo;
         </p>
         <span style={{
-          fontFamily: 'var(--font-bebas)', fontSize: 11,
+          fontFamily: 'var(--font-bebas)', fontSize: 13,
+          letterSpacing: '0.2em', color: C.midLow,
+        }}>
+          — {todayQuote.author.toUpperCase()}
+        </span>
+      </div>
+
+      {/* ── Daily check-in CTA (only if not done today) ──────────────────── */}
+      {!didCheckInToday && (
+        <div style={{
+          margin: '0 22px',
+          borderTop: `1px solid ${C.line}`,
+          padding: '16px 0 0',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.mid }}>MENTAL CHECK-IN</span>
+            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.brick, letterSpacing: '0.1em' }}>NOT DONE</span>
+          </div>
+          <Link href="/mental/check-in" style={{ textDecoration: 'none', display: 'block' }}>
+            <div style={{
+              background: C.bgRaised,
+              border: `1px solid ${C.lineHard}`,
+              padding: '14px 18px',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 12, letterSpacing: '0.08em', color: C.text }}>
+                  Today&apos;s prompt
+                </div>
+                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, marginTop: 3, letterSpacing: '0.06em' }}>
+                  2 min · counts toward Mental domain
+                </div>
+              </div>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 12, color: C.amber, letterSpacing: '0.1em' }}>→</span>
+            </div>
+          </Link>
+        </div>
+      )}
+
+      {/* ── Quick nav ────────────────────────────────────────────────────── */}
+      <div style={{
+        borderTop: `1px solid ${C.line}`,
+        margin: '16px 0 0',
+        padding: '14px 22px',
+        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2,
+      }}>
+        {[
+          { label: 'MENTAL',    href: '/mental' },
+          { label: 'RECOVERY',  href: '/recovery' },
+          { label: 'BREATHE',   href: '/breathwork' },
+          { label: 'HISTORY',   href: '/history' },
+        ].map((n) => (
+          <Link key={n.href} href={n.href} style={{ textDecoration: 'none' }}>
+            <div style={{
+              background: C.bgRaised,
+              padding: '10px 6px',
+              textAlign: 'center',
+              border: `1px solid ${C.line}`,
+            }}>
+              <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.16em', color: C.midLow }}>
+                {n.label}
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+    </main>
+  );
+}
