@@ -47,7 +47,7 @@ export default async function HealthPage() {
       .order('log_date', { ascending: false }),
     supabase
       .from('injury_reports')
-      .select('id, body_region, side, stage, injury_date')
+      .select('id, body_region, side, stage, occurred_on')
       .eq('athlete_id', user.id)
       .neq('stage', 'resolved'),
     supabase
