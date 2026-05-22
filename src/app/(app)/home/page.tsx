@@ -9,24 +9,12 @@ import { createClient } from '@/lib/supabase/server';
 import { loadHomeData } from '@/lib/score/loadHomeData';
 import { RAMPING_DAYS } from '@/lib/score/computeInvestmentScore';
 import { getTodayQuote } from '@/lib/daily-quotes';
+import { C } from '@/lib/design-tokens';
 
 export const dynamic = 'force-dynamic';
 
-// ── Palette (mirrors cageside-home.jsx C object) ────────────────────────────
-const C = {
-  bg:       '#1A1713',
-  bgRaised: '#252118',
-  bgSunk:   '#13110E',
-  amber:    '#D4922E',
-  amberLow: '#7A4F1A',
-  green:    '#3D8B55',
-  text:     '#F5F0E8',
-  mid:      '#D8D2C8',
-  midLow:   '#B8B2A8',
-  brick:    '#A83030',
-  line:     'rgba(245,240,232,0.13)',
-  lineHard: 'rgba(245,240,232,0.35)',
-};
+// ── Local aliases for keys that changed names in the new token system ────────
+const green    = '#3D8B55';          // Score-ready indicator — not in global palette
 
 function getBeltColor(color: string | null): string {
   const map: Record<string, string> = {
@@ -110,7 +98,7 @@ export default async function HomePage() {
           <div style={{ width: 3, height: 22, background: C.amber }} />
           <div>
             <div style={{ fontFamily: 'var(--font-anton)', fontSize: 22, letterSpacing: '0.08em' }}>CAGE LOGIC</div>
-            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: C.midLow, marginTop: 2 }}>
+            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: C.dim, marginTop: 2 }}>
               {dateStr}
             </div>
           </div>
@@ -126,8 +114,8 @@ export default async function HomePage() {
           </div>
           <div style={{
             width: 7, height: 7, flexShrink: 0,
-            background: today.loggedToday ? C.green : C.brick,
-            boxShadow: today.loggedToday ? `0 0 8px ${C.green}` : `0 0 8px ${C.brick}`,
+            background: today.loggedToday ? green : C.brick,
+            boxShadow: today.loggedToday ? `0 0 8px ${green}` : `0 0 8px ${C.brick}`,
           }}/>
         </div>
       </div>
@@ -136,7 +124,7 @@ export default async function HomePage() {
       {activeInjuries > 0 && (
         <div style={{
           borderLeft: `2px solid ${C.brick}`,
-          background: `${C.brick}18`,
+          background: C.brickLow,
           padding: '10px 22px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           borderBottom: `1px solid ${C.line}`,
@@ -163,7 +151,7 @@ export default async function HomePage() {
             letterSpacing: '0.2em', color: C.amber,
           }}>INVESTMENT SCORE</span>
           <div style={{ height: 1, width: 40, background: C.amberLow }}/>
-          <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.1em' }}>
+          <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, letterSpacing: '0.1em' }}>
             {score.isRamping ? dayLabel : '30D WINDOW'}
           </span>
         </div>
@@ -181,7 +169,7 @@ export default async function HomePage() {
                 : `Up +${weekly.sessions} this week.`}
             </span>
             {!score.isRamping && (
-              <Link href="/score" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.08em', textDecoration: 'none' }}>
+              <Link href="/score" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.08em', textDecoration: 'none' }}>
                 PEAK — · SEE BREAKDOWN
               </Link>
             )}
@@ -196,7 +184,7 @@ export default async function HomePage() {
                   fontSize: 72, lineHeight: 0.88,
                   color: C.amber, display: 'inline-block',
                   letterSpacing: '-0.02em',
-                  textShadow: `0 1px 0 rgba(0,0,0,0.35), 0 0 24px rgba(201,130,42,0.18)`,
+                  textShadow: `0 1px 0 rgba(0,0,0,0.35), 0 0 24px rgba(255,182,39,0.25)`,
                 }}>
                   RAMP
                 </span>
@@ -210,7 +198,7 @@ export default async function HomePage() {
                 fontSize: 110, lineHeight: 0.85,
                 color: C.amber, display: 'inline-block',
                 letterSpacing: '-0.02em',
-                textShadow: `0 1px 0 rgba(0,0,0,0.35), 0 0 32px rgba(201,130,42,0.15)`,
+                textShadow: `0 1px 0 rgba(0,0,0,0.35), 0 0 32px rgba(255,182,39,0.25)`,
                 filter: 'contrast(1.05)',
               }}>
                 {String(roundedScore).padStart(2, '0')}
@@ -227,17 +215,17 @@ export default async function HomePage() {
                 <div key={t} style={{
                   position: 'absolute', top: 0, left: `${t}%`,
                   width: 1, height: t % 20 === 0 ? 8 : 4,
-                  background: C.midLow,
+                  background: C.dim,
                 }}/>
               ))}
               <div style={{
                 position: 'absolute', top: -1, left: `${roundedScore}%`,
                 transform: 'translateX(-50%)',
-                width: 2, height: 14, background: C.amber,
-                boxShadow: `0 0 6px ${C.amber}`,
+                width: 2, height: 14, background: C.amberGlow,
+                boxShadow: `0 0 6px ${C.amberGlow}`,
               }}/>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.06em' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.06em' }}>
               {[0, 20, 40, 60, 80, 100].map((t) => <span key={t}>{t}</span>)}
             </div>
           </div>
@@ -245,7 +233,7 @@ export default async function HomePage() {
 
         {/* Ramping progress bar */}
         {score.isRamping && (
-          <div style={{ marginTop: 18, height: 4, background: C.bgSunk, position: 'relative', overflow: 'hidden' }}>
+          <div style={{ marginTop: 18, height: 4, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
             <div style={{
               position: 'absolute', inset: 0,
               width: `${((daysSinceSignup + 1) / RAMPING_DAYS) * 100}%`,
@@ -272,7 +260,7 @@ export default async function HomePage() {
                 <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 13, letterSpacing: '0.1em', color: C.mid, width: 90, flexShrink: 0 }}>
                   {d.label}
                 </span>
-                <div style={{ flex: 1, height: 6, background: C.bgSunk, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ flex: 1, height: 6, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
                   <div style={{
                     position: 'absolute', inset: 0, width: `${v}%`,
                     background: v > 50 ? C.amberLow : C.brick,
@@ -295,35 +283,35 @@ export default async function HomePage() {
       <div style={{
         borderTop: `1px solid ${C.line}`, borderBottom: `1px solid ${C.line}`,
         padding: '14px 22px',
-        background: `linear-gradient(90deg, ${C.bgRaised} 0%, transparent 70%)`,
+        background: `linear-gradient(90deg, ${C.raised} 0%, transparent 70%)`,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.midLow }}>TODAY</span>
+          <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.dim }}>TODAY</span>
           <span style={{ fontFamily: 'var(--font-anton)', fontSize: 26, letterSpacing: '0.04em', color: today.loggedToday ? C.text : C.mid }}>
             {today.loggedToday ? 'LOGGED' : 'NOT YET'}
           </span>
           {today.loggedToday && today.sessionType && (
-            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.08em' }}>
+            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, letterSpacing: '0.08em' }}>
               · {today.sessionType.replace('_', ' ')}
               {today.durationMinutes ? ` · ${today.durationMinutes}MIN` : ''}
             </span>
           )}
         </div>
-        <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.08em' }}>—</span>
+        <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, letterSpacing: '0.08em' }}>—</span>
       </div>
 
       {/* ── PUNCH IN — moved up, right after TODAY ───────────────────────── */}
       <div style={{ padding: '12px 22px 0' }}>
         <Link href="/log" style={{ textDecoration: 'none', display: 'block' }}>
           <div style={{
-            background: today.loggedToday ? C.bgRaised : C.amber,
-            color: today.loggedToday ? C.midLow : C.bg,
+            background: today.loggedToday ? C.raised : C.amber,
+            color: today.loggedToday ? C.dim : C.bg,
             padding: '18px 24px',
             position: 'relative',
             cursor: today.loggedToday ? 'default' : 'pointer',
             border: today.loggedToday ? `1px solid ${C.lineHard}` : '1px solid transparent',
-            boxShadow: today.loggedToday ? 'none' : `inset 0 0 0 1px rgba(0,0,0,0.2), 0 4px 16px rgba(212,146,46,0.18)`,
+            boxShadow: today.loggedToday ? 'none' : `inset 0 0 0 1px rgba(0,0,0,0.2), 0 4px 20px rgba(255,182,39,0.20)`,
             transition: 'background 120ms',
           }}>
             {!today.loggedToday && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'rgba(0,0,0,0.15)' }}/>}
@@ -349,7 +337,7 @@ export default async function HomePage() {
       <div style={{ padding: '14px 22px 6px' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14 }}>
           <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.mid }}>THIS WEEK</span>
-          <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.1em' }}>
+          <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, letterSpacing: '0.1em' }}>
             {format(new Date(), 'MMM d').toUpperCase()} · 7 DAYS
           </span>
         </div>
@@ -389,11 +377,11 @@ export default async function HomePage() {
         margin: '12px 22px 0',
         padding: '10px 14px',
         borderLeft: `2px solid ${C.brick}`,
-        background: C.bgRaised,
+        background: C.raised,
         display: 'flex', alignItems: 'center', gap: 12,
       }}>
         <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.brick, letterSpacing: '0.16em', flexShrink: 0 }}>NOTE</span>
-        <div style={{ width: 1, height: 14, background: C.midLow, flexShrink: 0 }}/>
+        <div style={{ width: 1, height: 14, background: C.dim, flexShrink: 0 }}/>
         <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, color: C.text, lineHeight: 1.55, letterSpacing: '0.04em' }}>
           {nudge}
         </span>
@@ -407,14 +395,14 @@ export default async function HomePage() {
             <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.mid }}>STRIPE TRACK</span>
             {/* Visual belt with stripes */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.midLow, letterSpacing: '0.1em' }}>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.1em' }}>
                 {String(primaryDiscipline.rank_color ?? 'WHITE').toUpperCase()} BELT
               </span>
               <div style={{
                 width: 56, height: 10,
                 background: getBeltColor(primaryDiscipline.rank_color as string | null),
                 position: 'relative',
-                border: '1px solid rgba(245,240,232,0.25)',
+                border: `1px solid ${C.lineHard}`,
                 flexShrink: 0,
               }}>
                 {Array.from({ length: primaryDiscipline.stripes ?? 0 }, (_, i) => (
@@ -433,9 +421,9 @@ export default async function HomePage() {
           <div style={{ marginBottom: 10 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
               <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.mid, letterSpacing: '0.08em' }}>TIME IN</span>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.06em' }}>{daysInCurrentPhase} / {STRIPE_THRESHOLD}d</span>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, letterSpacing: '0.06em' }}>{daysInCurrentPhase} / {STRIPE_THRESHOLD}d</span>
             </div>
-            <div style={{ height: 6, background: C.bgSunk, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ height: 6, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', inset: 0, width: `${stripeTimeProgress}%`, background: stripeTimeReady ? C.amber : C.amberLow }}/>
             </div>
           </div>
@@ -443,19 +431,19 @@ export default async function HomePage() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
               <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.mid, letterSpacing: '0.08em' }}>INVESTMENT</span>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: scoreReady ? C.green : C.midLow, letterSpacing: '0.06em' }}>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: scoreReady ? green : C.dim, letterSpacing: '0.06em' }}>
                 {score.isRamping ? 'CALIBRATING' : `${roundedScore} / 65 ${scoreReady ? '✓' : ''}`}
               </span>
             </div>
-            <div style={{ height: 6, background: C.bgSunk, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ height: 6, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
               <div style={{
                 position: 'absolute', inset: 0,
                 width: score.isRamping ? '4%' : `${Math.min(100, Math.max(0, (roundedScore / 65) * 100))}%`,
-                background: scoreReady ? C.green : C.amberLow,
+                background: scoreReady ? green : C.amberLow,
               }}/>
             </div>
           </div>
-          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.06em', marginTop: 10 }}>
+          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, letterSpacing: '0.06em', marginTop: 10 }}>
             {stripeTimeReady && scoreReady ? 'Both tracks solid. Talk to your coach.' : 'Keep building. Your coach watches both.'}
           </p>
         </div>
@@ -473,7 +461,7 @@ export default async function HomePage() {
         </p>
         <span style={{
           fontFamily: 'var(--font-bebas)', fontSize: 13,
-          letterSpacing: '0.2em', color: C.midLow,
+          letterSpacing: '0.2em', color: C.dim,
         }}>
           — {todayQuote.author.toUpperCase()}
         </span>
@@ -492,7 +480,7 @@ export default async function HomePage() {
           </div>
           <Link href="/mental/check-in" style={{ textDecoration: 'none', display: 'block' }}>
             <div style={{
-              background: C.bgRaised,
+              background: C.raised,
               border: `1px solid ${C.lineHard}`,
               padding: '14px 18px',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -501,7 +489,7 @@ export default async function HomePage() {
                 <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 12, letterSpacing: '0.08em', color: C.text }}>
                   Today&apos;s prompt
                 </div>
-                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, marginTop: 3, letterSpacing: '0.06em' }}>
+                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, marginTop: 3, letterSpacing: '0.06em' }}>
                   2 min · counts toward Mental domain
                 </div>
               </div>
@@ -526,12 +514,12 @@ export default async function HomePage() {
         ].map((n) => (
           <Link key={n.href} href={n.href} style={{ textDecoration: 'none' }}>
             <div style={{
-              background: C.bgRaised,
+              background: C.raised,
               padding: '10px 6px',
               textAlign: 'center',
               border: `1px solid ${C.line}`,
             }}>
-              <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.16em', color: C.midLow }}>
+              <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.16em', color: C.dim }}>
                 {n.label}
               </span>
             </div>

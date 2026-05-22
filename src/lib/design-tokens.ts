@@ -115,9 +115,9 @@ export const images = {
 
   // Mental
   mentalLoss:  '/mental-loss.jpg',
-  mentalBRS:   '/mental-brs_bright.jpg',
-  mentalDaily: '/mental-daily_bright.jpg',
-  mentalBreath: '/mental-breath_bright.jpg',
+  mentalBRS:   '/mental-brs_bright.png',
+  mentalDaily: '/mental-daily_bright.png',
+  mentalBreath: '/mental-breath_bright.png',
 
   // Log
   logSession:  '/log-session_bright.jpg',
