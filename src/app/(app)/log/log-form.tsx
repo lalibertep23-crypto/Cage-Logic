@@ -146,6 +146,10 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
   }
 
   const [rolls, setRolls]           = useState<RollRow[]>(() => readDraft('rolls', []));
+  // Separate state for partner name inputs — prevents full-form re-render + localStorage
+  // write on every keystroke, which dismisses the iOS keyboard mid-type.
+  // Syncs back into rolls on blur only.
+  const [partnerNames, setPartnerNames] = useState<Record<number, string>>({});
   const [rollChains, setRollChains] = useState<Record<number, ChainStep[]>>(() => readDraft('rollChains', {}));
   const [chainOpen, setChainOpen]   = useState<Record<number, boolean>>({});
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -505,7 +509,10 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
                 </span>
                 <button
                   type="button"
-                  onClick={() => setRolls((rs) => rs.filter((x) => x.id !== r.id))}
+                  onClick={() => {
+                    setRolls((rs) => rs.filter((x) => x.id !== r.id));
+                    setPartnerNames((prev) => { const next = { ...prev }; delete next[r.id]; return next; });
+                  }}
                   style={{ background: 'none', border: 'none', color: C.brick, fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', cursor: 'pointer' }}
                 >
                   REMOVE
@@ -518,8 +525,9 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
                   type="text"
                   maxLength={80}
                   placeholder="e.g. blue belt, bigger"
-                  value={r.partner}
-                  onChange={(e) => setRolls((rs) => rs.map((x) => x.id === r.id ? { ...x, partner: e.target.value } : x))}
+                  value={partnerNames[r.id] ?? r.partner}
+                  onChange={(e) => setPartnerNames((prev) => ({ ...prev, [r.id]: e.target.value }))}
+                  onBlur={(e) => setRolls((rs) => rs.map((x) => x.id === r.id ? { ...x, partner: e.target.value } : x))}
                   style={flatInputStyle}
                 />
               </FlatField>

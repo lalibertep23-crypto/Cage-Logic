@@ -196,7 +196,7 @@ export default async function RecoveryPage() {
         }}>
           <div style={{
             position: 'absolute', inset: 0,
-            backgroundImage: 'url(/recovery-today.jpg)',
+            backgroundImage: 'url(/recovery.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'right center',
             filter: 'saturate(1.5) contrast(1.1)',
