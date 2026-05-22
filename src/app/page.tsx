@@ -39,7 +39,7 @@ export default async function WelcomePage() {
           position: 'absolute', inset: 0, zIndex: 0,
           backgroundImage: `url('/hero-mobile-bg.png')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center 70%',
+          backgroundPosition: 'center 82%',
           filter: 'saturate(1.1) contrast(1.05) brightness(0.9)',
         }}/>
 
@@ -119,7 +119,7 @@ export default async function WelcomePage() {
           </div>
 
           {/* ── Wordmark — centered, matches reference ──────────────────── */}
-          <div style={{ marginTop: 32, textAlign: 'center' }}>
+          <div style={{ marginTop: 64, textAlign: 'center' }}>
             {/* CAGE — amber */}
             <div style={{
               fontFamily: 'var(--font-anton)',
