@@ -1,7 +1,7 @@
 // Landing screen — Cage Logic
-// Full-bleed hero. Code wordmark over clean background image.
-// Responsive: mobile portrait → tablet landscape at 768px.
-// New design tokens. No motivational copy.
+// Phone frame (430px) — matches (app) layout behavior on desktop.
+// position:absolute backgrounds stay inside the frame.
+// Big dominant wordmark. Amber glow CTA.
 
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
@@ -13,86 +13,69 @@ export default async function WelcomePage() {
   const isSignedIn = !!user;
 
   return (
-    <>
-      <style>{`
-        .hero-bg {
-          background-image: url('/hero-mobile-bg.png');
-          background-size: cover;
-          background-position: center center;
-        }
-        @media (min-width: 768px) {
-          .hero-bg {
-            background-image: url('/hero-tablet-bg.png');
-            background-position: center 55%;
-          }
-          .wordmark-wrap {
-            transform: none;
-            margin-top: 32px;
-          }
-          .wordmark-cage {
-            font-size: clamp(80px, 10vw, 120px) !important;
-          }
-          .wordmark-logic {
-            font-size: clamp(80px, 10vw, 120px) !important;
-          }
-          .cta-wrap {
-            max-width: 440px;
-          }
-          .tagline {
-            margin-top: 16px !important;
-          }
-        }
-      `}</style>
-
-      <main style={{
-        minHeight: '100vh',
-        background: C.bg,
-        color: C.text,
+    // Outer — fills viewport, centers the phone frame
+    <div style={{
+      minHeight: '100vh',
+      background: C.bg,
+      display: 'flex',
+      alignItems: 'flex-start',
+      justifyContent: 'center',
+    }}>
+      {/* Phone frame — 430px, self-contained */}
+      <div style={{
         position: 'relative',
+        width: '100%',
+        maxWidth: 430,
+        minHeight: '100vh',
         overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
+        background: C.bg,
+        borderLeft:  `1px solid rgba(200,148,58,0.2)`,
+        borderRight: `1px solid rgba(200,148,58,0.2)`,
+        boxShadow: '-8px 0 40px rgba(0,0,0,0.6), 8px 0 40px rgba(0,0,0,0.6)',
       }}>
 
-        {/* ── Hero background ────────────────────────────────────────────── */}
-        <div className="hero-bg" style={{
-          position: 'fixed', inset: 0, zIndex: 0,
-          filter: 'saturate(1.1) contrast(1.05) brightness(0.95)',
+        {/* ── Hero background — absolute, stays in frame ──────────────── */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0,
+          backgroundImage: `url('/hero-mobile-bg.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          filter: 'saturate(1.1) contrast(1.05) brightness(0.9)',
         }}/>
 
-        {/* ── Top vignette — header legibility ──────────────────────────── */}
+        {/* ── Top vignette — header legibility ────────────────────────── */}
         <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, height: 160, zIndex: 1,
-          background: `linear-gradient(to bottom, rgba(5,5,5,0.92) 0%, rgba(5,5,5,0.55) 55%, transparent 100%)`,
+          position: 'absolute', top: 0, left: 0, right: 0, height: 200, zIndex: 1,
+          background: `linear-gradient(to bottom, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.6) 60%, transparent 100%)`,
           pointerEvents: 'none',
         }}/>
 
-        {/* ── Bottom vignette — CTA legibility ──────────────────────────── */}
+        {/* ── Bottom vignette — CTA legibility ────────────────────────── */}
         <div style={{
-          position: 'fixed', bottom: 0, left: 0, right: 0, height: 300, zIndex: 1,
-          background: `linear-gradient(to top, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.85) 40%, rgba(5,5,5,0.4) 70%, transparent 100%)`,
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: 320, zIndex: 1,
+          background: `linear-gradient(to top, rgba(5,5,5,1) 0%, rgba(5,5,5,0.9) 35%, rgba(5,5,5,0.5) 65%, transparent 100%)`,
           pointerEvents: 'none',
         }}/>
 
-        {/* ── Amber paint streak — top edge ─────────────────────────────── */}
+        {/* ── Amber paint streak — top edge ───────────────────────────── */}
         <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, height: 2, zIndex: 10,
+          position: 'absolute', top: 0, left: 0, right: 0, height: 2, zIndex: 10,
           background: `linear-gradient(90deg,
             transparent 0%,
             ${C.amber} 8%,
-            ${C.amberLow} 18%,
-            transparent 26%,
-            ${C.amber} 44%,
-            ${C.amberGlow} 52%,
-            transparent 62%,
-            ${C.amber} 80%,
-            transparent 92%
+            ${C.amberLow} 20%,
+            transparent 28%,
+            ${C.amber} 46%,
+            ${C.amberGlow} 54%,
+            transparent 64%,
+            ${C.amber} 82%,
+            transparent 95%
           )`,
-          opacity: 0.85,
+          opacity: 0.9,
           pointerEvents: 'none',
         }}/>
 
-        {/* ── Content ───────────────────────────────────────────────────── */}
+        {/* ── Content layer ────────────────────────────────────────────── */}
         <div style={{
           position: 'relative', zIndex: 2,
           display: 'flex', flexDirection: 'column',
@@ -103,7 +86,7 @@ export default async function WelcomePage() {
           {/* Top bar */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            paddingTop: 22,
+            paddingTop: 24,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div style={{ width: 3, height: 16, background: C.amber }}/>
@@ -135,53 +118,53 @@ export default async function WelcomePage() {
             )}
           </div>
 
-          {/* ── Wordmark ──────────────────────────────────────────────────── */}
-          <div className="wordmark-wrap" style={{
-            marginTop: 32,
+          {/* ── Wordmark — big, dominant, stamped ───────────────────────── */}
+          <div style={{
+            marginTop: 36,
             transform: 'rotate(-2deg)',
             transformOrigin: 'left center',
           }}>
-            {/* CAGE — amber, stamped */}
-            <div className="wordmark-cage" style={{
+            {/* CAGE — amber */}
+            <div style={{
               fontFamily: 'var(--font-anton)',
-              fontSize: 'clamp(72px, 21vw, 92px)',
+              fontSize: 118,
               lineHeight: 0.85,
-              letterSpacing: '0.02em',
+              letterSpacing: '0.01em',
               color: C.amber,
-              WebkitTextStroke: `4px ${C.bg}`,
+              WebkitTextStroke: `5px ${C.bg}`,
               paintOrder: 'stroke fill',
               textShadow: `
-                2px 2px 0 #000,
-                4px 4px 0 #000,
-                7px 7px 0 rgba(0,0,0,0.65),
-                0 0 48px rgba(255,182,39,0.35)
+                3px 3px 0 #000,
+                6px 6px 0 #000,
+                9px 9px 0 rgba(0,0,0,0.7),
+                0 0 60px rgba(255,182,39,0.4)
               `,
             }}>CAGE</div>
 
-            {/* LOGIC — off-white, same stamp */}
-            <div className="wordmark-logic" style={{
+            {/* LOGIC — off-white */}
+            <div style={{
               fontFamily: 'var(--font-anton)',
-              fontSize: 'clamp(72px, 21vw, 92px)',
+              fontSize: 118,
               lineHeight: 0.85,
-              letterSpacing: '0.02em',
+              letterSpacing: '0.01em',
               color: C.text,
-              WebkitTextStroke: `4px ${C.bg}`,
+              WebkitTextStroke: `5px ${C.bg}`,
               paintOrder: 'stroke fill',
-              marginLeft: 'clamp(12px, 3.5vw, 22px)',
+              marginLeft: 18,
               textShadow: `
-                2px 2px 0 rgba(200,148,58,0.5),
-                4px 4px 0 #000,
-                7px 7px 0 rgba(0,0,0,0.65)
+                3px 3px 0 rgba(200,148,58,0.6),
+                6px 6px 0 #000,
+                9px 9px 0 rgba(0,0,0,0.7)
               `,
             }}>LOGIC</div>
           </div>
 
           {/* Tagline */}
-          <div className="tagline" style={{ marginTop: 10, paddingLeft: 4 }}>
+          <div style={{ marginTop: 14, paddingLeft: 4 }}>
             <div style={{
               fontFamily: 'var(--font-dm-mono)', fontSize: 10,
               letterSpacing: '0.3em',
-              color: `rgba(200,148,58,0.7)`,
+              color: `rgba(200,148,58,0.65)`,
             }}>
               TRACK. SCORE. IMPROVE.
             </div>
@@ -190,16 +173,16 @@ export default async function WelcomePage() {
           {/* Push CTAs to bottom */}
           <div style={{ flex: 1 }}/>
 
-          {/* ── CTAs ──────────────────────────────────────────────────────── */}
-          <div className="cta-wrap" style={{
-            paddingBottom: 62,
+          {/* ── CTAs ────────────────────────────────────────────────────── */}
+          <div style={{
+            paddingBottom: 64,
             display: 'flex', flexDirection: 'column', gap: 10,
           }}>
 
             {/* Primary */}
             <Link href={isSignedIn ? '/home' : '/signup'} style={{ textDecoration: 'none', display: 'block' }}>
               <div style={{
-                background: 'rgba(5,5,5,0.72)',
+                background: 'rgba(5,5,5,0.75)',
                 border: `1px solid ${C.amber}`,
                 color: C.text,
                 padding: '20px 24px',
@@ -212,16 +195,15 @@ export default async function WelcomePage() {
                 `,
                 position: 'relative', overflow: 'hidden',
               }}>
-                {/* Top edge glow line */}
+                {/* LED top edge */}
                 <div style={{
                   position: 'absolute', top: 0, left: 0, right: 0, height: 1,
                   background: `linear-gradient(90deg,
                     transparent 0%,
                     ${C.amberGlow} 30%,
-                    ${C.amber} 60%,
+                    ${C.amber} 65%,
                     transparent 100%
                   )`,
-                  opacity: 0.9,
                 }}/>
                 <div>
                   <div style={{
@@ -239,15 +221,15 @@ export default async function WelcomePage() {
                   </div>
                 </div>
                 <div style={{
-                  fontFamily: 'var(--font-anton)', fontSize: 30,
+                  fontFamily: 'var(--font-anton)', fontSize: 32,
                   color: C.amberGlow,
-                  textShadow: `0 0 14px rgba(255,182,39,0.7)`,
+                  textShadow: `0 0 16px rgba(255,182,39,0.7)`,
                   flexShrink: 0,
                 }}>→</div>
               </div>
             </Link>
 
-            {/* Secondary — sign in only for new users */}
+            {/* Secondary */}
             {!isSignedIn && (
               <Link href="/login" style={{ textDecoration: 'none', display: 'block' }}>
                 <div style={{
@@ -259,7 +241,6 @@ export default async function WelcomePage() {
                   fontSize: 10,
                   letterSpacing: '0.22em',
                   textAlign: 'center',
-                  backdropFilter: 'blur(4px)',
                 }}>
                   ALREADY TRAINING · SIGN IN
                 </div>
@@ -268,7 +249,7 @@ export default async function WelcomePage() {
 
           </div>
         </div>
-      </main>
-    </>
+      </div>
+    </div>
   );
 }
