@@ -118,33 +118,33 @@ export default async function WelcomePage() {
             )}
           </div>
 
-          {/* ── Wordmark — straight, dominant, stamped ──────────────────── */}
+          {/* ── Wordmark ────────────────────────────────────────────────── */}
           <div style={{ marginTop: 32 }}>
             {/* CAGE — amber */}
             <div style={{
               fontFamily: 'var(--font-anton)',
-              fontSize: 124,
+              fontSize: 96,
               lineHeight: 0.88,
               letterSpacing: '0.01em',
               color: C.amber,
-              WebkitTextStroke: `5px ${C.bg}`,
+              WebkitTextStroke: `4px ${C.bg}`,
               paintOrder: 'stroke fill',
               textShadow: `
                 3px 3px 0 #000,
                 6px 6px 0 #000,
                 9px 9px 0 rgba(0,0,0,0.7),
-                0 0 60px rgba(255,182,39,0.4)
+                0 0 50px rgba(255,182,39,0.35)
               `,
             }}>CAGE</div>
 
             {/* LOGIC — off-white */}
             <div style={{
               fontFamily: 'var(--font-anton)',
-              fontSize: 124,
+              fontSize: 96,
               lineHeight: 0.88,
               letterSpacing: '0.01em',
               color: C.text,
-              WebkitTextStroke: `5px ${C.bg}`,
+              WebkitTextStroke: `4px ${C.bg}`,
               paintOrder: 'stroke fill',
               textShadow: `
                 3px 3px 0 rgba(200,148,58,0.6),
@@ -152,6 +152,16 @@ export default async function WelcomePage() {
                 9px 9px 0 rgba(0,0,0,0.7)
               `,
             }}>LOGIC</div>
+          </div>
+
+          {/* Tagline — between wordmark and brain, matches reference */}
+          <div style={{ marginTop: 10, paddingLeft: 2 }}>
+            <div style={{
+              fontFamily: 'var(--font-dm-mono)', fontSize: 10,
+              letterSpacing: '0.28em', color: C.mid,
+            }}>
+              TRACK. SCORE. IMPROVE.
+            </div>
           </div>
 
           {/* Push CTAs to bottom */}
@@ -162,14 +172,6 @@ export default async function WelcomePage() {
             paddingBottom: 64,
             display: 'flex', flexDirection: 'column', gap: 10,
           }}>
-            {/* Tagline — sits above CTA, not over the brain */}
-            <div style={{
-              fontFamily: 'var(--font-dm-mono)', fontSize: 9,
-              letterSpacing: '0.28em', color: C.dim,
-              textAlign: 'center', marginBottom: 4,
-            }}>
-              TRACK. SCORE. IMPROVE.
-            </div>
 
             {/* Primary */}
             <Link href={isSignedIn ? '/home' : '/signup'} style={{ textDecoration: 'none', display: 'block' }}>
