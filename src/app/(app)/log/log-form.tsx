@@ -136,41 +136,20 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
 
   // Draft persistence — keyed by date so yesterday's draft never restores
   const draftKey = `cl-log-draft-${new Date().toISOString().slice(0, 10)}`;
-  function readDraft<T>(field: string, fallback: T): T {
-    try {
-      const raw = typeof window !== 'undefined' ? localStorage.getItem(draftKey) : null;
-      if (!raw) return fallback;
-      const parsed = JSON.parse(raw);
-      return field in parsed ? parsed[field] : fallback;
-    } catch { return fallback; }
-  }
 
-  const [rolls, setRolls]           = useState<RollRow[]>(() => readDraft('rolls', []));
+  // ── State — all initialised with safe SSR defaults (no localStorage reads here).
+  // Reading localStorage in useState initialisers causes React 19 hydration mismatches
+  // because the server renders with undefined-window fallbacks but the client sees real
+  // localStorage data. Draft restoration happens in a useEffect below (client-only).
+  const [rolls, setRolls]           = useState<RollRow[]>([]);
   // Separate state for partner name inputs — prevents full-form re-render + localStorage
   // write on every keystroke, which dismisses the iOS keyboard mid-type.
   // Syncs back into rolls on blur only.
   const [partnerNames, setPartnerNames] = useState<Record<number, string>>({});
-  const [rollChains, setRollChains] = useState<Record<number, ChainStep[]>>(() => readDraft('rollChains', {}));
+  const [rollChains, setRollChains] = useState<Record<number, ChainStep[]>>({});
   const [chainOpen, setChainOpen]   = useState<Record<number, boolean>>({});
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [customEntries, setCustomEntries] = useState<CustomEntry[]>(() => readDraft('customEntries', []));
-
-  // Save draft to localStorage on every relevant state change
-  useEffect(() => {
-    try {
-      localStorage.setItem(draftKey, JSON.stringify({
-        rolls, rollChains, customEntries, sessionType, energy, intensity, sessionTime, selectedIds,
-      }));
-    } catch {}
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rolls, rollChains, customEntries, sessionType, energy, intensity, sessionTime, selectedIds]);
-
-  // Clear draft on successful submit
-  useEffect(() => {
-    if (state.ok) {
-      try { localStorage.removeItem(draftKey); } catch {}
-    }
-  }, [state.ok, draftKey]);
+  const [customEntries, setCustomEntries] = useState<CustomEntry[]>([]);
 
   function addChainStep(rollId: number) {
     setRollChains(prev => ({
@@ -188,14 +167,53 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
     }));
   }
   const [query, setQuery]           = useState('');
-  const [selectedIds, setSelectedIds] = useState<string[]>(() => readDraft('selectedIds', []));
-  const [sessionType, setSessionType] = useState<string>(() => readDraft('sessionType', 'gi'));
-  const [energy, setEnergy]           = useState<number>(() => readDraft('energy', 6));
-  const [intensity, setIntensity]     = useState<number>(() => readDraft('intensity', 6));
-  const [sessionTime, setSessionTime] = useState<string>(() => readDraft('sessionTime', (() => {
-    const now = new Date();
-    return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-  })()));
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [sessionType, setSessionType] = useState<string>('gi');
+  const [energy, setEnergy]           = useState<number>(6);
+  const [intensity, setIntensity]     = useState<number>(6);
+  // Empty string on server; set to current time + draft restore in useEffect below
+  const [sessionTime, setSessionTime] = useState<string>('');
+
+  // Restore draft from localStorage after hydration (client-only, runs once)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(draftKey);
+      const now = new Date();
+      const defaultTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      if (!raw) { setSessionTime(defaultTime); return; }
+      const p = JSON.parse(raw);
+      if (Array.isArray(p.rolls))         setRolls(p.rolls);
+      if (p.rollChains)                   setRollChains(p.rollChains);
+      if (Array.isArray(p.customEntries)) setCustomEntries(p.customEntries);
+      if (Array.isArray(p.selectedIds))   setSelectedIds(p.selectedIds);
+      if (p.sessionType)                  setSessionType(p.sessionType);
+      if (typeof p.energy === 'number')   setEnergy(p.energy);
+      if (typeof p.intensity === 'number') setIntensity(p.intensity);
+      setSessionTime(p.sessionTime ?? defaultTime);
+    } catch {
+      const now = new Date();
+      setSessionTime(`${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Save draft to localStorage on every relevant state change
+  useEffect(() => {
+    if (!sessionTime) return; // skip the server-render pass before hydration
+    try {
+      localStorage.setItem(draftKey, JSON.stringify({
+        rolls, rollChains, customEntries, sessionType, energy, intensity, sessionTime, selectedIds,
+      }));
+    } catch {}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rolls, rollChains, customEntries, sessionType, energy, intensity, sessionTime, selectedIds]);
+
+  // Clear draft on successful submit
+  useEffect(() => {
+    if (state.ok) {
+      try { localStorage.removeItem(draftKey); } catch {}
+    }
+  }, [state.ok, draftKey]);
 
   const today = new Date().toISOString().slice(0, 10);
 
