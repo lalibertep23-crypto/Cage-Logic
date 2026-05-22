@@ -39,7 +39,7 @@ export default async function WelcomePage() {
           position: 'absolute', inset: 0, zIndex: 0,
           backgroundImage: `url('/hero-mobile-bg.png')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center top',
+          backgroundPosition: 'center 18%',
           filter: 'saturate(1.1) contrast(1.05) brightness(0.9)',
         }}/>
 
@@ -156,8 +156,8 @@ export default async function WelcomePage() {
             {/* Tagline — centered under wordmark, clear of cage */}
             <div style={{
               marginTop: 12,
-              fontFamily: 'var(--font-dm-mono)', fontSize: 10,
-              letterSpacing: '0.28em', color: C.mid,
+              fontFamily: 'var(--font-dm-mono)', fontSize: 12,
+              letterSpacing: '0.28em', color: C.text,
             }}>
               TRACK. SCORE. IMPROVE.
             </div>
@@ -168,7 +168,7 @@ export default async function WelcomePage() {
 
           {/* ── CTAs ────────────────────────────────────────────────────── */}
           <div style={{
-            paddingBottom: 64,
+            paddingBottom: 40,
             display: 'flex', flexDirection: 'column', gap: 10,
           }}>
 
