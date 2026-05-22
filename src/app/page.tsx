@@ -39,7 +39,7 @@ export default async function WelcomePage() {
           position: 'absolute', inset: 0, zIndex: 0,
           backgroundImage: `url('/hero-mobile-bg.png')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center center',
+          backgroundPosition: 'center 70%',
           filter: 'saturate(1.1) contrast(1.05) brightness(0.9)',
         }}/>
 
@@ -118,12 +118,12 @@ export default async function WelcomePage() {
             )}
           </div>
 
-          {/* ── Wordmark ────────────────────────────────────────────────── */}
-          <div style={{ marginTop: 32 }}>
+          {/* ── Wordmark — centered, matches reference ──────────────────── */}
+          <div style={{ marginTop: 32, textAlign: 'center' }}>
             {/* CAGE — amber */}
             <div style={{
               fontFamily: 'var(--font-anton)',
-              fontSize: 96,
+              fontSize: 88,
               lineHeight: 0.88,
               letterSpacing: '0.01em',
               color: C.amber,
@@ -140,7 +140,7 @@ export default async function WelcomePage() {
             {/* LOGIC — off-white */}
             <div style={{
               fontFamily: 'var(--font-anton)',
-              fontSize: 96,
+              fontSize: 88,
               lineHeight: 0.88,
               letterSpacing: '0.01em',
               color: C.text,
@@ -152,11 +152,10 @@ export default async function WelcomePage() {
                 9px 9px 0 rgba(0,0,0,0.7)
               `,
             }}>LOGIC</div>
-          </div>
 
-          {/* Tagline — between wordmark and brain, matches reference */}
-          <div style={{ marginTop: 10, paddingLeft: 2 }}>
+            {/* Tagline — centered under wordmark, clear of cage */}
             <div style={{
+              marginTop: 12,
               fontFamily: 'var(--font-dm-mono)', fontSize: 10,
               letterSpacing: '0.28em', color: C.mid,
             }}>
