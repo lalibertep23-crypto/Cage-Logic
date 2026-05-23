@@ -24,7 +24,7 @@ export default function DemoProfilePage() {
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
             objectFit: 'cover', objectPosition: 'center 8%',
-            filter: 'brightness(0.60) contrast(1.08) saturate(0.85)',
+            filter: 'brightness(0.72) contrast(1.12) saturate(0.92)',
           }}
         />
 
@@ -106,51 +106,154 @@ export default function DemoProfilePage() {
         </div>
       </div>
 
+      {/* ── Role Chips ───────────────────────────────────────────────────── */}
+      <div style={{
+        padding: '10px 20px', borderBottom: `1px solid ${C.line}`,
+        display: 'flex', gap: 8, alignItems: 'center',
+      }}>
+        {['RETIRED ATHLETE', 'COACH'].map(role => (
+          <span key={role} style={{
+            fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.20em',
+            color: C.amber,
+            border: `1px solid rgba(200,148,58,0.35)`,
+            padding: '4px 10px',
+            background: 'rgba(200,148,58,0.06)',
+          }}>
+            {role}
+          </span>
+        ))}
+      </div>
+
       {/* ── Identity Strip ──────────────────────────────────────────────── */}
       <div style={{ padding: '18px 20px', borderBottom: `1px solid ${C.line}`, background: C.surface }}>
-        {/* Belt row */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-          {/* CSS black belt */}
-          <div style={{ display: 'flex', width: 76, height: 14, flexShrink: 0, overflow: 'hidden', border: `1px solid ${C.lineHard}` }}>
-            <div style={{
-              flex: 1,
-              background: 'linear-gradient(180deg, #2E2A24 0%, #1A1612 55%, #0A0806 100%)',
-              position: 'relative',
-            }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'rgba(255,255,255,0.10)' }}/>
-              <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'rgba(0,0,0,0.20)', transform: 'translateY(-50%)' }}/>
-            </div>
-            {/* Red tip — BJJ black belt has a red panel */}
-            <div style={{
-              width: 18,
-              background: 'linear-gradient(180deg, #8B1A1A 0%, #5E0F0F 100%)',
-              borderLeft: `1px solid rgba(242,239,232,0.08)`,
-              flexShrink: 0,
-            }}/>
-          </div>
-          <div>
-            <div style={{ fontFamily: fonts.label, fontSize: 15, letterSpacing: '0.18em', color: C.text }}>BJJ BLACK BELT</div>
-            <div style={{ fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.14em', color: C.amber, marginTop: 2 }}>
-              VERIFIED · RICARDO ALMEIDA
-            </div>
-          </div>
-        </div>
-        {/* Stats grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+
+        {/* Achievement badge row */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 22 }}>
           {[
-            { label: 'WEIGHT CLASS', value: '155 LB' },
-            { label: 'DISCIPLINE', value: 'MMA' },
-            { label: 'BASE', value: 'WRESTLING' },
-          ].map(({ label, value }, i) => (
-            <div key={label} style={{
-              paddingRight: i < 2 ? 12 : 0,
-              borderRight: i < 2 ? `1px solid ${C.line}` : 'none',
-              paddingLeft: i > 0 ? 12 : 0,
+            'UFC HALL OF FAMER',
+            'FORMER LW CHAMPION',
+            'COLLEGIATE WRESTLER',
+          ].map(badge => (
+            <span key={badge} style={{
+              fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.18em',
+              color: C.amber,
+              border: `1px solid rgba(200,148,58,0.45)`,
+              padding: '5px 12px',
+              background: 'rgba(200,148,58,0.08)',
             }}>
-              <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.16em', color: C.dim, marginBottom: 3 }}>{label}</div>
-              <div style={{ fontFamily: fonts.label, fontSize: 14, letterSpacing: '0.12em', color: C.text }}>{value}</div>
-            </div>
+              {badge}
+            </span>
           ))}
+        </div>
+
+        {/* Discipline stack */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+
+          {/* MMA */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 14,
+            paddingBottom: 14, marginBottom: 14,
+            borderBottom: `1px solid ${C.line}`,
+          }}>
+            <div style={{ width: 40, flexShrink: 0 }}>
+              <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.18em', color: C.dim }}>MMA</div>
+              <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.12em', color: C.amber, marginTop: 2 }}>PRO</div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: fonts.label, fontSize: 15, letterSpacing: '0.16em', color: C.text }}>23 – 11 – 1</div>
+              <div style={{ fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.12em', color: C.dim, marginTop: 2 }}>
+                PROFESSIONAL RECORD · RETIRED
+              </div>
+            </div>
+          </div>
+
+          {/* BJJ */}
+          <div style={{ paddingBottom: 16, marginBottom: 16, borderBottom: `1px solid ${C.line}` }}>
+
+            {/* Belt — full width, prominent */}
+            <div style={{
+              display: 'flex', height: 26, overflow: 'hidden',
+              border: `1px solid rgba(242,239,232,0.22)`,
+              marginBottom: 12,
+              boxShadow: '0 2px 16px rgba(0,0,0,0.60)',
+            }}>
+              {/* Black body */}
+              <div style={{
+                flex: 1,
+                background: 'linear-gradient(180deg, #3A3530 0%, #1D1A16 40%, #0A0806 100%)',
+                position: 'relative',
+              }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,0.09)' }}/>
+                <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'rgba(0,0,0,0.28)', transform: 'translateY(-50%)' }}/>
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 1, background: 'rgba(0,0,0,0.45)' }}/>
+              </div>
+              {/* Red tip */}
+              <div style={{
+                width: 44,
+                background: 'linear-gradient(180deg, #A82424 0%, #711414 100%)',
+                borderLeft: `2px solid rgba(242,239,232,0.14)`,
+                flexShrink: 0,
+                position: 'relative',
+              }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,0.08)' }}/>
+              </div>
+            </div>
+
+            {/* Rank + verified */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ width: 40, flexShrink: 0 }}>
+                <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.14em', color: C.dim }}>BJJ</div>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.16em', color: C.text }}>BLACK BELT</div>
+                <div style={{ fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.12em', color: C.amber, marginTop: 3 }}>
+                  VERIFIED · RICARDO ALMEIDA
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Wrestling */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 40, flexShrink: 0 }}>
+              <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.18em', color: C.dim }}>WR</div>
+              <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.12em', color: C.amber, marginTop: 2 }}>D2</div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.16em', color: C.text }}>NCAA DIVISION II</div>
+              <div style={{ fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.12em', color: C.dim, marginTop: 2 }}>
+                COLLEGIATE WRESTLING · CLARION UNIVERSITY, PA
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── Gym Affiliation ─────────────────────────────────────────────── */}
+      <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.line}` }}>
+        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.amber, marginBottom: 14 }}>AFFILIATION</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <div style={{
+              fontFamily: fonts.label, fontSize: 17, letterSpacing: '0.14em',
+              color: C.text, marginBottom: 4,
+            }}>
+              IRON ARMY ACADEMY
+            </div>
+            <div style={{ fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.16em', color: C.amber, marginBottom: 6 }}>
+              HEAD COACH
+            </div>
+            <div style={{ fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.14em', color: C.dim }}>
+              TOMS RIVER, NJ · 2018–PRESENT
+            </div>
+          </div>
+          {/* Active indicator */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0, marginTop: 4 }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: green }}/>
+            <span style={{ fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.16em', color: green }}>CURRENT</span>
+          </div>
         </div>
       </div>
 
@@ -163,13 +266,13 @@ export default function DemoProfilePage() {
           fontFamily: fonts.body, fontSize: 13, lineHeight: 1.7,
           letterSpacing: '0.04em', color: C.mid,
         }}>
-          UFC Hall of Famer and former Lightweight Champion. The only fighter to beat BJ Penn three times. Division I wrestler, BJJ black belt under Ricardo Almeida. Forged in Toms River.
+          UFC Hall of Famer. Former Lightweight Champion — 687-day reign. The only fighter to beat BJ Penn three times. Collegiate wrestler out of Clarion University. BJJ black belt under Ricardo Almeida. Toms River, NJ.
         </div>
       </div>
 
       {/* ── Game Style Tags ──────────────────────────────────────────────── */}
       <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.line}` }}>
-        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.dim, marginBottom: 12 }}>GAME STYLE</div>
+        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.amber, marginBottom: 12 }}>GAME STYLE</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
           {[
             'WRESTLER BASE',
@@ -192,12 +295,11 @@ export default function DemoProfilePage() {
         </div>
       </div>
 
-      {/* ── Competition Record ───────────────────────────────────────────── */}
+      {/* Competition Record */}
       <div style={{ padding: '18px 20px', borderBottom: `1px solid ${C.line}`, background: C.surface }}>
-        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.dim, marginBottom: 16 }}>
+        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.amber, marginBottom: 16 }}>
           MMA RECORD
         </div>
-        {/* Big numbers */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: 18 }}>
           {[
             { n: '23', label: 'WINS',   color: green },
@@ -220,7 +322,6 @@ export default function DemoProfilePage() {
             </div>
           ))}
         </div>
-        {/* Method breakdown */}
         <div style={{ borderTop: `1px solid ${C.line}`, paddingTop: 14 }}>
           {[
             { method: 'KO / TKO',    w: 6, l: 5 },
@@ -239,27 +340,26 @@ export default function DemoProfilePage() {
             </div>
           ))}
         </div>
-        {/* Standout fact */}
         <div style={{
           marginTop: 8, padding: '10px 14px',
           background: 'rgba(200,148,58,0.07)', border: `1px solid rgba(200,148,58,0.20)`,
           borderLeft: `3px solid ${C.amber}`,
         }}>
           <span style={{ fontFamily: fonts.body, fontSize: 11, letterSpacing: '0.08em', color: C.amber }}>
-            0 SUBMISSION LOSSES — 4–0 by submission. Never tapped.
+            0 SUBMISSION LOSSES — 4-0 by submission. Never tapped.
           </span>
         </div>
       </div>
 
-      {/* ── Career Credentials ───────────────────────────────────────────── */}
+      {/* Career Credentials */}
       <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.line}` }}>
-        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.dim, marginBottom: 14 }}>CREDENTIALS</div>
+        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.amber, marginBottom: 14 }}>CREDENTIALS</div>
         {[
           'Former UFC Lightweight Champion — 687-day reign (3rd longest in LW history)',
           'Defeated BJ Penn three times. Only fighter in history to do so.',
           'UFC Hall of Fame inductee',
-          'Division I collegiate wrestler · BJJ black belt under Ricardo Almeida',
-          'Pro MMA debut 2005 · 25+ years training',
+          'Collegiate wrestler · Clarion University, PA · BJJ black belt under Ricardo Almeida',
+          'Pro MMA debut 2005 · 25+ years in combat sports',
         ].map((line, i) => (
           <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
             <span style={{ color: C.amber, fontFamily: fonts.body, fontSize: 11, flexShrink: 0, marginTop: 1 }}>—</span>
@@ -268,9 +368,9 @@ export default function DemoProfilePage() {
         ))}
       </div>
 
-      {/* ── Highlight Clips ──────────────────────────────────────────────── */}
+      {/* Highlight Clips */}
       <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.line}`, background: C.surface }}>
-        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.dim, marginBottom: 12 }}>HIGHLIGHTS</div>
+        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.amber, marginBottom: 12 }}>HIGHLIGHTS</div>
         {[
           { label: 'BJ PENN I — LW TITLE WIN  ·  UFC 112', url: 'https://www.youtube.com/watch?v=boIRifT3_GU' },
           { label: 'BJ PENN III — EDGAR FINISHES PENN', url: 'https://www.youtube.com/watch?v=UlRV-c3Wk9M' },
@@ -294,14 +394,14 @@ export default function DemoProfilePage() {
                 {label}
               </span>
               <span style={{ fontFamily: fonts.body, fontSize: 11, color: C.amber, flexShrink: 0, marginLeft: 12 }}>
-                VIEW →
+                VIEW
               </span>
             </div>
           </a>
         ))}
       </div>
 
-      {/* ── Footer ──────────────────────────────────────────────────────── */}
+      {/* Footer */}
       <div style={{ padding: '16px 20px 40px' }}>
         <div style={{
           fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.20em',
