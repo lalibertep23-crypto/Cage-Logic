@@ -103,21 +103,25 @@ function ScoreOctagon({
   topLabel,
   bottomLabel,
   color,
+  isRamping,
+  currentDay,
 }: {
   value: string | number;
   topLabel: string;
   bottomLabel: string;
   color: string;
+  isRamping?: boolean;
+  currentDay?: number;
 }) {
   const pts      = '54,4 126,4 176,54 176,146 126,196 54,196 4,146 4,54';
   const innerPts = '60,12 120,12 168,60 168,140 120,188 60,188 12,140 12,60';
   const strVal   = String(value).padStart(2, '0');
 
   return (
-    <svg viewBox="0 0 180 200" width="100%" style={{ maxWidth: 165, display: 'block' }}>
+    <svg viewBox="-20 -20 220 240" width="100%" style={{ maxWidth: 178, display: 'block' }}>
       <defs>
-        <filter id="octGlow" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="7" result="blur"/>
+        <filter id="octGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="9" result="blur"/>
           <feMerge>
             <feMergeNode in="blur"/>
             <feMergeNode in="blur"/>
@@ -125,36 +129,61 @@ function ScoreOctagon({
           </feMerge>
         </filter>
         <filter id="octGlowStrong" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feGaussianBlur stdDeviation="4" result="blur"/>
           <feMerge>
             <feMergeNode in="blur"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
       </defs>
-      {/* Outer ambient halo — wide diffuse glow */}
-      <polygon points={pts} fill="none" stroke={color} strokeWidth="18" opacity="0.18" filter="url(#octGlow)"/>
-      {/* Secondary halo */}
-      <polygon points={pts} fill="none" stroke={color} strokeWidth="8" opacity="0.25" filter="url(#octGlow)"/>
-      {/* Main frame — dark fill + glowing border */}
-      <polygon points={pts} fill="rgba(5,5,5,0.88)" stroke={color} strokeWidth="3" filter="url(#octGlowStrong)"/>
-      {/* Inner hairline */}
-      <polygon points={innerPts} fill="none" stroke={color} strokeWidth="1" opacity="0.4"/>
-      {/* Top label */}
-      <text x="90" y="64" textAnchor="middle"
-        fontFamily="'Bebas Neue', sans-serif" fontSize="16" letterSpacing="7" fill={color}>
-        {topLabel}
-      </text>
-      {/* Main value */}
-      <text x="90" y="150" textAnchor="middle"
-        fontFamily="'Anton', sans-serif" fontSize="90" letterSpacing="-3" fill={color}>
-        {strVal}
-      </text>
-      {/* Sub-label */}
-      <text x="90" y="178" textAnchor="middle"
-        fontFamily="'DM Mono', monospace" fontSize="13" fill="rgba(242,239,232,0.4)" letterSpacing="3">
-        {bottomLabel}
-      </text>
+      {/* ── Outer metal structural ring ──────────────────────────── */}
+      <polygon points={pts} fill="none" stroke="#050403" strokeWidth="40"/>
+      <polygon points={pts} fill="none" stroke="#111009" strokeWidth="32"/>
+      <polygon points={pts} fill="none" stroke="#1B1813" strokeWidth="24"/>
+      <polygon points={pts} fill="none" stroke="#25211B" strokeWidth="16"/>
+      <polygon points={pts} fill="none" stroke="#2E2923" strokeWidth="10"/>
+      {/* ── Amber glow halos ────────────────────────────────────── */}
+      <polygon points={pts} fill="none" stroke={color} strokeWidth="24" opacity="0.12" filter="url(#octGlow)"/>
+      <polygon points={pts} fill="none" stroke={color} strokeWidth="10" opacity="0.28" filter="url(#octGlow)"/>
+      {/* ── Main amber frame ────────────────────────────────────── */}
+      <polygon points={pts} fill="rgba(5,5,5,0.91)" stroke={color} strokeWidth="3.5" filter="url(#octGlowStrong)"/>
+      {/* ── Inner hairline ──────────────────────────────────────── */}
+      <polygon points={innerPts} fill="none" stroke={color} strokeWidth="1" opacity="0.35"/>
+      {/* ── Content ─────────────────────────────────────────────── */}
+      {isRamping ? (
+        <>
+          {/* FORMING label — where SCORE would appear */}
+          <text x="90" y="94" textAnchor="middle"
+            fontFamily="'Bebas Neue', sans-serif" fontSize="21" letterSpacing="6"
+            fill={color} opacity="0.6">
+            FORMING
+          </text>
+          {/* Redaction bars — stand-in for the hidden score */}
+          <rect x="46" y="106" width="88" height="12" rx="1" fill={color} opacity="0.10"/>
+          <rect x="60" y="125" width="60" height="8" rx="1" fill={color} opacity="0.07"/>
+          {/* Compact day marker at bottom — not redundant, uses · separator */}
+          <text x="90" y="172" textAnchor="middle"
+            fontFamily="'Anton', sans-serif" fontSize="34" letterSpacing="0"
+            fill={color} opacity="0.72">
+            {`${String(currentDay ?? 1).padStart(2, '0')} · 30`}
+          </text>
+        </>
+      ) : (
+        <>
+          <text x="90" y="64" textAnchor="middle"
+            fontFamily="'Bebas Neue', sans-serif" fontSize="16" letterSpacing="7" fill={color}>
+            {topLabel}
+          </text>
+          <text x="90" y="150" textAnchor="middle"
+            fontFamily="'Anton', sans-serif" fontSize="90" letterSpacing="-3" fill={color}>
+            {strVal}
+          </text>
+          <text x="90" y="178" textAnchor="middle"
+            fontFamily="'DM Mono', monospace" fontSize="13" fill="rgba(242,239,232,0.4)" letterSpacing="3">
+            {bottomLabel}
+          </text>
+        </>
+      )}
     </svg>
   );
 }
@@ -293,7 +322,7 @@ export default async function HomePage() {
           position: 'absolute', inset: 0,
           backgroundImage: 'url(/home-score_bright.png)',
           backgroundSize: 'cover', backgroundPosition: 'center',
-          opacity: 0.38, filter: 'brightness(0.75)',
+          opacity: 0.55, filter: 'brightness(1.05)',
         }}/>
         <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', padding: '22px 22px 20px' }}>
 
@@ -338,9 +367,11 @@ export default async function HomePage() {
           <div style={{ width: 160, flexShrink: 0 }}>
             <ScoreOctagon
               value={score.isRamping ? currentDay : roundedScore}
-              topLabel={score.isRamping ? 'RAMP' : 'SCORE'}
-              bottomLabel={score.isRamping ? `/ ${RAMPING_DAYS}` : '/ 100'}
+              topLabel="SCORE"
+              bottomLabel="/ 100"
               color={score.isRamping ? C.amberBright : scoreColor}
+              isRamping={score.isRamping}
+              currentDay={currentDay}
             />
           </div>
         </div>
@@ -501,61 +532,77 @@ export default async function HomePage() {
 
       {/* ── Stripe Track ─────────────────────────────────────────────────── */}
       {primaryDiscipline && (
-        <div style={{ padding: '16px 22px', borderBottom: `1px solid ${C.line}` }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 18, letterSpacing: '0.2em', color: C.text }}>STRIPE TRACK</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.1em' }}>
-                {String(primaryDiscipline.rank_color ?? 'WHITE').toUpperCase()} BELT
-              </span>
-              {/* Belt bar with stripe marks */}
-              <div style={{
-                width: 52, height: 10,
-                background: getBeltColor(primaryDiscipline.rank_color as string | null),
-                position: 'relative', border: `1px solid ${C.lineHard}`, flexShrink: 0,
-              }}>
-                {Array.from({ length: (primaryDiscipline.stripes as number) ?? 0 }, (_, i) => (
-                  <div key={i} style={{
-                    position: 'absolute', right: i * 7 + 3, top: 0, bottom: 0,
-                    width: 4, background: 'rgba(255,255,255,0.88)',
-                  }}/>
-                ))}
+        <div style={{
+          borderBottom: `1px solid ${C.line}`,
+          borderLeft: `3px solid ${stripeTimeReady && scoreReady ? C.amber : C.amberLow}`,
+          background: C.surface,
+        }}>
+          <div style={{ padding: '16px 22px' }}>
+            {/* Header row */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.text }}>
+                  STRIPE TRACK
+                </span>
+                {stripeTimeReady && scoreReady && (
+                  <span style={{
+                    fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.14em',
+                    color: C.amber, border: `1px solid ${C.amber}`, padding: '2px 6px',
+                  }}>GATES CLEAR</span>
+                )}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.1em' }}>
+                  {String(primaryDiscipline.rank_color ?? 'WHITE').toUpperCase()} BELT
+                </span>
+                <div style={{
+                  width: 52, height: 10,
+                  background: getBeltColor(primaryDiscipline.rank_color as string | null),
+                  position: 'relative', border: `1px solid ${C.lineHard}`, flexShrink: 0,
+                }}>
+                  {Array.from({ length: (primaryDiscipline.stripes as number) ?? 0 }, (_, i) => (
+                    <div key={i} style={{
+                      position: 'absolute', right: i * 7 + 3, top: 0, bottom: 0,
+                      width: 4, background: 'rgba(255,255,255,0.88)',
+                    }}/>
+                  ))}
+                </div>
               </div>
             </div>
+            {/* Time in bar */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.mid }}>TIME IN PHASE</span>
+                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: stripeTimeReady ? C.amber : C.dim, letterSpacing: '0.06em' }}>
+                  {daysInCurrentPhase}d · {STRIPE_THRESHOLD}d target {stripeTimeReady ? '✓' : ''}
+                </span>
+              </div>
+              <div style={{ height: 5, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', inset: 0, width: `${stripeTimeProgress}%`, background: stripeTimeReady ? C.amber : C.amberLow }}/>
+              </div>
+            </div>
+            {/* Investment bar */}
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.mid }}>INVESTMENT SCORE</span>
+                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: scoreReady ? green : C.dim, letterSpacing: '0.06em' }}>
+                  {score.isRamping ? 'CALIBRATING' : `${roundedScore} / 65 min ${scoreReady ? '✓' : ''}`}
+                </span>
+              </div>
+              <div style={{ height: 5, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  width: score.isRamping ? '3%' : `${Math.min(100, (roundedScore / 65) * 100)}%`,
+                  background: scoreReady ? green : C.amberLow,
+                }}/>
+              </div>
+            </div>
+            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dimmer, letterSpacing: '0.06em', margin: 0, lineHeight: 1.6 }}>
+              {stripeTimeReady && scoreReady
+                ? 'Both gates clear. Bring it to your coach.'
+                : 'Coach watches both gates. Keep building.'}
+            </p>
           </div>
-          {/* Time in bar */}
-          <div style={{ marginBottom: 10 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: C.mid }}>TIME IN</span>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.06em' }}>
-                {daysInCurrentPhase} / {STRIPE_THRESHOLD}d
-              </span>
-            </div>
-            <div style={{ height: 4, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', inset: 0, width: `${stripeTimeProgress}%`, background: stripeTimeReady ? C.amber : C.amberLow }}/>
-            </div>
-          </div>
-          {/* Investment bar */}
-          <div style={{ marginBottom: 10 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: C.mid }}>INVESTMENT</span>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: scoreReady ? green : C.dim, letterSpacing: '0.06em' }}>
-                {score.isRamping ? 'CALIBRATING' : `${roundedScore} / 65 ${scoreReady ? '✓' : ''}`}
-              </span>
-            </div>
-            <div style={{ height: 4, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
-              <div style={{
-                position: 'absolute', inset: 0,
-                width: score.isRamping ? '3%' : `${Math.min(100, (roundedScore / 65) * 100)}%`,
-                background: scoreReady ? green : C.amberLow,
-              }}/>
-            </div>
-          </div>
-          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dimmer, letterSpacing: '0.06em', margin: 0 }}>
-            {stripeTimeReady && scoreReady
-              ? 'Both gates clear. Bring it to your coach.'
-              : 'Keep building. Coach watches both.'}
-          </p>
         </div>
       )}
 
@@ -563,24 +610,35 @@ export default async function HomePage() {
       {/* ── Mental Check-in CTA ── */}
       {!didCheckInToday && (
         <Link href="/mental" style={{ textDecoration: 'none', display: 'block' }}>
-          <div style={{ padding: '14px 22px', borderBottom: `1px solid ${C.line}` }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 3, height: 16, background: C.amber }}/>
-                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.2em', color: C.text }}>MENTAL CHECK-IN</span>
+          <div style={{
+            borderBottom: `1px solid ${C.line}`,
+            borderLeft: `3px solid ${C.amber}`,
+            background: C.surface,
+          }}>
+            <div style={{ padding: '16px 22px' }}>
+              {/* Header row */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.text }}>
+                  MENTAL CHECK-IN
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.14em',
+                  color: C.brick, border: `1px solid ${C.brick}`, padding: '2px 6px',
+                }}>
+                  NOT DONE
+                </span>
               </div>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.brick, letterSpacing: '0.12em' }}>NOT DONE</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, color: C.text, letterSpacing: '0.04em', marginBottom: 4 }}>
-                  Today's prompt
-                </div>
-                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.08em' }}>
-                  2 min · counts toward Mental domain
-                </div>
+              {/* Description */}
+              <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, letterSpacing: '0.06em', margin: '0 0 14px', lineHeight: 1.65 }}>
+                Daily prompt active. 2 min. Scores toward Mental domain.
+              </p>
+              {/* CTA row */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.2em', color: C.amber }}>
+                  OPEN CHECK-IN
+                </span>
+                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 18, color: C.amber }}>→</span>
               </div>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 18, color: C.amber }}>→</span>
             </div>
           </div>
         </Link>
