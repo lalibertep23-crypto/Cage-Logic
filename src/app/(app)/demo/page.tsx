@@ -16,7 +16,7 @@ export default function DemoProfilePage() {
       {/* ── Hero Photo ──────────────────────────────────────────────────── */}
       <div style={{ position: 'relative', height: 340, overflow: 'hidden', background: C.raised }}>
         <img
-          src="/frankie-edgar-profile.jpg"
+          src="/frankie-edgar-profile.avif"
           alt="Frankie Edgar"
           style={{
             width: '100%', height: '100%',

@@ -10,7 +10,7 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', background: '#060503', paddingTop: '0px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', background: '#050505', paddingTop: '0px' }}>
       {/* Phone frame outline */}
       <div
         style={{
@@ -18,10 +18,10 @@ export default function AppLayout({
           width: '100%',
           maxWidth: '430px',
           minHeight: '100vh',
-          background: '#1A1713',
-          borderLeft:  '1px solid rgba(201,130,42,0.25)',
-          borderRight: '1px solid rgba(201,130,42,0.25)',
-          boxShadow: '-8px 0 40px rgba(0,0,0,0.6), 8px 0 40px rgba(0,0,0,0.6), 0 0 80px rgba(201,130,42,0.04)',
+          background: '#050505',
+          borderLeft:  '1px solid rgba(200,148,58,0.20)',
+          borderRight: '1px solid rgba(200,148,58,0.20)',
+          boxShadow: '-8px 0 40px rgba(0,0,0,0.6), 8px 0 40px rgba(0,0,0,0.6), 0 0 80px rgba(200,148,58,0.04)',
         }}
       >
         <div style={{ paddingBottom: 80 }}>
