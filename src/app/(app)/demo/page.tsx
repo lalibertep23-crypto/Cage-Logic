@@ -16,7 +16,18 @@ export default function DemoProfilePage() {
       {/* ── Hero Photo ──────────────────────────────────────────────────── */}
       <div style={{ position: 'relative', height: 460, overflow: 'hidden', background: '#0A0806' }}>
 
-        {/* Photo */}
+        {/* Cage atmosphere background — sits behind Frankie's transparent-bg photo */}
+        <img
+          src="/cage-hero-bg.jpg"
+          alt=""
+          style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%',
+            objectFit: 'cover', objectPosition: 'center center',
+          }}
+        />
+
+        {/* Photo — RGBA with transparent background, composites over cage */}
         <img
           src="/frankie-edgar-profile.avif"
           alt=""
@@ -24,7 +35,7 @@ export default function DemoProfilePage() {
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
             objectFit: 'cover', objectPosition: 'center 8%',
-            filter: 'brightness(0.72) contrast(1.12) saturate(0.92)',
+            filter: 'brightness(0.82) contrast(1.08) saturate(0.90)',
           }}
         />
 
@@ -170,33 +181,18 @@ export default function DemoProfilePage() {
           {/* BJJ */}
           <div style={{ paddingBottom: 16, marginBottom: 16, borderBottom: `1px solid ${C.line}` }}>
 
-            {/* Belt — full width, prominent */}
+            {/* Belt — real image, cropped to strip */}
             <div style={{
-              display: 'flex', height: 26, overflow: 'hidden',
+              height: 26, overflow: 'hidden',
               border: `1px solid rgba(242,239,232,0.22)`,
               marginBottom: 12,
               boxShadow: '0 2px 16px rgba(0,0,0,0.60)',
             }}>
-              {/* Black body */}
-              <div style={{
-                flex: 1,
-                background: 'linear-gradient(180deg, #3A3530 0%, #1D1A16 40%, #0A0806 100%)',
-                position: 'relative',
-              }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,0.09)' }}/>
-                <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'rgba(0,0,0,0.28)', transform: 'translateY(-50%)' }}/>
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 1, background: 'rgba(0,0,0,0.45)' }}/>
-              </div>
-              {/* Red tip */}
-              <div style={{
-                width: 44,
-                background: 'linear-gradient(180deg, #A82424 0%, #711414 100%)',
-                borderLeft: `2px solid rgba(242,239,232,0.14)`,
-                flexShrink: 0,
-                position: 'relative',
-              }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,0.08)' }}/>
-              </div>
+              <img
+                src="/black-belt-strip.jpg"
+                alt="Black belt"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center', display: 'block' }}
+              />
             </div>
 
             {/* Rank + verified */}
