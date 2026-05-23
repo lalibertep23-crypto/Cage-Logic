@@ -179,4 +179,67 @@ export default async function ScorePage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{ width: 6, height: 6, background: color, flexShrink: 0 }} />
                     <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.16em', color: C.amber }}>
-               
+                      {d.label}
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.1em', color: C.dimmer }}>
+                      {d.weight}% WT
+                    </span>
+                    {isWeakest && (
+                      <span style={{
+                        fontFamily: 'var(--font-dm-mono)', fontSize: 7, letterSpacing: '0.14em',
+                        color: C.brick, border: `1px solid ${C.brick}`, padding: '1px 4px',
+                      }}>
+                        MOST ROOM
+                      </span>
+                    )}
+                  </div>
+                  <span style={{ fontFamily: 'var(--font-anton)', fontSize: 22, color, letterSpacing: '0.02em' }}>
+                    {score.isRamping ? '—' : v}
+                  </span>
+                </div>
+
+                {/* Progress bar */}
+                <div style={{ height: 4, background: C.sunk, position: 'relative', overflow: 'hidden', marginBottom: 12 }}>
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    width: score.isRamping ? '3%' : `${Math.max(0, Math.min(100, v))}%`,
+                    background: color,
+                  }} />
+                  {!score.isRamping && v > 15 && (
+                    <div style={{
+                      position: 'absolute', inset: 0,
+                      width: `${v * 0.4}%`,
+                      background: `${color}55`,
+                    }} />
+                  )}
+                </div>
+
+                {/* What it measures */}
+                <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.03em', lineHeight: 1.65, color: C.dimmer, margin: '0 0 6px' }}>
+                  {d.what}
+                </p>
+
+                {(isWeakest || v < 50) && (
+                  <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.04em', lineHeight: 1.6, color: C.dim, margin: 0 }}>
+                    → {d.uplift}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* ── How scoring works ── */}
+        <div style={{ marginTop: 28, padding: '16px', background: C.surface, borderLeft: `2px solid ${C.amberLow}` }}>
+          <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 13, letterSpacing: '0.2em', color: C.mid, marginBottom: 10 }}>
+            HOW IT WORKS
+          </div>
+          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.03em', lineHeight: 1.7, color: C.dimmer, margin: 0 }}>
+            Zero AI. Pure computation from your logged data. Each domain is decay-weighted — data from this week counts more than data from three weeks ago. Score forms after 30 days. During ramp, all domains are already tracking.
+          </p>
+        </div>
+
+      </div>
+    </main>
+  );
+}

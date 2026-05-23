@@ -549,8 +549,43 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* ── Mental Check-in CTA ──────────────────────────────────────────── */}
+
+      {/* ── Mental Check-in CTA ── */}
       {!didCheckInToday && (
-        <div style={{ padding: '14px 22px', borderBottom: `1px solid ${C.line}` }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <span style={{ fontFamily
+        <Link href="/mental" style={{ textDecoration: 'none', display: 'block' }}>
+          <div style={{ padding: '14px 22px', borderBottom: `1px solid ${C.line}` }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 3, height: 16, background: C.amber }}/>
+                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.2em', color: C.text }}>MENTAL CHECK-IN</span>
+              </div>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.brick, letterSpacing: '0.12em' }}>NOT DONE</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, color: C.text, letterSpacing: '0.04em', marginBottom: 4 }}>
+                  Today's prompt
+                </div>
+                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.08em' }}>
+                  2 min · counts toward Mental domain
+                </div>
+              </div>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 18, color: C.amber }}>→</span>
+            </div>
+          </div>
+        </Link>
+      )}
+
+      {/* ── Daily Quote ── */}
+      <div style={{ padding: '18px 22px 80px' }}>
+        <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, lineHeight: 1.75, color: C.dim, margin: '0 0 8px', letterSpacing: '0.03em' }}>
+          "{todayQuote.text}"
+        </p>
+        <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dimmer, letterSpacing: '0.1em', margin: 0 }}>
+          — {todayQuote.author.toUpperCase()}
+        </p>
+      </div>
+
+    </main>
+  );
+}
