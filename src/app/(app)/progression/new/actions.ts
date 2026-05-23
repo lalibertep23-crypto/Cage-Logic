@@ -136,4 +136,9 @@ export async function logPromotionAction(
     .eq('id', parsed.data.disciplineId)
     .eq('athlete_id', user.id);
   if (discErr) {
-    return { error: `Promotion saved but discipline didn't sync: ${discErr.mes
+    return { error: `Promotion saved but discipline didn't sync: ${discErr.message}` };
+  }
+
+  revalidatePath('/home');
+  redirect('/progression');
+}
