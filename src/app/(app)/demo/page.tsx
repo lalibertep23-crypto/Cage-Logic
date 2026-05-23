@@ -155,10 +155,13 @@ export default function DemoProfilePage() {
       </div>
 
       {/* ── Bio ─────────────────────────────────────────────────────────── */}
-      <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.line}` }}>
+      <div style={{
+        padding: '16px 20px', borderBottom: `1px solid ${C.line}`,
+        borderLeft: `3px solid ${C.amberLow}`,
+      }}>
         <div style={{
-          fontFamily: fonts.body, fontSize: 11, lineHeight: 1.75,
-          letterSpacing: '0.03em', color: C.mid,
+          fontFamily: fonts.body, fontSize: 13, lineHeight: 1.7,
+          letterSpacing: '0.04em', color: C.mid,
         }}>
           UFC Hall of Famer and former Lightweight Champion. The only fighter to beat BJ Penn three times. Division I wrestler, BJJ black belt under Ricardo Almeida. Forged in Toms River.
         </div>
@@ -166,7 +169,7 @@ export default function DemoProfilePage() {
 
       {/* ── Game Style Tags ──────────────────────────────────────────────── */}
       <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.line}` }}>
-        <div style={{ fontFamily: fonts.label, fontSize: 12, letterSpacing: '0.2em', color: C.dim, marginBottom: 10 }}>GAME STYLE</div>
+        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.dim, marginBottom: 12 }}>GAME STYLE</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
           {[
             'WRESTLER BASE',
@@ -177,10 +180,10 @@ export default function DemoProfilePage() {
             'ELITE CARDIO',
           ].map(tag => (
             <span key={tag} style={{
-              fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.12em',
+              fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.14em',
               color: C.amber,
               border: `1px solid rgba(200,148,58,0.35)`,
-              padding: '3px 9px',
+              padding: '4px 10px',
               background: 'rgba(200,148,58,0.06)',
             }}>
               {tag}
@@ -191,7 +194,7 @@ export default function DemoProfilePage() {
 
       {/* ── Competition Record ───────────────────────────────────────────── */}
       <div style={{ padding: '18px 20px', borderBottom: `1px solid ${C.line}`, background: C.surface }}>
-        <div style={{ fontFamily: fonts.label, fontSize: 12, letterSpacing: '0.2em', color: C.dim, marginBottom: 16 }}>
+        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.dim, marginBottom: 16 }}>
           MMA RECORD
         </div>
         {/* Big numbers */}
@@ -209,7 +212,7 @@ export default function DemoProfilePage() {
                 {n}
               </div>
               <div style={{
-                fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.16em',
+                fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.18em',
                 color: C.dimmer, marginTop: 8,
               }}>
                 {label}
@@ -228,10 +231,10 @@ export default function DemoProfilePage() {
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
               paddingBottom: 8,
             }}>
-              <span style={{ fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.08em', color: C.mid }}>{method}</span>
+              <span style={{ fontFamily: fonts.body, fontSize: 11, letterSpacing: '0.10em', color: C.mid }}>{method}</span>
               <div style={{ display: 'flex', gap: 18 }}>
-                <span style={{ fontFamily: fonts.body, fontSize: 10, color: green }}>{w}W</span>
-                <span style={{ fontFamily: fonts.body, fontSize: 10, color: l > 0 ? C.brick : C.dimmer }}>{l}L</span>
+                <span style={{ fontFamily: fonts.body, fontSize: 11, color: green }}>{w}W</span>
+                <span style={{ fontFamily: fonts.body, fontSize: 11, color: l > 0 ? C.brick : C.dimmer }}>{l}L</span>
               </div>
             </div>
           ))}
@@ -242,7 +245,7 @@ export default function DemoProfilePage() {
           background: 'rgba(200,148,58,0.07)', border: `1px solid rgba(200,148,58,0.20)`,
           borderLeft: `3px solid ${C.amber}`,
         }}>
-          <span style={{ fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.06em', color: C.amber }}>
+          <span style={{ fontFamily: fonts.body, fontSize: 11, letterSpacing: '0.08em', color: C.amber }}>
             0 SUBMISSION LOSSES — 4–0 by submission. Never tapped.
           </span>
         </div>
@@ -250,7 +253,7 @@ export default function DemoProfilePage() {
 
       {/* ── Career Credentials ───────────────────────────────────────────── */}
       <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.line}` }}>
-        <div style={{ fontFamily: fonts.label, fontSize: 12, letterSpacing: '0.2em', color: C.dim, marginBottom: 12 }}>CREDENTIALS</div>
+        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.dim, marginBottom: 14 }}>CREDENTIALS</div>
         {[
           'Former UFC Lightweight Champion — 687-day reign (3rd longest in LW history)',
           'Defeated BJ Penn three times. Only fighter in history to do so.',
@@ -258,16 +261,16 @@ export default function DemoProfilePage() {
           'Division I collegiate wrestler · BJJ black belt under Ricardo Almeida',
           'Pro MMA debut 2005 · 25+ years training',
         ].map((line, i) => (
-          <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 9, alignItems: 'flex-start' }}>
-            <span style={{ color: C.amber, fontFamily: fonts.body, fontSize: 10, flexShrink: 0, marginTop: 1 }}>—</span>
-            <span style={{ fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.04em', color: C.mid, lineHeight: 1.6 }}>{line}</span>
+          <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
+            <span style={{ color: C.amber, fontFamily: fonts.body, fontSize: 11, flexShrink: 0, marginTop: 1 }}>—</span>
+            <span style={{ fontFamily: fonts.body, fontSize: 12, letterSpacing: '0.04em', color: C.mid, lineHeight: 1.6 }}>{line}</span>
           </div>
         ))}
       </div>
 
       {/* ── Highlight Clips ──────────────────────────────────────────────── */}
       <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.line}`, background: C.surface }}>
-        <div style={{ fontFamily: fonts.label, fontSize: 12, letterSpacing: '0.2em', color: C.dim, marginBottom: 12 }}>HIGHLIGHTS</div>
+        <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: C.dim, marginBottom: 12 }}>HIGHLIGHTS</div>
         {[
           { label: 'BJ PENN I — LW TITLE WIN  ·  UFC 112', url: 'https://www.youtube.com/watch?v=boIRifT3_GU' },
           { label: 'BJ PENN III — EDGAR FINISHES PENN', url: 'https://www.youtube.com/watch?v=UlRV-c3Wk9M' },
@@ -287,10 +290,10 @@ export default function DemoProfilePage() {
               border: `1px solid ${C.lineHard}`,
               borderLeft: `3px solid ${C.amberLow}`,
             }}>
-              <span style={{ fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.07em', color: C.text, lineHeight: 1.4 }}>
+              <span style={{ fontFamily: fonts.body, fontSize: 11, letterSpacing: '0.08em', color: C.text, lineHeight: 1.4 }}>
                 {label}
               </span>
-              <span style={{ fontFamily: fonts.body, fontSize: 10, color: C.amber, flexShrink: 0, marginLeft: 12 }}>
+              <span style={{ fontFamily: fonts.body, fontSize: 11, color: C.amber, flexShrink: 0, marginLeft: 12 }}>
                 VIEW →
               </span>
             </div>
