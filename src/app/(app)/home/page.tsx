@@ -33,12 +33,39 @@ function getDomainColor(pct: number): string {
   return C.brick;
 }
 
-function getBeltColor(color: string | null): string {
-  const map: Record<string, string> = {
-    white: '#E8E4DC', blue: '#1E5FA8', purple: '#6B3A8A',
-    brown: '#6B3A1F', black: '#1A1713',
+// ── Belt Visual ───────────────────────────────────────────────────────────────
+// CSS-only: gradient body + black tip panel + white stripe marks.
+// No images. Accurate to a real BJJ belt structure.
+function BeltVisual({ color, stripes }: { color: string | null; stripes: number }) {
+  const rank = String(color ?? 'white').toLowerCase();
+  const gradients: Record<string, [string, string, string]> = {
+    white:  ['#F0EDE5', '#D4D0C8', '#B0ACA4'],
+    blue:   ['#2668C0', '#1A4E96', '#0F3268'],
+    purple: ['#7844AA', '#5C3088', '#3C1E60'],
+    brown:  ['#804020', '#5E2C10', '#3A1608'],
+    black:  ['#2E2A24', '#1A1612', '#0A0806'],
   };
-  return map[String(color ?? 'white').toLowerCase()] ?? '#E8E4DC';
+  const [hi, mid, lo] = gradients[rank] ?? gradients.white;
+
+  return (
+    <div style={{ display: 'flex', width: 84, height: 15, flexShrink: 0, overflow: 'hidden', border: '1px solid rgba(242,239,232,0.10)' }}>
+      {/* Belt body */}
+      <div style={{ flex: 1, background: `linear-gradient(180deg, ${hi} 0%, ${mid} 55%, ${lo} 100%)`, position: 'relative' }}>
+        {/* Top sheen */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'rgba(255,255,255,0.18)' }}/>
+        {/* Center seam */}
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'rgba(0,0,0,0.14)', transform: 'translateY(-50%)' }}/>
+        {/* Bottom shadow */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: 'rgba(0,0,0,0.22)' }}/>
+      </div>
+      {/* Black tip panel */}
+      <div style={{ width: 22, background: 'linear-gradient(180deg, #1E1A16 0%, #0A0806 100%)', position: 'relative', borderLeft: '1px solid rgba(242,239,232,0.07)', flexShrink: 0 }}>
+        {Array.from({ length: Math.min(stripes, 4) }, (_, i) => (
+          <div key={i} style={{ position: 'absolute', right: i * 5 + 2, top: 2, bottom: 2, width: 2.5, background: 'rgba(242,239,232,0.82)' }}/>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 // ── Domain Icons ──────────────────────────────────────────────────────────────
@@ -555,18 +582,10 @@ export default async function HomePage() {
                 <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.1em' }}>
                   {String(primaryDiscipline.rank_color ?? 'WHITE').toUpperCase()} BELT
                 </span>
-                <div style={{
-                  width: 52, height: 10,
-                  background: getBeltColor(primaryDiscipline.rank_color as string | null),
-                  position: 'relative', border: `1px solid ${C.lineHard}`, flexShrink: 0,
-                }}>
-                  {Array.from({ length: (primaryDiscipline.stripes as number) ?? 0 }, (_, i) => (
-                    <div key={i} style={{
-                      position: 'absolute', right: i * 7 + 3, top: 0, bottom: 0,
-                      width: 4, background: 'rgba(255,255,255,0.88)',
-                    }}/>
-                  ))}
-                </div>
+                <BeltVisual
+                  color={primaryDiscipline.rank_color as string | null}
+                  stripes={(primaryDiscipline.stripes as number) ?? 0}
+                />
               </div>
             </div>
             {/* Time in bar */}

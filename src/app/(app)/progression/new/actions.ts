@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 
 // Manual self-log of a promotion. V1: athlete logs their own.
@@ -138,5 +139,6 @@ export async function logPromotionAction(
     return { error: `Promotion saved but discipline didn't sync: ${discErr.message}` };
   }
 
+  revalidatePath('/home');
   redirect('/progression');
 }

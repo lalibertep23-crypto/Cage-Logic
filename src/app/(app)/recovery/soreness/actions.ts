@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 
 // Step 9a — Daily soreness logging.
@@ -87,5 +88,6 @@ export async function logSorenessAction(
   );
 
   if (error) return { error: error.message };
+  revalidatePath('/home');
   redirect('/recovery');
 }

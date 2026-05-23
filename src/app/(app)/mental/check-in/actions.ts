@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 
 // Daily mental check-in. 1–5 scale. Writes psych_assessments with
@@ -54,5 +55,6 @@ export async function submitCheckInAction(
   });
 
   if (error) return { error: error.message };
+  revalidatePath('/home');
   redirect('/mental');
 }

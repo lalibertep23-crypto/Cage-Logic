@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { IRON_ARMY_GYM_ID } from '@/lib/constants';
 
@@ -214,5 +215,6 @@ export async function logSessionAction(
     }
   }
 
+  revalidatePath('/home');
   redirect('/home');
 }
