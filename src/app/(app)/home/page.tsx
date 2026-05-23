@@ -114,22 +114,32 @@ function ScoreOctagon({
   const strVal   = String(value).padStart(2, '0');
 
   return (
-    <svg viewBox="0 0 180 200" width="100%" style={{ maxWidth: 155, display: 'block' }}>
+    <svg viewBox="0 0 180 200" width="100%" style={{ maxWidth: 165, display: 'block' }}>
       <defs>
-        <filter id="octGlow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="4" result="blur"/>
+        <filter id="octGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="7" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <filter id="octGlowStrong" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
           <feMerge>
             <feMergeNode in="blur"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
       </defs>
-      {/* Outer ambient halo */}
-      <polygon points={pts} fill="none" stroke={color} strokeWidth="10" opacity="0.12" filter="url(#octGlow)"/>
+      {/* Outer ambient halo — wide diffuse glow */}
+      <polygon points={pts} fill="none" stroke={color} strokeWidth="18" opacity="0.18" filter="url(#octGlow)"/>
+      {/* Secondary halo */}
+      <polygon points={pts} fill="none" stroke={color} strokeWidth="8" opacity="0.25" filter="url(#octGlow)"/>
       {/* Main frame — dark fill + glowing border */}
-      <polygon points={pts} fill="rgba(5,5,5,0.82)" stroke={color} strokeWidth="2.5" filter="url(#octGlow)"/>
+      <polygon points={pts} fill="rgba(5,5,5,0.88)" stroke={color} strokeWidth="3" filter="url(#octGlowStrong)"/>
       {/* Inner hairline */}
-      <polygon points={innerPts} fill="none" stroke={color} strokeWidth="0.75" opacity="0.3"/>
+      <polygon points={innerPts} fill="none" stroke={color} strokeWidth="1" opacity="0.4"/>
       {/* Top label */}
       <text x="90" y="64" textAnchor="middle"
         fontFamily="'Bebas Neue', sans-serif" fontSize="16" letterSpacing="7" fill={color}>
@@ -281,7 +291,7 @@ export default async function HomePage() {
         {/* Cage background image */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/home-score_bright.jpg)',
+          backgroundImage: 'url(/home-score_bright.png)',
           backgroundSize: 'cover', backgroundPosition: 'center',
           opacity: 0.38, filter: 'brightness(0.75)',
         }}/>
@@ -314,7 +324,7 @@ export default async function HomePage() {
               <div style={{
                 position: 'absolute', inset: 0,
                 width: `${score.isRamping ? rampPct : 100}%`,
-                background: scoreColor,
+                background: score.isRamping ? C.amber : scoreColor,
               }}/>
             </div>
             {!score.isRamping && (
@@ -325,12 +335,12 @@ export default async function HomePage() {
           </div>
 
           {/* Right: octagon score frame */}
-          <div style={{ width: 148, flexShrink: 0 }}>
+          <div style={{ width: 160, flexShrink: 0 }}>
             <ScoreOctagon
               value={score.isRamping ? currentDay : roundedScore}
               topLabel={score.isRamping ? 'RAMP' : 'SCORE'}
               bottomLabel={score.isRamping ? `/ ${RAMPING_DAYS}` : '/ 100'}
-              color={scoreColor}
+              color={score.isRamping ? C.amberBright : scoreColor}
             />
           </div>
         </div>
