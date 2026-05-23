@@ -18,7 +18,7 @@ export default function AppLayout({
           width: '100%',
           maxWidth: '430px',
           minHeight: '100vh',
-          background: "linear-gradient(rgba(5,5,5,0.78), rgba(5,5,5,0.78)), url('/concrete-background.png') center / cover",
+          background: "url('/concrete-dark.jpg') center / cover",
           borderLeft:  '1px solid rgba(200,148,58,0.20)',
           borderRight: '1px solid rgba(200,148,58,0.20)',
           boxShadow: '-8px 0 40px rgba(0,0,0,0.6), 8px 0 40px rgba(0,0,0,0.6), 0 0 80px rgba(200,148,58,0.04)',
