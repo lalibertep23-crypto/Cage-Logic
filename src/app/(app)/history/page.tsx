@@ -112,7 +112,7 @@ export default async function HistoryPage() {
   const groups = [...groupsMap.values()].sort((a, b) => (a.key < b.key ? 1 : -1));
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       {/* ── Page header ───────────────────────────────────────────────── */}
       <div style={{

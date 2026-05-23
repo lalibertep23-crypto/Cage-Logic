@@ -115,7 +115,7 @@ export default async function HealthPage() {
   }));
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       {/* ── Header ────────────────────────────────────────────────────── */}
       <div style={{

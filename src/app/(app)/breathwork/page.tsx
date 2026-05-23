@@ -108,7 +108,7 @@ export default async function BreathworkPage() {
   }));
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <div style={{ position: 'relative', height: 210, overflow: 'hidden' }}>

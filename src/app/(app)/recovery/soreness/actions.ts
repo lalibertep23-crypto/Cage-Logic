@@ -87,7 +87,4 @@ export async function logSorenessAction(
     { onConflict: 'athlete_id,log_date' }
   );
 
-  if (error) return { error: error.message };
-  revalidatePath('/home');
-  redirect('/recovery');
-}
+  if (error) return { error

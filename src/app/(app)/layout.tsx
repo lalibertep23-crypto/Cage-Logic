@@ -18,7 +18,7 @@ export default function AppLayout({
           width: '100%',
           maxWidth: '430px',
           minHeight: '100vh',
-          background: '#050505',
+          background: 'url(/concrete-background.png) center center / cover fixed',
           borderLeft:  '1px solid rgba(200,148,58,0.20)',
           borderRight: '1px solid rgba(200,148,58,0.20)',
           boxShadow: '-8px 0 40px rgba(0,0,0,0.6), 8px 0 40px rgba(0,0,0,0.6), 0 0 80px rgba(200,148,58,0.04)',
@@ -27,8 +27,3 @@ export default function AppLayout({
         <div style={{ paddingBottom: 80 }}>
           {children}
         </div>
-        <NavBar />
-      </div>
-    </div>
-  );
-}

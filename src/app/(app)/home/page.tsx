@@ -286,7 +286,7 @@ export default async function HomePage() {
   const rampPct     = Math.min(100, (currentDay / RAMPING_DAYS) * 100);
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div style={{
@@ -579,100 +579,4 @@ export default async function HomePage() {
                 )}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.1em' }}>
-                  {String(primaryDiscipline.rank_color ?? 'WHITE').toUpperCase()} BELT
-                </span>
-                <BeltVisual
-                  color={primaryDiscipline.rank_color as string | null}
-                  stripes={(primaryDiscipline.stripes as number) ?? 0}
-                />
-              </div>
-            </div>
-            {/* Time in bar */}
-            <div style={{ marginBottom: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.mid }}>TIME IN PHASE</span>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: stripeTimeReady ? C.amber : C.dim, letterSpacing: '0.06em' }}>
-                  {daysInCurrentPhase}d · {STRIPE_THRESHOLD}d target {stripeTimeReady ? '✓' : ''}
-                </span>
-              </div>
-              <div style={{ height: 5, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', inset: 0, width: `${stripeTimeProgress}%`, background: stripeTimeReady ? C.amber : C.amberLow }}/>
-              </div>
-            </div>
-            {/* Investment bar */}
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.mid }}>INVESTMENT SCORE</span>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: scoreReady ? green : C.dim, letterSpacing: '0.06em' }}>
-                  {score.isRamping ? 'CALIBRATING' : `${roundedScore} / 65 min ${scoreReady ? '✓' : ''}`}
-                </span>
-              </div>
-              <div style={{ height: 5, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
-                <div style={{
-                  position: 'absolute', inset: 0,
-                  width: score.isRamping ? '3%' : `${Math.min(100, (roundedScore / 65) * 100)}%`,
-                  background: scoreReady ? green : C.amberLow,
-                }}/>
-              </div>
-            </div>
-            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dimmer, letterSpacing: '0.06em', margin: 0, lineHeight: 1.6 }}>
-              {stripeTimeReady && scoreReady
-                ? 'Both gates clear. Bring it to your coach.'
-                : 'Coach watches both gates. Keep building.'}
-            </p>
-          </div>
-        </div>
-      )}
-
-
-      {/* ── Mental Check-in CTA ── */}
-      {!didCheckInToday && (
-        <Link href="/mental" style={{ textDecoration: 'none', display: 'block' }}>
-          <div style={{
-            borderBottom: `1px solid ${C.line}`,
-            borderLeft: `3px solid ${C.amber}`,
-            background: C.surface,
-          }}>
-            <div style={{ padding: '16px 22px' }}>
-              {/* Header row */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.text }}>
-                  MENTAL CHECK-IN
-                </span>
-                <span style={{
-                  fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.14em',
-                  color: C.brick, border: `1px solid ${C.brick}`, padding: '2px 6px',
-                }}>
-                  NOT DONE
-                </span>
-              </div>
-              {/* Description */}
-              <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, letterSpacing: '0.06em', margin: '0 0 14px', lineHeight: 1.65 }}>
-                Daily prompt active. 2 min. Scores toward Mental domain.
-              </p>
-              {/* CTA row */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.2em', color: C.amber }}>
-                  OPEN CHECK-IN
-                </span>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 18, color: C.amber }}>→</span>
-              </div>
-            </div>
-          </div>
-        </Link>
-      )}
-
-      {/* ── Daily Quote ── */}
-      <div style={{ padding: '18px 22px 80px' }}>
-        <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, lineHeight: 1.75, color: C.dim, margin: '0 0 8px', letterSpacing: '0.03em' }}>
-          "{todayQuote.text}"
-        </p>
-        <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dimmer, letterSpacing: '0.1em', margin: 0 }}>
-          — {todayQuote.author.toUpperCase()}
-        </p>
-      </div>
-
-    </main>
-  );
-}
+                <span style={{ fontFa

@@ -210,11 +210,4 @@ export async function logSessionAction(
             technique_custom: s.technique_custom,
             result: s.result,
           }))
-        );
-      }
-    }
-  }
-
-  revalidatePath('/home');
-  redirect('/home');
-}
+       

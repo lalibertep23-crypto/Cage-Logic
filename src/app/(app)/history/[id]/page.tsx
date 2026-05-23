@@ -139,7 +139,7 @@ export default async function SessionDetailPage({
   }
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       {/* ── Page header ──────────────────────────────────────────────────── */}
       <div style={{

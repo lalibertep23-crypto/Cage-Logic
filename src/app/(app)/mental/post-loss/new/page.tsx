@@ -28,7 +28,7 @@ export default async function PostLossNewPage() {
   };
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',

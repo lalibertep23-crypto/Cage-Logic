@@ -54,7 +54,4 @@ export async function submitCheckInAction(
     notes: parsed.data.notes ?? null,
   });
 
-  if (error) return { error: error.message };
-  revalidatePath('/home');
-  redirect('/mental');
-}
+  if (error) return { err

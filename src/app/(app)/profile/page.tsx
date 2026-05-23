@@ -137,7 +137,7 @@ export default async function ProfilePage() {
   const memberSince = (athlete.created_at as string | null) ?? null;
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       {/* ── Page header ──────────────────────────────────────────────────── */}
       <div style={{

@@ -122,7 +122,7 @@ export default async function ProgressionPage() {
   }));
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 100 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 100 }}>
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div style={{ padding: '20px 22px 16px', borderBottom: `1px solid ${C.border}` }}>

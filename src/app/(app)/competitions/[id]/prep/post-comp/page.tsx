@@ -77,7 +77,7 @@ export default async function PostCompPage({
   };
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       {/* Header */}
       <div style={{

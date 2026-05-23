@@ -11,7 +11,7 @@ const green = '#5C8A3C';
 
 export default function DemoProfilePage() {
   return (
-    <div style={{ background: C.bg, minHeight: '100vh', color: C.text }}>
+    <div style={{ minHeight: '100vh', color: C.text }}>
 
       {/* ── Hero Photo ──────────────────────────────────────────────────── */}
       <div style={{ position: 'relative', height: 460, overflow: 'hidden', background: '#0A0806' }}>
@@ -416,3 +416,4 @@ export default function DemoProfilePage() {
     </div>
   );
 }
+                  

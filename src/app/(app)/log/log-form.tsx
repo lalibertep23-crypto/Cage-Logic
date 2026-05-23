@@ -244,7 +244,7 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
     .concat(Array.from(grouped.keys()).filter((k) => !(POSITION_ORDER as readonly string[]).includes(k)));
 
   return (
-    <form action={formAction} style={{ display: 'flex', flexDirection: 'column', background: C.bg, minHeight: '100vh' }}>
+    <form action={formAction} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
 
       {/* ── Injury follow-up banner ───────────────────────────────────────── */}
       {activeInjuries.length > 0 && (

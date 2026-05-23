@@ -55,7 +55,7 @@ export default async function CriteriaPage({
   const displayFrom = fromRank || 'current rank';
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 100 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 100 }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 22px 14px', borderBottom: `1px solid ${C.border}` }}>

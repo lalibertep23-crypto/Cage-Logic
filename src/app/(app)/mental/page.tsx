@@ -329,7 +329,7 @@ export default async function MentalHubPage() {
   }));
 
   return (
-    <main style={{ background: C.bg, minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       {/* ── Hero — image + title merged ─────────────────────────────── */}
       <div style={{ position: 'relative', height: 220, overflow: 'hidden' }}>
