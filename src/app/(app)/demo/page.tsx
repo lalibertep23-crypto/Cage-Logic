@@ -14,45 +14,95 @@ export default function DemoProfilePage() {
     <div style={{ background: C.bg, minHeight: '100vh', color: C.text }}>
 
       {/* ── Hero Photo ──────────────────────────────────────────────────── */}
-      <div style={{ position: 'relative', height: 340, overflow: 'hidden', background: C.raised }}>
+      <div style={{ position: 'relative', height: 460, overflow: 'hidden', background: '#0A0806' }}>
+
+        {/* Photo */}
         <img
           src="/frankie-edgar-profile.avif"
-          alt="Frankie Edgar"
+          alt=""
           style={{
+            position: 'absolute', inset: 0,
             width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'center 15%',
-            filter: 'brightness(0.65)',
+            objectFit: 'cover', objectPosition: 'center 8%',
+            filter: 'brightness(0.60) contrast(1.08) saturate(0.85)',
           }}
         />
-        {/* Bottom fade */}
+
+        {/* Warm amber color grade — top-left directional */}
         <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: 200,
-          background: `linear-gradient(to bottom, transparent 0%, ${C.bg} 100%)`,
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(135deg, rgba(200,148,58,0.10) 0%, transparent 55%)',
+          pointerEvents: 'none',
         }}/>
-        {/* Top label */}
+
+        {/* Side vignettes */}
         <div style={{
-          position: 'absolute', top: 16, left: 20,
-          fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.22em', color: C.amber,
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to right, rgba(5,5,5,0.55) 0%, transparent 35%, transparent 65%, rgba(5,5,5,0.55) 100%)',
+          pointerEvents: 'none',
+        }}/>
+
+        {/* Bottom fade — long and aggressive so name is fully readable */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: 320,
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(5,5,5,0.50) 40%, rgba(5,5,5,0.88) 65%, #050505 100%)',
+          pointerEvents: 'none',
+        }}/>
+
+        {/* Top label with amber accent bar */}
+        <div style={{
+          position: 'absolute', top: 18, left: 20,
+          display: 'flex', alignItems: 'center', gap: 8,
         }}>
-          ATHLETE PROFILE
+          <div style={{ width: 2, height: 12, background: C.amber, flexShrink: 0 }}/>
+          <span style={{ fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.26em', color: C.amber }}>
+            ATHLETE PROFILE
+          </span>
         </div>
-        {/* Name overlay */}
-        <div style={{ position: 'absolute', bottom: 18, left: 20, right: 20 }}>
+
+        {/* Name block — anchored to bottom, fully inside the fade zone */}
+        <div style={{ position: 'absolute', bottom: 0, left: 20, right: 20, paddingBottom: 28 }}>
+
+          {/* UFC badge */}
           <div style={{
-            fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.22em',
-            color: C.amber, marginBottom: 6,
+            display: 'inline-flex', alignItems: 'center', gap: 7,
+            padding: '4px 10px', marginBottom: 12,
+            background: 'rgba(200,148,58,0.10)',
+            border: '1px solid rgba(200,148,58,0.28)',
           }}>
-            UFC HALL OF FAMER · IRON ARMY ACADEMY
+            <span style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.22em', color: C.amber }}>UFC HALL OF FAMER</span>
+            <div style={{ width: 2, height: 2, background: C.amber, borderRadius: '50%', opacity: 0.6 }}/>
+            <span style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.22em', color: C.amber }}>IRON ARMY ACADEMY</span>
           </div>
-          <div style={{ fontFamily: fonts.header, fontSize: 52, letterSpacing: '0.02em', lineHeight: 0.9, color: C.text }}>
+
+          {/* FRANKIE */}
+          <div style={{
+            fontFamily: fonts.header, fontSize: 62, letterSpacing: '-0.01em', lineHeight: 0.86,
+            color: C.text,
+            textShadow: '0 4px 32px rgba(0,0,0,0.9)',
+          }}>
             FRANKIE
           </div>
-          <div style={{ fontFamily: fonts.header, fontSize: 40, letterSpacing: '0.04em', lineHeight: 1, color: C.amber }}>
+
+          {/* "THE ANSWER" — Bebas, spaced, amber, smaller as an epithet */}
+          <div style={{
+            fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.32em', lineHeight: 1.6,
+            color: C.amber,
+            textShadow: '0 0 24px rgba(200,148,58,0.50)',
+            paddingLeft: 3,
+          }}>
             "THE ANSWER"
           </div>
-          <div style={{ fontFamily: fonts.header, fontSize: 52, letterSpacing: '0.02em', lineHeight: 0.9, color: C.text }}>
+
+          {/* EDGAR */}
+          <div style={{
+            fontFamily: fonts.header, fontSize: 62, letterSpacing: '-0.01em', lineHeight: 0.86,
+            color: C.text,
+            textShadow: '0 4px 32px rgba(0,0,0,0.9)',
+          }}>
             EDGAR
           </div>
+
         </div>
       </div>
 
