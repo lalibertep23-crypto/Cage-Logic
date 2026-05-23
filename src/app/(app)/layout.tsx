@@ -27,3 +27,8 @@ export default function AppLayout({
         <div style={{ paddingBottom: 80 }}>
           {children}
         </div>
+        <NavBar />
+      </div>
+    </div>
+  );
+}
