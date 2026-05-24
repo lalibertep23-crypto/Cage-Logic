@@ -1,7 +1,6 @@
 // Progression — Multi-discipline hub. Screen 1.
-// Card design: belt/rank image fills full card as background.
-// Text + badge float on top via absolute overlay.
-// BJJ -> /progression/criteria. Muay Thai -> /progression/muay-thai.
+// Card: belt image fills full card as background. Content floats on top.
+// No NEXT line — just discipline + rank. Badge enlarged, circular crop.
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,7 +10,7 @@ import { C, fonts } from '@/lib/design-tokens';
 
 export const dynamic = 'force-dynamic';
 
-type RankDisplay = { rankLine: string; nextLine: string; rightImage: string };
+type RankDisplay = { rankLine: string; rightImage: string };
 
 type DisciplineConfig = {
   key:         string;
@@ -41,33 +40,28 @@ function bjjRank(rankColor: string, stripes: number): RankDisplay {
   const base = LABELS[rankColor] ?? rankColor.toUpperCase();
   if (rankColor === 'black') {
     const degLabel = DEGREE_LABELS[stripes];
-    const nextDeg  = DEGREE_LABELS[stripes + 1];
     return {
       rankLine:   degLabel ? (base + ' • ' + degLabel) : base,
-      nextLine:   stripes >= 4 ? 'AT THE SUMMIT' : (base + ' • ' + (nextDeg ?? '')),
       rightImage: DEGREE_IMAGES[stripes] ?? '/first-degree.png',
     };
   }
-  const NEXT_BELT: Record<string, string> = {
-    white: 'BLUE BELT', blue: 'PURPLE BELT', purple: 'BROWN BELT', brown: 'BLACK BELT',
-  };
+  const stripe = stripes > 0 ? (' • STRIPE ' + stripes) : '';
   return {
-    rankLine:   stripes > 0 ? (base + ' • STRIPE ' + stripes) : base,
-    nextLine:   stripes < 4 ? (base + ' • STRIPE ' + (stripes + 1)) : (NEXT_BELT[rankColor] ?? ''),
+    rankLine:   base + stripe,
     rightImage: BELT_IMAGES[rankColor] ?? '/white-belt.png',
   };
 }
 
 function muayThaiRank(rankColor: string): RankDisplay {
-  const LEVELS: Record<string, { name: string; image: string; next: string }> = {
-    prajied_1: { name: 'PRAJIED LEVEL 1', image: '/prajied-level1.png', next: 'PRAJIED LEVEL 2' },
-    prajied_2: { name: 'PRAJIED LEVEL 2', image: '/prajied-level2.png', next: 'PRAJIED LEVEL 3' },
-    prajied_3: { name: 'PRAJIED LEVEL 3', image: '/prajied-level3.png', next: 'PRAJIED LEVEL 4' },
-    prajied_4: { name: 'PRAJIED LEVEL 4', image: '/prajied-level4.png', next: 'PRAJIED LEVEL 5' },
-    prajied_5: { name: 'PRAJIED LEVEL 5', image: '/prajied-level5.png', next: 'AT THE SUMMIT'   },
+  const LEVELS: Record<string, { name: string; image: string }> = {
+    prajied_1: { name: 'PRAJIED LEVEL 1', image: '/prajied-level1.png' },
+    prajied_2: { name: 'PRAJIED LEVEL 2', image: '/prajied-level2.png' },
+    prajied_3: { name: 'PRAJIED LEVEL 3', image: '/prajied-level3.png' },
+    prajied_4: { name: 'PRAJIED LEVEL 4', image: '/prajied-level4.png' },
+    prajied_5: { name: 'PRAJIED LEVEL 5', image: '/prajied-level5.png' },
   };
   const level = LEVELS[rankColor] ?? LEVELS['prajied_1'];
-  return { rankLine: level.name, nextLine: level.next, rightImage: level.image };
+  return { rankLine: level.name, rightImage: level.image };
 }
 
 function levelRank(rankColor: string, images: Record<string, string>): RankDisplay {
@@ -75,13 +69,8 @@ function levelRank(rankColor: string, images: Record<string, string>): RankDispl
     level_1: 'TRAINING LEVEL 1', level_2: 'TRAINING LEVEL 2',
     level_3: 'TRAINING LEVEL 3', level_4: 'TRAINING LEVEL 4',
   };
-  const NEXT: Record<string, string> = {
-    level_1: 'TRAINING LEVEL 2', level_2: 'TRAINING LEVEL 3',
-    level_3: 'TRAINING LEVEL 4', level_4: 'AT THE SUMMIT',
-  };
   return {
     rankLine:   LABELS[rankColor] ?? rankColor.toUpperCase(),
-    nextLine:   NEXT[rankColor] ?? 'AT THE SUMMIT',
     rightImage: images[rankColor] ?? '',
   };
 }
@@ -91,13 +80,8 @@ function mmaRank(rankColor: string): RankDisplay {
     foundation: 'FOUNDATION', intermediate: 'INTERMEDIATE',
     advanced: 'ADVANCED', expert: 'EXPERT',
   };
-  const NEXT: Record<string, string> = {
-    foundation: 'INTERMEDIATE', intermediate: 'ADVANCED',
-    advanced: 'EXPERT', expert: 'AT THE SUMMIT',
-  };
   return {
     rankLine:   LABELS[rankColor] ?? rankColor.toUpperCase(),
-    nextLine:   NEXT[rankColor] ?? 'AT THE SUMMIT',
     rightImage: '/championship-belt.png',
   };
 }
@@ -148,13 +132,13 @@ const DISCIPLINES: DisciplineConfig[] = [
   },
 ];
 
-// Card: belt image fills entire card as background. Content floats on top.
+// ─── Card ───────────────────────────────────────────────────────────────────
+
 function DisciplineCard({
-  config, rankLine, nextLine, rightImage, hasData, isLocked,
+  config, rankLine, rightImage, hasData, isLocked,
 }: {
   config:     DisciplineConfig;
   rankLine:   string;
-  nextLine:   string;
   rightImage: string;
   hasData:    boolean;
   isLocked:   boolean;
@@ -165,12 +149,12 @@ function DisciplineCard({
   return (
     <div style={{
       position: 'relative',
-      height: 112,
+      height: 118,
       overflow: 'hidden',
-      opacity: hasData ? 1 : 0.42,
+      opacity: hasData ? 1 : 0.38,
     }}>
 
-      {/* Layer 1: full-bleed belt/rank image */}
+      {/* Layer 1: full-bleed background — belt / rank art */}
       {hasData && rightImage ? (
         <Image
           src={rightImage}
@@ -180,24 +164,24 @@ function DisciplineCard({
           style={{
             objectFit: 'cover',
             objectPosition: 'center right',
-            opacity: isLocked ? 0.22 : 0.62,
-            filter: isLocked ? 'grayscale(0.8) brightness(0.6)' : 'none',
+            opacity: isLocked ? 0.28 : 0.88,
+            filter: isLocked ? 'grayscale(0.8) brightness(0.5)' : 'none',
           }}
         />
       ) : (
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(14,11,7,0.90)' }}/>
       )}
 
-      {/* Layer 2: directional scrim */}
+      {/* Layer 2: directional scrim — strong left, open right */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(to right, rgba(8,6,3,0.97) 0%, rgba(8,6,3,0.88) 45%, rgba(8,6,3,0.55) 72%, rgba(8,6,3,0.10) 100%)',
+        background: 'linear-gradient(to right, rgba(6,4,2,0.97) 0%, rgba(6,4,2,0.90) 32%, rgba(6,4,2,0.60) 55%, rgba(6,4,2,0.08) 100%)',
       }}/>
 
-      {/* Layer 3: left accent bar + border */}
+      {/* Layer 3: accent border */}
       <div style={{
         position: 'absolute', inset: 0,
-        border: '1px solid rgba(255,255,255,0.07)',
+        border: '1px solid rgba(255,255,255,0.06)',
         borderLeft: borderLeftVal,
         pointerEvents: 'none',
       }}/>
@@ -208,77 +192,67 @@ function DisciplineCard({
         display: 'flex', alignItems: 'center',
       }}>
 
-        {/* Badge — dark circle backdrop masks any white-background PNGs */}
+        {/* Badge — circular crop handles any background type */}
         <div style={{
-          width: 104, flexShrink: 0,
+          width: 108, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <div style={{
-            width: 88, height: 88,
+            width: 96, height: 96,
             borderRadius: '50%',
-            background: 'rgba(0,0,0,0.50)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(4,3,1,0.65)',
+            overflow: 'hidden',
+            position: 'relative',
             flexShrink: 0,
           }}>
-            <div style={{ width: 74, height: 74, position: 'relative' }}>
-              <Image
-                src={config.badge}
-                alt={config.label}
-                fill sizes="74px"
-                style={{
-                  objectFit: 'contain',
-                  opacity: hasData ? 1.0 : 0.25,
-                  filter: hasData ? 'none' : 'grayscale(1)',
-                }}
-              />
-            </div>
+            <Image
+              src={config.badge}
+              alt={config.label}
+              fill
+              sizes="96px"
+              style={{
+                objectFit: 'cover',
+                opacity: hasData ? 1.0 : 0.22,
+                filter: hasData ? 'none' : 'grayscale(1)',
+              }}
+            />
           </div>
         </div>
 
-        {/* Text block */}
-        <div style={{ flex: 1, minWidth: 0, paddingRight: 8 }}>
+        {/* Text — discipline label + rank only */}
+        <div style={{ flex: 1, minWidth: 0, paddingRight: 12 }}>
           <div style={{
-            fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.22em',
-            color: 'rgba(242,239,232,0.55)', marginBottom: 5,
+            fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.24em',
+            color: 'rgba(242,239,232,0.50)', marginBottom: 8,
             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
           }}>
             {config.label}
           </div>
           <div style={{
-            fontFamily: fonts.label, fontSize: 18, letterSpacing: '0.06em', lineHeight: 1.1,
+            fontFamily: fonts.label, fontSize: 20, letterSpacing: '0.05em', lineHeight: 1.0,
             color: hasData ? accentColor : 'rgba(242,239,232,0.28)',
             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
           }}>
             {rankLine}
           </div>
-          {hasData && (
-            <div style={{
-              fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.08em',
-              color: 'rgba(242,239,232,0.42)', marginTop: 6,
-              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-            }}>
-              <span style={{ color: accentColor + '80' }}>{'NEXT  '}</span>
-              {nextLine}
-            </div>
-          )}
         </div>
 
-        {/* Chevron / lock */}
+        {/* Chevron or lock */}
         <div style={{
-          width: 32, flexShrink: 0,
+          width: 36, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           {isLocked && hasData ? (
-            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"
-                 stroke="rgba(242,239,232,0.28)" strokeWidth="1.4" strokeLinecap="round">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"
+                 stroke="rgba(242,239,232,0.25)" strokeWidth="1.4" strokeLinecap="round">
               <rect x="3" y="8" width="10" height="7" rx="1"/>
               <path d="M5.5 8V6a2.5 2.5 0 015 0v2"/>
             </svg>
           ) : (
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M3 1l4 4-4 4"
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+              <path d="M3.5 1.5l5 4.5-5 4.5"
                 stroke={hasData ? accentColor : 'rgba(242,239,232,0.20)'}
-                strokeWidth="1.5" strokeLinecap="round"/>
+                strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           )}
         </div>
@@ -288,9 +262,9 @@ function DisciplineCard({
       {isLocked && hasData && (
         <div style={{
           position: 'absolute', top: 0, right: 0, padding: '3px 8px',
-          background: 'rgba(242,239,232,0.06)',
+          background: 'rgba(242,239,232,0.05)',
           fontFamily: fonts.body, fontSize: 7, letterSpacing: '0.18em',
-          color: 'rgba(242,239,232,0.32)',
+          color: 'rgba(242,239,232,0.28)',
         }}>
           COMING SOON
         </div>
@@ -298,6 +272,8 @@ function DisciplineCard({
     </div>
   );
 }
+
+// ─── Page ────────────────────────────────────────────────────────────────────
 
 export default async function ProgressionPage() {
   const supabase = await createClient();
@@ -323,15 +299,15 @@ export default async function ProgressionPage() {
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 96, position: 'relative' }}>
 
-      {/* Page background */}
+      {/* Background */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
         <img src="/bjj-background.png" alt=""
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
         />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(5,4,3,0.72)' }}/>
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(5,4,3,0.68)' }}/>
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'radial-gradient(ellipse at 50% 0%, rgba(200,120,40,0.06) 0%, rgba(0,0,0,0.40) 100%)',
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(200,120,40,0.06) 0%, rgba(0,0,0,0.35) 100%)',
         }}/>
       </div>
 
@@ -389,14 +365,13 @@ export default async function ProgressionPage() {
             const href      = hasData ? config.getHref(rankColor, stripes) : '#';
             const rankInfo  = hasData
               ? config.getRank(rankColor, stripes)
-              : { rankLine: 'NOT ENROLLED', nextLine: '', rightImage: '' };
+              : { rankLine: 'NOT ENROLLED', rightImage: '' };
 
             return (
               <Link key={config.key} href={href} style={{ textDecoration: 'none', display: 'block' }}>
                 <DisciplineCard
                   config={config}
                   rankLine={rankInfo.rankLine}
-                  nextLine={rankInfo.nextLine}
                   rightImage={rankInfo.rightImage}
                   hasData={hasData}
                   isLocked={isLocked}
