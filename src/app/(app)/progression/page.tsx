@@ -159,17 +159,18 @@ function DisciplineCard({
   hasData:    boolean;
   isLocked:   boolean;
 }) {
-  const accentColor = config.accentColor;
+  const accentColor   = config.accentColor;
+  const borderLeftVal = '3px solid ' + (hasData ? accentColor : 'rgba(242,239,232,0.10)');
 
   return (
     <div style={{
       position: 'relative',
-      height: 104,
+      height: 112,
       overflow: 'hidden',
       opacity: hasData ? 1 : 0.42,
     }}>
 
-      {/* ── Layer 1: full-bleed belt/rank image ── */}
+      {/* Layer 1: full-bleed belt/rank image */}
       {hasData && rightImage ? (
         <Image
           src={rightImage}
@@ -179,7 +180,7 @@ function DisciplineCard({
           style={{
             objectFit: 'cover',
             objectPosition: 'center right',
-            opacity: isLocked ? 0.18 : 0.42,
+            opacity: isLocked ? 0.22 : 0.62,
             filter: isLocked ? 'grayscale(0.8) brightness(0.6)' : 'none',
           }}
         />
@@ -187,42 +188,50 @@ function DisciplineCard({
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(14,11,7,0.90)' }}/>
       )}
 
-      {/* ── Layer 2: directional scrim — heavy left, open right ── */}
+      {/* Layer 2: directional scrim */}
       <div style={{
         position: 'absolute', inset: 0,
         background: 'linear-gradient(to right, rgba(8,6,3,0.97) 0%, rgba(8,6,3,0.88) 45%, rgba(8,6,3,0.55) 72%, rgba(8,6,3,0.10) 100%)',
       }}/>
 
-      {/* ── Layer 3: left accent bar + border ── */}
+      {/* Layer 3: left accent bar + border */}
       <div style={{
         position: 'absolute', inset: 0,
         border: '1px solid rgba(255,255,255,0.07)',
-        borderLeft: '3px solid ' + (hasData ? accentColor : 'rgba(242,239,232,0.10)'),
+        borderLeft: borderLeftVal,
         pointerEvents: 'none',
       }}/>
 
-      {/* ── Layer 4: content ── */}
+      {/* Layer 4: content */}
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center',
       }}>
 
-        {/* Badge — large, prominent */}
+        {/* Badge — dark circle backdrop masks any white-background PNGs */}
         <div style={{
-          width: 90, flexShrink: 0,
+          width: 104, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <div style={{ width: 76, height: 76, position: 'relative' }}>
-            <Image
-              src={config.badge}
-              alt={config.label}
-              fill sizes="76px"
-              style={{
-                objectFit: 'contain',
-                opacity: hasData ? 1.0 : 0.25,
-                filter: hasData ? 'none' : 'grayscale(1)',
-              }}
-            />
+          <div style={{
+            width: 88, height: 88,
+            borderRadius: '50%',
+            background: 'rgba(0,0,0,0.50)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <div style={{ width: 74, height: 74, position: 'relative' }}>
+              <Image
+                src={config.badge}
+                alt={config.label}
+                fill sizes="74px"
+                style={{
+                  objectFit: 'contain',
+                  opacity: hasData ? 1.0 : 0.25,
+                  filter: hasData ? 'none' : 'grayscale(1)',
+                }}
+              />
+            </div>
           </div>
         </div>
 
