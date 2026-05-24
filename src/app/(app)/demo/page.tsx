@@ -7,24 +7,36 @@ import Link from 'next/link';
 
 const green = '#5C8A3C';
 
-// Reusable glow card style
+// Base card — no boxShadow; animation drives that via CSS
 const card: React.CSSProperties = {
   background: 'rgba(17,17,17,0.92)',
-  border: '1px solid rgba(200,148,58,0.28)',
-  boxShadow: '0 0 0 1px rgba(200,148,58,0.05), 0 4px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(200,148,58,0.10)',
+  border: '1px solid rgba(200,148,58,0.22)',
 };
+
+// Card with staggered glow animation
+const gc = (delay: number): React.CSSProperties => ({
+  ...card,
+  animation: `cardEdge 5.5s ease-in-out ${delay}s infinite`,
+});
 
 export default function DemoProfilePage() {
   return (
     <div style={{ minHeight: '100vh', color: C.text }}>
 
-      {/* Hide scrollbars globally on this page */}
       <style>{`
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes cardEdge {
+          0%   { box-shadow: 0 0 0 1px rgba(200,148,58,0.14), 0 4px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(200,148,58,0.07); }
+          20%  { box-shadow: 0 0 0 1px rgba(200,148,58,0.06), 0 4px 28px rgba(0,0,0,0.62), inset 0 1px 0 rgba(200,148,58,0.03); }
+          55%  { box-shadow: 0 0 0 1px rgba(200,148,58,0.34), 0 4px 18px rgba(0,0,0,0.48), inset 0 1px 0 rgba(200,148,58,0.18), 0 0 24px rgba(200,148,58,0.11), 0 0 6px rgba(200,148,58,0.08); }
+          80%  { box-shadow: 0 0 0 1px rgba(200,148,58,0.10), 0 4px 24px rgba(0,0,0,0.58), inset 0 1px 0 rgba(200,148,58,0.05); }
+          100% { box-shadow: 0 0 0 1px rgba(200,148,58,0.14), 0 4px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(200,148,58,0.07); }
+        }
       `}</style>
 
-      {/* ── Minimal Header — no center logo ─────────────────────────────── */}
+      {/* ── Minimal Header ────────────────────────────────────────────────── */}
       <div style={{
         position: 'sticky', top: 0, zIndex: 50,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -60,33 +72,43 @@ export default function DemoProfilePage() {
         </div>
       </div>
 
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <div style={{ position: 'relative', height: 460, overflow: 'hidden', background: '#0A0806' }}>
-        <img src="/concrete-athlete-profile.png" alt="" style={{
+      {/* ── Hero ──────────────────────────────────────────────────────────── */}
+      <div style={{ position: 'relative', height: 480, overflow: 'hidden', background: '#080604' }}>
+
+        {/* Scene: cage-left / concrete-right split */}
+        <img src="/profile-scene.png" alt="" style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', objectPosition: 'center center',
+          objectFit: 'cover', objectPosition: 'center top',
         }}/>
+
+        {/* Frankie — full body, standing, right side */}
         <img src="/frankie-edgar-profile.avif" alt="" style={{
-          position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', objectPosition: 'center 8%',
-          filter: 'brightness(0.88) contrast(1.06) saturate(0.88)',
+          position: 'absolute', bottom: 0,
+          right: '6%',
+          height: '96%',
+          width: 'auto',
+          objectFit: 'contain',
+          objectPosition: 'bottom center',
+          filter: 'brightness(0.90) contrast(1.05) saturate(0.90)',
         }}/>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(200,148,58,0.12) 0%, transparent 50%)', pointerEvents: 'none' }}/>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(5,5,5,0.60) 0%, transparent 35%, transparent 65%, rgba(5,5,5,0.60) 100%)', pointerEvents: 'none' }}/>
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 320, background: 'linear-gradient(to bottom, transparent 0%, rgba(5,5,5,0.55) 38%, rgba(5,5,5,0.92) 68%, #050505 100%)', pointerEvents: 'none' }}/>
+
+        {/* Atmospheric overlays */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(200,148,58,0.10) 0%, transparent 45%)', pointerEvents: 'none' }}/>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(5,5,5,0.65) 0%, transparent 30%, transparent 55%, rgba(5,5,5,0.50) 100%)', pointerEvents: 'none' }}/>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 300, background: 'linear-gradient(to bottom, transparent 0%, rgba(5,5,5,0.50) 40%, rgba(5,5,5,0.90) 68%, #050505 100%)', pointerEvents: 'none' }}/>
 
         {/* Name block */}
-        <div style={{ position: 'absolute', bottom: 0, left: 20, right: 20, paddingBottom: 20 }}>
-          <div style={{ fontFamily: fonts.header, fontSize: 66, letterSpacing: '-0.01em', lineHeight: 0.86, color: '#fff', textShadow: '0 4px 40px rgba(0,0,0,0.95)' }}>FRANKIE</div>
-          <div style={{ fontFamily: fonts.label, fontSize: 13, letterSpacing: '0.36em', lineHeight: 1.8, color: C.amber, textShadow: '0 0 28px rgba(200,148,58,0.65)', paddingLeft: 3 }}>"THE ANSWER"</div>
-          <div style={{ fontFamily: fonts.header, fontSize: 66, letterSpacing: '-0.01em', lineHeight: 0.86, color: '#fff', textShadow: '0 4px 40px rgba(0,0,0,0.95)' }}>EDGAR</div>
-          <div style={{ fontFamily: fonts.label, fontSize: 11, letterSpacing: '0.20em', color: 'rgba(242,239,232,0.70)', marginTop: 12, textTransform: 'uppercase' }}>
-            UFC Hall of Fame  ·  Former LW Champion
+        <div style={{ position: 'absolute', bottom: 0, left: 20, right: '42%', paddingBottom: 20 }}>
+          <div style={{ fontFamily: fonts.header, fontSize: 62, letterSpacing: '-0.01em', lineHeight: 0.86, color: '#fff', textShadow: '0 4px 40px rgba(0,0,0,0.95)' }}>FRANKIE</div>
+          <div style={{ fontFamily: fonts.label, fontSize: 12, letterSpacing: '0.36em', lineHeight: 2.0, color: C.amber, textShadow: '0 0 28px rgba(200,148,58,0.65)', paddingLeft: 3 }}>"THE ANSWER"</div>
+          <div style={{ fontFamily: fonts.header, fontSize: 62, letterSpacing: '-0.01em', lineHeight: 0.86, color: '#fff', textShadow: '0 4px 40px rgba(0,0,0,0.95)' }}>EDGAR</div>
+          <div style={{ fontFamily: fonts.label, fontSize: 10, letterSpacing: '0.18em', color: 'rgba(242,239,232,0.65)', marginTop: 12, textTransform: 'uppercase', lineHeight: 1.6 }}>
+            UFC Hall of Fame<br/>Former LW Champion
           </div>
         </div>
       </div>
 
-      {/* ── Credential Badge Cards ────────────────────────────────────────── */}
+      {/* ── Credential Badge Strip ────────────────────────────────────────── */}
       <div style={{ display: 'flex', borderBottom: '1px solid rgba(200,148,58,0.14)', overflowX: 'auto' }} className="hide-scroll">
         {[
           { src: '/verified-athlete.png', line1: 'VERIFIED',  line2: 'ATHLETE'    },
@@ -113,7 +135,7 @@ export default function DemoProfilePage() {
       </div>
 
       {/* ── Pro Record ───────────────────────────────────────────────────── */}
-      <div style={{ ...card, margin: '12px 12px 0', padding: '16px 20px 0' }}>
+      <div style={{ ...gc(0), margin: '12px 12px 0', padding: '16px 20px 0' }}>
         <div style={{ fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.28em', color: C.amber, marginBottom: 16, opacity: 0.7 }}>PRO RECORD</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: 16 }}>
           {[
@@ -135,10 +157,10 @@ export default function DemoProfilePage() {
       </div>
 
       {/* ── Style DNA + Physical Profile ─────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, margin: '12px 12px 0' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, margin: '12px 12px 0' }}>
 
         {/* Style DNA */}
-        <div style={{ ...card, padding: '14px 14px', marginRight: 6 }}>
+        <div style={{ ...gc(0.8), padding: '14px 14px' }}>
           <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.26em', color: C.amber, marginBottom: 14, textShadow: '0 0 12px rgba(200,148,58,0.5)' }}>STYLE DNA</div>
           {[
             { attr: 'PRESSURE', pct: 92 },
@@ -165,7 +187,7 @@ export default function DemoProfilePage() {
         </div>
 
         {/* Physical Profile */}
-        <div style={{ ...card, padding: '14px 12px', marginLeft: 6 }}>
+        <div style={{ ...gc(1.4), padding: '14px 12px' }}>
           <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.26em', color: C.amber, marginBottom: 14, textShadow: '0 0 12px rgba(200,148,58,0.5)' }}>PHYSICAL</div>
           {[
             { label: 'HEIGHT',  value: "5'6\"" },
@@ -182,11 +204,9 @@ export default function DemoProfilePage() {
         </div>
       </div>
 
-      {/* ── Lineage — top-down tree ───────────────────────────────────────── */}
-      <div style={{ ...card, margin: '12px 12px 0', padding: '16px 20px 20px' }}>
+      {/* ── BJJ Lineage — top-down tree ───────────────────────────────────── */}
+      <div style={{ ...gc(2.0), margin: '12px 12px 0', padding: '16px 20px 20px' }}>
         <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.26em', color: C.amber, marginBottom: 20, textShadow: '0 0 12px rgba(200,148,58,0.5)' }}>BJJ LINEAGE</div>
-
-        {/* Tree */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
           {[
             { name: 'CARLSON GRACIE',   dim: 0.38, size: 9  },
@@ -195,11 +215,9 @@ export default function DemoProfilePage() {
             { name: 'FRANKIE EDGAR',    dim: 1.00, size: 13, highlight: true },
           ].map(({ name, dim, size, highlight }, i) => (
             <div key={name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-              {/* Connector line above (skip for first) */}
               {i > 0 && (
                 <div style={{ width: 1, height: 20, background: `rgba(200,148,58,${dim * 0.5})` }}/>
               )}
-              {/* Node */}
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 10,
                 padding: '8px 16px',
@@ -228,16 +246,27 @@ export default function DemoProfilePage() {
         </div>
       </div>
 
-      {/* ── Current Affiliation ───────────────────────────────────────────── */}
-      <div style={{ ...card, margin: '12px 12px 0', padding: '16px 20px' }}>
-        <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.26em', color: C.amber, marginBottom: 16, textShadow: '0 0 12px rgba(200,148,58,0.5)' }}>CURRENT AFFILIATION</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ width: 60, height: 60, borderRadius: '50%', overflow: 'hidden', border: '1px solid rgba(200,148,58,0.35)', flexShrink: 0, boxShadow: '0 0 12px rgba(200,148,58,0.15)' }}>
+      {/* ── Current Affiliation — gym photo card ──────────────────────────── */}
+      <div style={{ ...gc(2.6), margin: '12px 12px 0', overflow: 'hidden', padding: 0 }}>
+        {/* Mat photo header */}
+        <div style={{ position: 'relative', height: 110, overflow: 'hidden' }}>
+          <img src="/iron-army-mat.png" alt="" style={{
+            width: '100%', height: '100%',
+            objectFit: 'cover', objectPosition: 'center 42%',
+            filter: 'brightness(0.28) saturate(0.55)',
+          }}/>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(17,17,17,0.20) 0%, rgba(17,17,17,0.88) 100%)' }}/>
+          <div style={{ position: 'absolute', top: 14, left: 20, fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.26em', color: C.amber, textShadow: '0 0 12px rgba(200,148,58,0.6)' }}>CURRENT AFFILIATION</div>
+        </div>
+
+        {/* Logo + info row */}
+        <div style={{ padding: '14px 20px 18px', display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ width: 56, height: 56, borderRadius: '50%', overflow: 'hidden', border: '1px solid rgba(200,148,58,0.35)', flexShrink: 0, boxShadow: '0 0 12px rgba(200,148,58,0.18)' }}>
             <img src="/iron-army-logo.jpg" alt="Iron Army" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.12em', color: C.text, marginBottom: 4 }}>IRON ARMY ACADEMY</div>
-            <div style={{ fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.14em', color: C.dim, marginBottom: 12 }}>TOMS RIVER, NJ</div>
+            <div style={{ fontFamily: fonts.label, fontSize: 17, letterSpacing: '0.10em', color: C.text, marginBottom: 3 }}>IRON ARMY ACADEMY</div>
+            <div style={{ fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.14em', color: C.dim, marginBottom: 14 }}>TOMS RIVER, NJ</div>
             <div style={{ display: 'inline-flex', padding: '6px 14px', border: '1px solid rgba(200,148,58,0.45)', background: 'rgba(200,148,58,0.07)', boxShadow: '0 0 10px rgba(200,148,58,0.10)' }}>
               <span style={{ fontFamily: fonts.body, fontSize: 8.5, letterSpacing: '0.16em', color: C.amber }}>VIEW GYM PROFILE</span>
             </div>
@@ -246,7 +275,7 @@ export default function DemoProfilePage() {
       </div>
 
       {/* ── Achievements ─────────────────────────────────────────────────── */}
-      <div style={{ ...card, margin: '12px 12px 0', padding: '16px 20px' }}>
+      <div style={{ ...gc(3.2), margin: '12px 12px 0', padding: '16px 20px' }}>
         <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.26em', color: C.amber, marginBottom: 18, textShadow: '0 0 12px rgba(200,148,58,0.5)' }}>ACHIEVEMENTS</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
           {[
@@ -265,7 +294,7 @@ export default function DemoProfilePage() {
       </div>
 
       {/* ── Career Highlights ─────────────────────────────────────────────── */}
-      <div style={{ ...card, margin: '12px 12px 0', padding: '16px 20px', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+      <div style={{ ...gc(3.8), margin: '12px 12px 0', padding: '16px 20px', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.26em', color: C.amber, marginBottom: 14, textShadow: '0 0 12px rgba(200,148,58,0.5)' }}>CAREER HIGHLIGHTS</div>
           {[
@@ -282,13 +311,14 @@ export default function DemoProfilePage() {
             </div>
           ))}
         </div>
-        <div style={{ width: 96, flexShrink: 0, height: 160, border: '1px solid rgba(200,148,58,0.18)', overflow: 'hidden', boxShadow: '0 0 14px rgba(0,0,0,0.5)' }}>
-          <img src="/frankie-edgar-profile.avif" alt="" style={{ width: '140%', height: '100%', objectFit: 'cover', objectPosition: 'center 5%', filter: 'grayscale(1) brightness(0.65)', marginLeft: '-20%' }}/>
+        {/* frankie-sh — cage photo, landscape, upper body */}
+        <div style={{ width: 114, flexShrink: 0, height: 84, border: '1px solid rgba(200,148,58,0.18)', overflow: 'hidden', boxShadow: '0 0 14px rgba(0,0,0,0.5)', alignSelf: 'center' }}>
+          <img src="/frankie-sh.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', filter: 'grayscale(1) brightness(0.60)' }}/>
         </div>
       </div>
 
       {/* ── Fight History Timeline ───────────────────────────────────────── */}
-      <div style={{ ...card, margin: '12px 12px 0', padding: '16px 0 20px' }}>
+      <div style={{ ...gc(4.4), margin: '12px 12px 0', padding: '16px 0 20px' }}>
         <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.26em', color: C.amber, marginBottom: 18, paddingLeft: 20, textShadow: '0 0 12px rgba(200,148,58,0.5)' }}>FIGHT HISTORY</div>
         <div className="hide-scroll" style={{ overflowX: 'auto', paddingBottom: 4 }}>
           <div style={{ display: 'flex', paddingLeft: 20, paddingRight: 20, gap: 0, minWidth: 'max-content' }}>
@@ -300,17 +330,13 @@ export default function DemoProfilePage() {
               { event: 'UFC 162', label: 'TITLE FIGHT',     url: null },
             ].map(({ event, label, url }, i, arr) => (
               <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 88, position: 'relative' }}>
-                {/* Label */}
                 <div style={{ fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.08em', color: url ? C.amber : C.text, marginBottom: 3, textAlign: 'center', textShadow: url ? '0 0 8px rgba(200,148,58,0.5)' : 'none' }}>{event}</div>
                 <div style={{ fontFamily: fonts.body, fontSize: 7.5, letterSpacing: '0.06em', color: C.dim, marginBottom: 10, textAlign: 'center', lineHeight: 1.3 }}>{label}</div>
-
-                {/* Timeline row */}
                 <div style={{ position: 'relative', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {i > 0 && <div style={{ position: 'absolute', right: '50%', top: '50%', width: '50%', height: 1, background: 'rgba(200,148,58,0.30)', transform: 'translateY(-50%)' }}/>}
                   {i < arr.length - 1 && <div style={{ position: 'absolute', left: '50%', top: '50%', width: '50%', height: 1, background: 'rgba(200,148,58,0.30)', transform: 'translateY(-50%)' }}/>}
                   <div style={{
-                    width: url ? 10 : 7,
-                    height: url ? 10 : 7,
+                    width: url ? 10 : 7, height: url ? 10 : 7,
                     borderRadius: '50%',
                     background: url ? C.amber : 'rgba(200,148,58,0.45)',
                     border: url ? '1px solid rgba(200,148,58,0.8)' : '1px solid rgba(200,148,58,0.4)',
@@ -318,8 +344,6 @@ export default function DemoProfilePage() {
                     boxShadow: url ? '0 0 10px rgba(200,148,58,0.8), 0 0 20px rgba(200,148,58,0.4)' : 'none',
                   }}/>
                 </div>
-
-                {/* Play button for fights with clips */}
                 {url && (
                   <a href={url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', marginTop: 10 }}>
                     <div style={{
@@ -339,7 +363,7 @@ export default function DemoProfilePage() {
       </div>
 
       {/* ── Video Highlights ─────────────────────────────────────────────── */}
-      <div style={{ ...card, margin: '12px 12px 0', padding: '16px 20px' }}>
+      <div style={{ ...gc(5.0), margin: '12px 12px 0', padding: '16px 20px' }}>
         <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.26em', color: C.amber, marginBottom: 14, textShadow: '0 0 12px rgba(200,148,58,0.5)' }}>HIGHLIGHTS</div>
         {[
           { label: 'BJ PENN I — LW TITLE WIN · UFC 112', url: 'https://www.youtube.com/watch?v=boIRifT3_GU' },
