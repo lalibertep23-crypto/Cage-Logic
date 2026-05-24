@@ -8,61 +8,13 @@ import Link from 'next/link';
 
 const green  = '#5C8A3C';
 
-/* ── Inline SVG badge icons (placeholders — swap for Patrick's art via src prop) */
-const ShieldCheck = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-    <path d="M14 2L4 6V14c0 6 4.5 10.5 10 12 5.5-1.5 10-6 10-12V6L14 2z" stroke="#C8943A" strokeWidth="1.4" fill="rgba(200,148,58,0.08)"/>
-    <path d="M9 14l3.5 3.5L19 11" stroke="#C8943A" strokeWidth="1.6" strokeLinecap="round"/>
-  </svg>
-);
-const TrophyStar = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-    <path d="M14 3l2 6h6l-5 4 2 6-5-3.5L9 19l2-6-5-4h6z" stroke="#C8943A" strokeWidth="1.3" fill="rgba(200,148,58,0.08)"/>
-    <rect x="11" y="21" width="6" height="2" rx="1" stroke="#C8943A" strokeWidth="1.2"/>
-    <rect x="9" y="23" width="10" height="2" rx="1" stroke="#C8943A" strokeWidth="1.2"/>
-  </svg>
-);
-const OctagonFist = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-    <polygon points="10,2 18,2 26,10 26,18 18,26 10,26 2,18 2,10" stroke="#C8943A" strokeWidth="1.3" fill="rgba(200,148,58,0.08)"/>
-    <circle cx="14" cy="14" r="4" stroke="#C8943A" strokeWidth="1.2" fill="rgba(200,148,58,0.12)"/>
-  </svg>
-);
-const BeltIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-    <rect x="2" y="11" width="24" height="6" rx="1" stroke="#C8943A" strokeWidth="1.3" fill="rgba(200,148,58,0.08)"/>
-    <rect x="22" y="11" width="4" height="6" rx="1" fill="rgba(168,36,36,0.6)" stroke="#C8943A" strokeWidth="0.8"/>
-    <line x1="2" y1="14" x2="22" y2="14" stroke="#C8943A" strokeWidth="0.7" opacity="0.5"/>
-  </svg>
-);
-const WrestlerIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-    <circle cx="10" cy="6" r="2.5" stroke="#C8943A" strokeWidth="1.2" fill="rgba(200,148,58,0.08)"/>
-    <circle cx="18" cy="6" r="2.5" stroke="#C8943A" strokeWidth="1.2" fill="rgba(200,148,58,0.08)"/>
-    <path d="M6 9c2 2 4 4 8 4s6-2 8-4" stroke="#C8943A" strokeWidth="1.3"/>
-    <path d="M8 13l-2 8m14-8l2 8" stroke="#C8943A" strokeWidth="1.2" strokeLinecap="round"/>
-  </svg>
+/* ── Badge img helper */
+const BadgeImg = ({ src, size = 44 }: { src: string; size?: number }) => (
+  <img src={src} alt="" style={{ width: size, height: size * 1.5, objectFit: 'contain' }} />
 );
 
-/* ── Achievement icons */
-const BeltAchieve = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <rect x="1" y="9" width="22" height="6" rx="1" stroke="#C8943A" strokeWidth="1.2" fill="rgba(200,148,58,0.08)"/>
-    <rect x="19" y="9" width="4" height="6" fill="rgba(168,36,36,0.7)" rx="0.5"/>
-  </svg>
-);
-const TrophyAchieve = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M7 3h10v8a5 5 0 01-10 0V3z" stroke="#C8943A" strokeWidth="1.2" fill="rgba(200,148,58,0.08)"/>
-    <path d="M7 7H4a2 2 0 000 4h3M17 7h3a2 2 0 010 4h-3" stroke="#C8943A" strokeWidth="1.1"/>
-    <rect x="10" y="16" width="4" height="3" stroke="#C8943A" strokeWidth="1.1"/>
-    <rect x="8" y="19" width="8" height="2" rx="1" stroke="#C8943A" strokeWidth="1.1"/>
-  </svg>
-);
-const StarAchieve = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M12 2l2.4 7H22l-6 4.4 2.3 7L12 16.3 5.7 20.4 8 13 2 8.6h7.6z" stroke="#C8943A" strokeWidth="1.2" fill="rgba(200,148,58,0.08)"/>
-  </svg>
+const AchieveImg = ({ src }: { src: string }) => (
+  <img src={src} alt="" style={{ width: 36, height: 54, objectFit: 'contain' }} />
 );
 
 export default function DemoProfilePage() {
@@ -134,7 +86,7 @@ export default function DemoProfilePage() {
       {/* ── Hero Photo ───────────────────────────────────────────────────── */}
       <div style={{ position: 'relative', height: 440, overflow: 'hidden', background: '#0A0806' }}>
 
-        <img src="/cage-hero-bg.jpg" alt="" style={{
+        <img src="/concrete-athlete-profile.png" alt="" style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
           objectFit: 'cover', objectPosition: 'center center',
         }}/>
@@ -171,12 +123,12 @@ export default function DemoProfilePage() {
       {/* ── Credential Badge Cards ────────────────────────────────────────── */}
       <div style={{ display: 'flex', borderBottom: `1px solid ${C.line}`, overflowX: 'auto' }}>
         {[
-          { icon: <ShieldCheck/>, line1: 'VERIFIED', line2: 'ATHLETE' },
-          { icon: <TrophyStar/>,  line1: 'HALL OF',  line2: 'FAME'    },
-          { icon: <OctagonFist/>, line1: 'PRO',       line2: 'VETERAN' },
-          { icon: <BeltIcon/>,    line1: 'BJJ',       line2: 'BLACK BELT' },
-          { icon: <WrestlerIcon/>,line1: 'NCAA',      line2: 'WRESTLER'},
-        ].map(({ icon, line1, line2 }, i) => (
+          { src: '/verified-athlete.png', line1: 'VERIFIED',  line2: 'ATHLETE'   },
+          { src: '/hallf-of-fame.png',    line1: 'HALL OF',   line2: 'FAME'      },
+          { src: '/ufc-veteran.png',      line1: 'PRO',       line2: 'VETERAN'   },
+          { src: '/bjj-badge.png',        line1: 'BJJ',       line2: 'BLACK BELT'},
+          { src: '/ncaa-wrestler.png',    line1: 'NCAA',      line2: 'WRESTLER'  },
+        ].map(({ src, line1, line2 }, i) => (
           <div key={i} style={{
             flex: '0 0 20%', minWidth: 70,
             display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -185,7 +137,7 @@ export default function DemoProfilePage() {
             background: C.surface,
             gap: 6,
           }}>
-            {icon}
+            <BadgeImg src={src} size={40} />
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.14em', color: C.dim, lineHeight: 1.4 }}>{line1}</div>
               <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.14em', color: C.text, lineHeight: 1.4 }}>{line2}</div>
@@ -329,13 +281,13 @@ export default function DemoProfilePage() {
         <div style={{ fontFamily: fonts.body, fontSize: 8, letterSpacing: '0.24em', color: C.amber, marginBottom: 16 }}>ACHIEVEMENTS</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 4 }}>
           {[
-            { icon: <BeltAchieve/>,   n: '1',  label1: 'WORLD',    label2: 'TITLES'    },
-            { icon: <BeltAchieve/>,   n: '3',  label1: 'TITLE',    label2: 'FIGHT WINS'},
-            { icon: <TrophyAchieve/>, n: '16', label1: 'FIGHT WIN',label2: 'STREAK'    },
-            { icon: <StarAchieve/>,   n: '15', label1: 'PERF. OF', label2: 'THE NIGHT' },
-          ].map(({ icon, n, label1, label2 }, i) => (
+            { src: '/championship-belt.png', n: '1',  label1: 'WORLD',    label2: 'TITLES'    },
+            { src: '/title-fight.png',       n: '3',  label1: 'TITLE',    label2: 'FIGHT WINS'},
+            { src: '/win-streak.png',        n: '16', label1: 'FIGHT WIN',label2: 'STREAK'    },
+            { src: '/fight-of-the-night.png',n: '15', label1: 'PERF. OF', label2: 'THE NIGHT' },
+          ].map(({ src, n, label1, label2 }, i) => (
             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              {icon}
+              <AchieveImg src={src} />
               <div style={{ fontFamily: fonts.header, fontSize: 28, letterSpacing: '-0.02em', color: C.amber, lineHeight: 1 }}>{n}</div>
               <div style={{ fontFamily: fonts.body, fontSize: 7.5, letterSpacing: '0.10em', color: C.dim, textAlign: 'center', lineHeight: 1.4 }}>{label1}<br/>{label2}</div>
             </div>
@@ -361,7 +313,7 @@ export default function DemoProfilePage() {
             </div>
           ))}
         </div>
-        {/* Photo placeholder — swap for b&w Frankie belt-raise photo */}
+        {/* Photo — b&w Frankie */}
         <div style={{
           width: 100, flexShrink: 0,
           height: 160, background: C.raised,
@@ -386,17 +338,11 @@ export default function DemoProfilePage() {
               { event: 'UFC 162', label: 'TITLE FIGHT'    },
             ].map(({ event, label }, i) => (
               <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 80, position: 'relative' }}>
-                {/* Event label */}
                 <div style={{ fontFamily: fonts.body, fontSize: 8.5, letterSpacing: '0.08em', color: C.text, marginBottom: 4, textAlign: 'center' }}>{event}</div>
                 <div style={{ fontFamily: fonts.body, fontSize: 7.5, letterSpacing: '0.06em', color: C.dim, marginBottom: 8, textAlign: 'center', lineHeight: 1.3 }}>{label}</div>
-
-                {/* Dot + line */}
                 <div style={{ position: 'relative', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {/* Left line */}
                   {i > 0 && <div style={{ position: 'absolute', right: '50%', top: '50%', width: '50%', height: 1, background: 'rgba(200,148,58,0.35)', transform: 'translateY(-50%)' }}/>}
-                  {/* Right line */}
                   {i < 4 && <div style={{ position: 'absolute', left: '50%', top: '50%', width: '50%', height: 1, background: 'rgba(200,148,58,0.35)', transform: 'translateY(-50%)' }}/>}
-                  {/* Dot */}
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: C.amber, border: `1px solid rgba(200,148,58,0.6)`, zIndex: 1, boxShadow: '0 0 6px rgba(200,148,58,0.5)' }}/>
                 </div>
               </div>
