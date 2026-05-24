@@ -1,6 +1,7 @@
 // Progression — Multi-discipline hub. Screen 1.
-// BJJ links to /progression/criteria. Muay Thai links to /progression/muay-thai.
-// Wrestling / Boxing / MMA locked until V1.5.
+// Card design: belt/rank image fills full card as background.
+// Text + badge float on top via absolute overlay.
+// BJJ -> /progression/criteria. Muay Thai -> /progression/muay-thai.
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -147,16 +148,7 @@ const DISCIPLINES: DisciplineConfig[] = [
   },
 ];
 
-function LockIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"
-         stroke="rgba(242,239,232,0.30)" strokeWidth="1.4" strokeLinecap="round">
-      <rect x="3" y="8" width="10" height="7" rx="1"/>
-      <path d="M5.5 8V6a2.5 2.5 0 015 0v2"/>
-    </svg>
-  );
-}
-
+// Card: belt image fills entire card as background. Content floats on top.
 function DisciplineCard({
   config, rankLine, nextLine, rightImage, hasData, isLocked,
 }: {
@@ -167,99 +159,123 @@ function DisciplineCard({
   hasData:    boolean;
   isLocked:   boolean;
 }) {
-  const borderColor = hasData ? config.accentColor : 'rgba(242,239,232,0.10)';
-  const rankColor   = hasData ? config.accentColor : 'rgba(242,239,232,0.30)';
-  const chevronClr  = hasData ? config.accentColor : 'rgba(242,239,232,0.22)';
-  const nextAccent  = config.accentColor + '70';
+  const accentColor = config.accentColor;
 
   return (
     <div style={{
-      position: 'relative', display: 'flex', alignItems: 'center',
-      height: 100, overflow: 'hidden',
-      background: hasData ? 'rgba(28,22,14,0.92)' : 'rgba(16,13,9,0.70)',
-      border: '1px solid rgba(255,255,255,0.07)',
-      borderLeft: '3px solid ' + borderColor,
-      opacity: hasData ? 1 : 0.48,
+      position: 'relative',
+      height: 104,
+      overflow: 'hidden',
+      opacity: hasData ? 1 : 0.42,
     }}>
 
-      {/* Badge — larger, centered */}
-      <div style={{
-        width: 80, flexShrink: 0,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <div style={{ width: 68, height: 68, position: 'relative' }}>
-          <Image src={config.badge} alt={config.label} fill sizes="68px"
-            style={{
-              objectFit: 'contain',
-              opacity: hasData ? 1.0 : 0.30,
-              filter: hasData ? 'none' : 'grayscale(1)',
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Text — simplified: label + rank only + next */}
-      <div style={{ flex: 1, padding: '0 6px 0 0', minWidth: 0, overflow: 'hidden' }}>
-        <div style={{
-          fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.22em',
-          color: 'rgba(242,239,232,0.50)', marginBottom: 5,
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>
-          {config.label}
-        </div>
-        <div style={{
-          fontFamily: fonts.label, fontSize: 17, letterSpacing: '0.07em', lineHeight: 1.1,
-          color: rankColor,
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>
-          {rankLine}
-        </div>
-        <div style={{
-          fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.08em',
-          color: 'rgba(242,239,232,0.38)', marginTop: 6,
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>
-          <span style={{ color: nextAccent }}>{'NEXT  '}</span>
-          {nextLine}
-        </div>
-      </div>
-
-      {/* Right rank visual */}
-      {hasData && rightImage && (
-        <div style={{
-          width: '26%', flexShrink: 0,
-          position: 'relative', height: '100%', overflow: 'hidden',
-        }}>
-          <div style={{
-            position: 'absolute', top: 0, left: 0, bottom: 0, width: '60%',
-            background: 'linear-gradient(to right, rgba(18,14,9,0.98), transparent)',
-            zIndex: 1, pointerEvents: 'none',
-          }}/>
-          <Image src={rightImage} alt="" fill sizes="26vw"
-            style={{
-              objectFit: 'cover', objectPosition: 'center',
-              opacity: isLocked ? 0.25 : 0.80,
-              filter: isLocked ? 'grayscale(0.7) brightness(0.6)' : 'none',
-            }}
-          />
-        </div>
+      {/* ── Layer 1: full-bleed belt/rank image ── */}
+      {hasData && rightImage ? (
+        <Image
+          src={rightImage}
+          alt=""
+          fill
+          sizes="100vw"
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center right',
+            opacity: isLocked ? 0.18 : 0.42,
+            filter: isLocked ? 'grayscale(0.8) brightness(0.6)' : 'none',
+          }}
+        />
+      ) : (
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(14,11,7,0.90)' }}/>
       )}
 
-      {/* Chevron / lock */}
+      {/* ── Layer 2: directional scrim — heavy left, open right ── */}
       <div style={{
-        width: 28, flexShrink: 0, zIndex: 2,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(to right, rgba(8,6,3,0.97) 0%, rgba(8,6,3,0.88) 45%, rgba(8,6,3,0.55) 72%, rgba(8,6,3,0.10) 100%)',
+      }}/>
+
+      {/* ── Layer 3: left accent bar + border ── */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderLeft: '3px solid ' + (hasData ? accentColor : 'rgba(242,239,232,0.10)'),
+        pointerEvents: 'none',
+      }}/>
+
+      {/* ── Layer 4: content ── */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', alignItems: 'center',
       }}>
-        {isLocked && hasData ? (
-          <LockIcon/>
-        ) : (
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-            <path d="M3 1l4 4-4 4" stroke={chevronClr} strokeWidth="1.5" strokeLinecap="round"/>
-          </svg>
-        )}
+
+        {/* Badge — large, prominent */}
+        <div style={{
+          width: 90, flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{ width: 76, height: 76, position: 'relative' }}>
+            <Image
+              src={config.badge}
+              alt={config.label}
+              fill sizes="76px"
+              style={{
+                objectFit: 'contain',
+                opacity: hasData ? 1.0 : 0.25,
+                filter: hasData ? 'none' : 'grayscale(1)',
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Text block */}
+        <div style={{ flex: 1, minWidth: 0, paddingRight: 8 }}>
+          <div style={{
+            fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.22em',
+            color: 'rgba(242,239,232,0.55)', marginBottom: 5,
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          }}>
+            {config.label}
+          </div>
+          <div style={{
+            fontFamily: fonts.label, fontSize: 18, letterSpacing: '0.06em', lineHeight: 1.1,
+            color: hasData ? accentColor : 'rgba(242,239,232,0.28)',
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          }}>
+            {rankLine}
+          </div>
+          {hasData && (
+            <div style={{
+              fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.08em',
+              color: 'rgba(242,239,232,0.42)', marginTop: 6,
+              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            }}>
+              <span style={{ color: accentColor + '80' }}>{'NEXT  '}</span>
+              {nextLine}
+            </div>
+          )}
+        </div>
+
+        {/* Chevron / lock */}
+        <div style={{
+          width: 32, flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          {isLocked && hasData ? (
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"
+                 stroke="rgba(242,239,232,0.28)" strokeWidth="1.4" strokeLinecap="round">
+              <rect x="3" y="8" width="10" height="7" rx="1"/>
+              <path d="M5.5 8V6a2.5 2.5 0 015 0v2"/>
+            </svg>
+          ) : (
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M3 1l4 4-4 4"
+                stroke={hasData ? accentColor : 'rgba(242,239,232,0.20)'}
+                strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          )}
+        </div>
       </div>
 
-      {/* Coming soon */}
+      {/* Coming soon tag */}
       {isLocked && hasData && (
         <div style={{
           position: 'absolute', top: 0, right: 0, padding: '3px 8px',
@@ -281,7 +297,7 @@ export default async function ProgressionPage() {
 
   const { data: rows } = await supabase
     .from('athlete_disciplines')
-    .select('discipline, rank_color, stripes, start_date')
+    .select('discipline, rank_color, stripes')
     .eq('athlete_id', user.id);
 
   const disciplineMap: { [key: string]: { rank_color: string; stripes: number } } = {};
@@ -298,7 +314,7 @@ export default async function ProgressionPage() {
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 96, position: 'relative' }}>
 
-      {/* Background — slightly less dark overlay */}
+      {/* Page background */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
         <img src="/bjj-background.png" alt=""
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
@@ -353,8 +369,8 @@ export default async function ProgressionPage() {
           </Link>
         </div>
 
-        {/* Cards */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 2, padding: '14px 14px 0' }}>
+        {/* Discipline cards */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 3, padding: '14px 14px 0' }}>
           {DISCIPLINES.map((config) => {
             const data      = disciplineMap[config.key];
             const hasData   = !!(data && data.rank_color);
@@ -364,7 +380,7 @@ export default async function ProgressionPage() {
             const href      = hasData ? config.getHref(rankColor, stripes) : '#';
             const rankInfo  = hasData
               ? config.getRank(rankColor, stripes)
-              : { rankLine: 'NOT ENROLLED', nextLine: 'ADD THIS DISCIPLINE', rightImage: '' };
+              : { rankLine: 'NOT ENROLLED', nextLine: '', rightImage: '' };
 
             return (
               <Link key={config.key} href={href} style={{ textDecoration: 'none', display: 'block' }}>
