@@ -64,20 +64,16 @@ const ICONS = {
       <path d="M2,12 L6,12 L8,8 L10,16 L12,12 L22,12"/>
     </svg>
   ),
-  // Schematic body outline — for Health / Your Body tab
-  health: (active: boolean) => (
+  // Rising bars — rank/belt progression
+  progression: (active: boolean) => (
     <svg width={22} height={22} viewBox="0 0 24 24" fill="none"
          stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" strokeLinejoin="miter">
-      {/* Head */}
-      <circle cx="12" cy="4" r="2.5"/>
-      {/* Torso */}
-      <path d="M9,7 L9,15 L15,15 L15,7 Z"/>
-      {/* Arms */}
-      <path d="M9,8 L5,11"/>
-      <path d="M15,8 L19,11"/>
-      {/* Legs */}
-      <path d="M10,15 L8,22"/>
-      <path d="M14,15 L16,22"/>
+      {/* Three rising bars — left short, center mid, right tall */}
+      <rect x="2"  y="16" width="5" height="6"/>
+      <rect x="9"  y="11" width="5" height="11"/>
+      <rect x="16" y="5"  width="5" height="17"/>
+      {/* Star on top of tallest bar — earned/achievement */}
+      <path d="M18.5,2 L19.3,4.2 L21.5,4.2 L19.8,5.5 L20.4,7.5 L18.5,6.2 L16.6,7.5 L17.2,5.5 L15.5,4.2 L17.7,4.2 Z" strokeWidth="1.2"/>
     </svg>
   ),
 };
@@ -89,8 +85,8 @@ const TABS: { href: string; label: string; id: TabId; match: (p: string) => bool
   { href: '/log',      label: 'LOG',    id: 'log',      match: (p) => p === '/log' },
   { href: '/history',  label: 'HIST',   id: 'history',  match: (p) => p.startsWith('/history') },
   { href: '/mental',   label: 'MENTAL', id: 'mental',   match: (p) => p.startsWith('/mental') || p.startsWith('/breathwork') },
-  { href: '/recovery', label: 'RECOV',  id: 'recovery', match: (p) => p.startsWith('/recovery') },
-  { href: '/health',   label: 'BODY',   id: 'health',   match: (p) => p.startsWith('/health') },
+  { href: '/recovery',    label: 'RECOVER',  id: 'recovery',    match: (p) => p.startsWith('/recovery') || p.startsWith('/health') },
+  { href: '/progression', label: 'PROGRESS', id: 'progression', match: (p) => p.startsWith('/progression') },
 ];
 
 export function NavBar() {
