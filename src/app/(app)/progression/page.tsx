@@ -87,12 +87,18 @@ function mmaRank(rankColor: string): RankDisplay {
   };
 }
 
-const WRESTLING_IMG: Record<string, string> = {
-  level_1: '/foundation-wrestling.png',
-  level_2: '/chain-wrestling-wrestling.png',
-  level_3: '/pressure-badge-wrestling.png',
-  level_4: '/elite-badge-wrestling.png',
-};
+function wrestlingRank(rankColor: string): RankDisplay {
+  const TIERS: Record<string, { label: string; image: string }> = {
+    level_1: { label: 'FOUNDATION',      image: '/foundation-wrestling.png' },
+    level_2: { label: 'CHAIN WRESTLING', image: '/chain-wrestling-wrestling.png' },
+    level_3: { label: 'PRESSURE',        image: '/pressure-badge-wrestling.png' },
+    level_4: { label: 'SCRAMBLE',        image: '/scramble-badge-wrestling.png' },
+    level_5: { label: 'COMPETITOR',      image: '/competitor-badge-wrestling.png' },
+    level_6: { label: 'ELITE',           image: '/elite-badge-wrestling.png' },
+  };
+  const tier = TIERS[rankColor] ?? TIERS['level_1'];
+  return { rankLine: tier.label, rightImage: tier.image };
+}
 const BOXING_IMG: Record<string, string> = {
   level_1: '/competitor-badge-wrestling.png',
   level_2: '/competitor-badge-wrestling.png',
@@ -110,8 +116,8 @@ const DISCIPLINES: DisciplineConfig[] = [
   {
     key: 'wrestling', label: 'WRESTLING',
     badge: '/wrestling-navigation-badge.png', accentColor: '#8A9BAE',
-    getHref: () => '#',
-    getRank: (rc) => levelRank(rc, WRESTLING_IMG),
+    getHref: () => '/progression/wrestling',
+    getRank: (rc) => wrestlingRank(rc),
   },
   {
     key: 'muay_thai', label: 'MUAY THAI',
@@ -297,6 +303,11 @@ export default async function ProgressionPage() {
     }
   }
 
+  const activeCount = DISCIPLINES.filter(d => {
+    const data = disciplineMap[d.key];
+    return data && data.rank_color;
+  }).length;
+
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 96, position: 'relative' }}>
 
@@ -314,28 +325,17 @@ export default async function ProgressionPage() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
 
-        {/* Header */}
+        {/* ── Nav Bar ── */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '14px 16px 12px',
-          borderBottom: '1px solid rgba(200,148,58,0.12)',
+          padding: '12px 16px 10px',
           background: 'rgba(5,4,3,0.60)',
           backdropFilter: 'blur(10px)',
         }}>
-          <BackButton href="/home" size={32} />
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              fontFamily: fonts.header, fontSize: 24, letterSpacing: '0.08em',
-              color: '#fff', textShadow: '0 2px 16px rgba(0,0,0,0.90)',
-            }}>PROGRESSION</div>
-            <div style={{
-              fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.24em',
-              color: 'rgba(200,148,58,0.65)', marginTop: 2,
-            }}>YOUR JOURNEY. EARN EVERYTHING.</div>
-          </div>
+          <BackButton href="/home" size={44} />
           <Link href="/progression/new" style={{ textDecoration: 'none' }}>
             <div style={{
-              width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
               border: '1px solid rgba(242,239,232,0.16)',
             }}>
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none"
@@ -344,6 +344,28 @@ export default async function ProgressionPage() {
               </svg>
             </div>
           </Link>
+        </div>
+
+        {/* ── Hero ── */}
+        <div style={{
+          padding: '18px 20px 16px',
+          borderBottom: '1px solid rgba(200,148,58,0.10)',
+        }}>
+          <div style={{
+            fontFamily: fonts.header, fontSize: 34, letterSpacing: '0.10em',
+            color: '#fff', lineHeight: 1.0,
+            textShadow: '0 2px 24px rgba(0,0,0,0.85)',
+          }}>PROGRESSION</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+            <div style={{
+              flex: 1, height: 1,
+              background: 'linear-gradient(to right, rgba(200,148,58,0.55) 0%, rgba(200,148,58,0.06) 60%, transparent 100%)',
+            }}/>
+            <div style={{
+              fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.22em',
+              color: 'rgba(200,148,58,0.60)',
+            }}>{activeCount} OF 5 ACTIVE</div>
+          </div>
         </div>
 
         {/* Discipline cards */}

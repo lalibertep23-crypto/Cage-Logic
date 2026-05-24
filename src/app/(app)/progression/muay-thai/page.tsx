@@ -133,7 +133,7 @@ export default async function MuayThaiRoadmapPage() {
           background: 'rgba(5,3,2,0.70)',
           backdropFilter: 'blur(10px)',
         }}>
-          <BackButton href="/progression" size={32} />
+          <BackButton href="/progression" size={44} />
 
           <div style={{ textAlign: 'center' }}>
             <div style={{

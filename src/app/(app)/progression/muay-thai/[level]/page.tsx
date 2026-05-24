@@ -50,7 +50,7 @@ export default async function MuayThaiLevelPage({
           background: 'rgba(5,3,2,0.70)',
           backdropFilter: 'blur(10px)',
         }}>
-          <BackButton href="/progression/muay-thai" size={32} />
+          <BackButton href="/progression/muay-thai" size={44} />
 
           <div style={{ textAlign: 'center' }}>
             <div style={{
