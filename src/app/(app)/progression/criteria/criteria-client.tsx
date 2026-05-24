@@ -1,36 +1,34 @@
 'use client';
 
+// Criteria client — checklist toggle, phase/objective/tip display.
+// Design-token spec. Circles not squares. Chevrons not arrows.
+
 import { useState, useEffect } from 'react';
-
-const C = {
-  bg:      '#1A1713',
-  surface: '#252118',
-  border:  'rgba(245,240,232,0.13)',
-  text:    '#F5F0E8',
-  dim:     'rgba(245,240,232,0.55)',
-  dimmer:  'rgba(245,240,232,0.35)',
-  amber:   '#D4922E',
-};
-
-type CriteriaData = {
-  min_classes?: number;
-  min_days?: number;
-  must_show?: string[];
-  coach_signoff?: boolean;
-  notes?: string;
-};
+import Link from 'next/link';
+import { C as DT, fonts } from '@/lib/design-tokens';
 
 type Props = {
   fromRank: string;
-  toRank: string;
-  criteria: CriteriaData;
-  gymName: string;
+  accentColor: string;
+  phase: string;
+  phaseDesc: string;
+  objective: string;
+  objectiveNote: string;
+  requirements: string[];
+  coachTip: string;
 };
 
-export function CriteriaClient({ fromRank, toRank, criteria, gymName }: Props) {
+export function CriteriaClient({
+  fromRank,
+  accentColor,
+  phase,
+  phaseDesc,
+  objective,
+  objectiveNote,
+  requirements,
+  coachTip,
+}: Props) {
   const storageKey = `cl-criteria-${fromRank}`;
-  const items = criteria.must_show ?? [];
-
   const [checked, setChecked] = useState<boolean[]>([]);
 
   useEffect(() => {
@@ -38,16 +36,14 @@ export function CriteriaClient({ fromRank, toRank, criteria, gymName }: Props) {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved) as boolean[];
-        // pad or trim to match current item count
-        const result = items.map((_, i) => parsed[i] ?? false);
-        setChecked(result);
+        setChecked(requirements.map((_, i) => parsed[i] ?? false));
       } else {
-        setChecked(items.map(() => false));
+        setChecked(requirements.map(() => false));
       }
     } catch {
-      setChecked(items.map(() => false));
+      setChecked(requirements.map(() => false));
     }
-  }, [storageKey, items.length]);
+  }, [storageKey, requirements.length]);
 
   function toggle(i: number) {
     setChecked((prev) => {
@@ -58,149 +54,193 @@ export function CriteriaClient({ fromRank, toRank, criteria, gymName }: Props) {
   }
 
   const doneCount = checked.filter(Boolean).length;
-  const allDone   = items.length > 0 && doneCount === items.length;
-
-  const toLabel = toRank === 'blue'   ? 'BLUE BELT'
-                : toRank === 'purple' ? 'PURPLE BELT'
-                : toRank === 'brown'  ? 'BROWN BELT'
-                : toRank === 'black'  ? 'BLACK BELT'
-                : (() => {
-                    const parts = toRank.split('_');
-                    return `${(parts[0] ?? '').toUpperCase()} BELT — STRIPE ${parts[1] ?? ''}`;
-                  })();
+  const allDone = requirements.length > 0 && doneCount === requirements.length;
 
   return (
     <div>
 
-      {/* Target rank */}
-      <div style={{ marginBottom: 22 }}>
-        <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.14em', color: C.dimmer, marginBottom: 5 }}>
-          TARGET RANK
-        </div>
-        <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 22, letterSpacing: '0.12em', color: C.amber }}>
-          {toLabel}
-        </div>
-        <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.08em', color: C.dimmer, marginTop: 2 }}>
-          {gymName.toUpperCase()} · BJJ
+      {/* CURRENT PHASE */}
+      <div style={{
+        padding: '18px 16px 16px',
+        borderBottom: '1px solid rgba(200,148,58,0.08)',
+      }}>
+        <div style={{
+          fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.18em',
+          color: accentColor, marginBottom: 10, opacity: 0.70,
+        }}>CURRENT PHASE</div>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+          {/* Shield icon */}
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+               stroke={accentColor} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"
+               style={{ flexShrink: 0, marginTop: 3, opacity: 0.80 }}>
+            <path d="M12 2L4 6v6c0 5.25 3.5 10.14 8 11.5C16.5 22.14 20 17.25 20 12V6L12 2z"/>
+          </svg>
+          <div>
+            <div style={{
+              fontFamily: fonts.header, fontSize: 18, letterSpacing: '0.06em',
+              color: DT.text, lineHeight: 1.1, marginBottom: 6,
+            }}>{phase}</div>
+            <div style={{
+              fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.05em',
+              color: 'rgba(242,239,232,0.48)', lineHeight: 1.75,
+            }}>{phaseDesc}</div>
+          </div>
         </div>
       </div>
 
-      {/* Thresholds */}
-      {(criteria.min_classes != null || criteria.min_days != null) && (
-        <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
-          {criteria.min_classes != null && (
-            <div style={{ flex: 1, background: C.surface, padding: '12px 14px 10px', border: `1px solid ${C.border}` }}>
-              <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 22, letterSpacing: '0.04em', color: C.text }}>
-                {criteria.min_classes}
-              </div>
-              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.12em', color: C.dimmer, marginTop: 2 }}>
-                MIN CLASSES
-              </div>
-            </div>
-          )}
-          {criteria.min_days != null && (
-            <div style={{ flex: 1, background: C.surface, padding: '12px 14px 10px', border: `1px solid ${C.border}` }}>
-              <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 22, letterSpacing: '0.04em', color: C.text }}>
-                {criteria.min_days}
-              </div>
-              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.12em', color: C.dimmer, marginTop: 2 }}>
-                MIN DAYS
-              </div>
-            </div>
-          )}
+      {/* TODAY'S OBJECTIVE */}
+      <div style={{
+        padding: '16px 16px 14px',
+        borderBottom: '1px solid rgba(200,148,58,0.08)',
+      }}>
+        <div style={{
+          fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.18em',
+          color: accentColor, marginBottom: 10, opacity: 0.70,
+        }}>TODAY&apos;S OBJECTIVE</div>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+          {/* Target / reticle icon */}
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke={accentColor} strokeWidth="1.4" strokeLinecap="round"
+               style={{ flexShrink: 0, marginTop: 3, opacity: 0.80 }}>
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="12" cy="12" r="1.2" fill={accentColor} stroke="none"/>
+          </svg>
+          <div>
+            <div style={{
+              fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.10em',
+              color: DT.text, marginBottom: 4,
+            }}>{objective}</div>
+            <div style={{
+              fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.05em',
+              color: 'rgba(242,239,232,0.42)',
+            }}>{objectiveNote}</div>
+          </div>
         </div>
-      )}
-
-      {/* Progress header */}
-      {items.length > 0 && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-          <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.2em', color: C.dimmer }}>
-            WHAT YOU NEED TO SHOW
-          </span>
-          <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: allDone ? C.amber : C.dimmer }}>
-            {doneCount} / {items.length}
-          </span>
-        </div>
-      )}
-
-      {/* Checklist */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {items.map((item, i) => {
-          const done = checked[i] ?? false;
-          return (
-            <button
-              key={i}
-              onClick={() => toggle(i)}
-              style={{
-                display: 'flex', alignItems: 'flex-start', gap: 12,
-                background: done ? 'rgba(201,130,42,0.06)' : C.surface,
-                border: `1px solid ${done ? 'rgba(201,130,42,0.3)' : C.border}`,
-                padding: '13px 14px 11px',
-                textAlign: 'left', cursor: 'pointer',
-                transition: 'background 100ms',
-              }}
-            >
-              {/* Checkbox */}
-              <div style={{
-                flexShrink: 0,
-                width: 16, height: 16, marginTop: 1,
-                border: `1.5px solid ${done ? C.amber : 'rgba(245,240,232,0.3)'}`,
-                background: done ? C.amber : 'transparent',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                {done && (
-                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                    <path d="M1 4L4 7L9 1" stroke="#1A1713" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
-              </div>
-              <span style={{
-                fontFamily: 'var(--font-dm-mono)',
-                fontSize: 11,
-                letterSpacing: '0.02em',
-                lineHeight: 1.65,
-                color: done ? C.dim : C.text,
-                textDecoration: done ? 'line-through' : 'none',
-              }}>
-                {item}
-              </span>
-            </button>
-          );
-        })}
       </div>
 
-      {/* Coach sign-off notice */}
-      {criteria.coach_signoff && (
-        <div style={{ marginTop: 16, padding: '12px 14px 10px', border: `1px solid rgba(201,130,42,0.2)`, background: 'rgba(201,130,42,0.03)' }}>
-          <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em', color: C.amber, marginBottom: 4 }}>
-            COACH SIGN-OFF REQUIRED
-          </div>
-          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.02em', lineHeight: 1.65, color: C.dim, margin: 0 }}>
-            Criteria are a guide, not a formula. Final call belongs to your instructor.
-          </p>
+      {/* STRIPE'S REQUIREMENTS */}
+      <div style={{ padding: '16px 16px 0' }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10,
+        }}>
+          <div style={{
+            fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.18em',
+            color: accentColor, opacity: 0.70,
+          }}>STRIPE&apos;S REQUIREMENTS</div>
+          <div style={{
+            fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.10em',
+            color: allDone ? accentColor : 'rgba(242,239,232,0.38)',
+          }}>{doneCount}/{requirements.length} COMPLETE</div>
         </div>
-      )}
 
-      {/* Notes */}
-      {criteria.notes && (
-        <div style={{ marginTop: 14 }}>
-          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.02em', lineHeight: 1.7, color: C.dimmer, margin: 0, fontStyle: 'italic' }}>
-            {criteria.notes}
-          </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {requirements.map((item, i) => {
+            const done = checked[i] ?? false;
+            return (
+              <button
+                key={i}
+                onClick={() => toggle(i)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '13px 14px',
+                  background: done ? 'rgba(200,148,58,0.06)' : 'rgba(14,12,10,0.70)',
+                  border: `1px solid ${done ? 'rgba(200,148,58,0.22)' : 'rgba(242,239,232,0.08)'}`,
+                  textAlign: 'left', cursor: 'pointer', width: '100%',
+                }}
+              >
+                {/* Circle indicator */}
+                <div style={{
+                  width: 18, height: 18, borderRadius: '50%', flexShrink: 0,
+                  border: `1.5px solid ${done ? accentColor : 'rgba(242,239,232,0.28)'}`,
+                  background: done ? accentColor : 'transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  {done && (
+                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                      <path d="M1 4L4 7L9 1" stroke="#050505" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </div>
+                {/* Item label */}
+                <span style={{
+                  flex: 1,
+                  fontFamily: fonts.body, fontSize: 11, letterSpacing: '0.04em',
+                  color: done ? 'rgba(242,239,232,0.40)' : DT.text,
+                  textDecoration: done ? 'line-through' : 'none',
+                }}>{item}</span>
+                {/* Chevron */}
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M2 1l3 3-3 3"
+                    stroke={done ? 'rgba(200,148,58,0.35)' : 'rgba(242,239,232,0.22)'}
+                    strokeWidth="1.3" strokeLinecap="round"/>
+                </svg>
+              </button>
+            );
+          })}
         </div>
-      )}
 
-      {/* Done state */}
-      {allDone && (
-        <div style={{ marginTop: 20, padding: '14px 16px 12px', background: 'rgba(201,130,42,0.08)', border: `1px solid rgba(201,130,42,0.4)` }}>
-          <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.14em', color: C.amber }}>
-            READY TO TALK TO YOUR COACH
+        {/* All-done state */}
+        {allDone && (
+          <div style={{
+            marginTop: 12, padding: '13px 16px 11px',
+            background: 'rgba(200,148,58,0.08)',
+            border: '1px solid rgba(200,148,58,0.35)',
+            borderLeft: `3px solid ${accentColor}`,
+          }}>
+            <div style={{
+              fontFamily: fonts.label, fontSize: 15, letterSpacing: '0.14em', color: accentColor,
+            }}>READY TO TALK TO YOUR COACH</div>
+            <div style={{
+              fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.04em',
+              lineHeight: 1.7, color: 'rgba(242,239,232,0.55)', marginTop: 5,
+            }}>You checked everything. Final call belongs to your instructor.</div>
           </div>
-          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.02em', lineHeight: 1.65, color: C.dim, margin: '6px 0 0' }}>
-            You have checked everything. The instructor decides timing. Start the conversation.
-          </p>
+        )}
+      </div>
+
+      {/* COACH TIP */}
+      <div style={{
+        margin: '14px 16px 0',
+        padding: '14px 16px',
+        background: 'rgba(14,12,10,0.60)',
+        border: '1px solid rgba(242,239,232,0.07)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+          {/* Lightbulb icon */}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="rgba(200,148,58,0.60)" strokeWidth="1.4" strokeLinecap="round"
+               style={{ flexShrink: 0, marginTop: 2 }}>
+            <path d="M12 2a7 7 0 017 7c0 2.8-1.6 5.3-4 6.5V18H9v-2.5C6.6 14.3 5 11.8 5 9a7 7 0 017-7z"/>
+            <path d="M9 21h6M10 18h4"/>
+          </svg>
+          <div>
+            <div style={{
+              fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.16em',
+              color: 'rgba(200,148,58,0.55)', marginBottom: 6,
+            }}>COACH TIP</div>
+            <div style={{
+              fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.04em',
+              lineHeight: 1.75, color: 'rgba(242,239,232,0.50)', fontStyle: 'italic',
+            }}>{coachTip}</div>
+          </div>
         </div>
-      )}
+      </div>
+
+      {/* VIEW DEMO LIBRARY — full-width amber CTA */}
+      <div style={{ padding: '20px 16px 0' }}>
+        <Link href="/resources" style={{ textDecoration: 'none', display: 'block' }}>
+          <div style={{
+            padding: '16px 20px',
+            background: '#C8943A',
+            textAlign: 'center',
+          }}>
+            <span style={{
+              fontFamily: fonts.label, fontSize: 16, letterSpacing: '0.22em', color: '#050505',
+            }}>VIEW DEMO LIBRARY</span>
+          </div>
+        </Link>
+      </div>
 
     </div>
   );
