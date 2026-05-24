@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { C, fonts } from '@/lib/design-tokens';
+import { BackButton } from '@/components/ui/back-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -175,7 +176,7 @@ function DisciplineCard({
       {/* Layer 2: directional scrim — strong left, open right */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(to right, rgba(6,4,2,0.97) 0%, rgba(6,4,2,0.90) 32%, rgba(6,4,2,0.60) 55%, rgba(6,4,2,0.08) 100%)',
+        background: 'linear-gradient(to right, rgba(6,4,2,0.97) 0%, rgba(6,4,2,0.82) 26%, rgba(6,4,2,0.38) 46%, rgba(6,4,2,0.00) 100%)',
       }}/>
 
       {/* Layer 3: accent border */}
@@ -321,16 +322,7 @@ export default async function ProgressionPage() {
           background: 'rgba(5,4,3,0.60)',
           backdropFilter: 'blur(10px)',
         }}>
-          <Link href="/home" style={{ textDecoration: 'none' }}>
-            <div style={{
-              width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: '1px solid rgba(242,239,232,0.16)',
-            }}>
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                <path d="M9 2L4 7l5 5" stroke="#F2EFE8" strokeWidth="1.6" strokeLinecap="round"/>
-              </svg>
-            </div>
-          </Link>
+          <BackButton href="/home" size={32} />
           <div style={{ textAlign: 'center' }}>
             <div style={{
               fontFamily: fonts.header, fontSize: 24, letterSpacing: '0.08em',

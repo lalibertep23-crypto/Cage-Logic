@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { C, fonts } from '@/lib/design-tokens';
+import { BackButton } from '@/components/ui/back-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -132,16 +133,7 @@ export default async function MuayThaiRoadmapPage() {
           background: 'rgba(5,3,2,0.70)',
           backdropFilter: 'blur(10px)',
         }}>
-          <Link href="/progression" style={{ textDecoration: 'none' }}>
-            <div style={{
-              width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: '1px solid rgba(242,239,232,0.14)',
-            }}>
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                <path d="M9 2L4 7l5 5" stroke="#F2EFE8" strokeWidth="1.6" strokeLinecap="round"/>
-              </svg>
-            </div>
-          </Link>
+          <BackButton href="/progression" size={32} />
 
           <div style={{ textAlign: 'center' }}>
             <div style={{
