@@ -4,7 +4,7 @@
 // Top: horizontal medal strip (6 tier badges). Tap to select.
 // Below: full-width detail panel — badge hero, focus chips, checklist.
 // Material progression: Concrete → Bronze → Steel → Silver → Gold → Platinum.
-// No fixed-height containers. Page scrolls naturally — no visible scrollbar.
+// Content: full 18-chain system from CAGE_LOGIC_METHOD_PROGRESSIONS.md
 
 import { useState } from 'react';
 import Image from 'next/image';
@@ -40,7 +40,7 @@ const TIERS: Tier[] = [
       '24+ sessions logged',
       'Coach signoff',
     ],
-    weeks: 'WEEKS 1–13',
+    weeks: '24+ SESSIONS',
     tbd: false,
   },
   {
@@ -48,77 +48,118 @@ const TIERS: Tier[] = [
     label: 'CHAIN WRESTLING', material: 'BRONZE',
     identity: 'You know what comes next.',
     badge: '/chain-wrestling-wrestling.png',
-    skills: ['Attack Chains', 'High-C to Double', 'Reshot Concepts', 'Mat Returns', 'Scramble Entries'],
+    skills: ['Shot-to-Finish Chains', 'Double Leg', 'Front Headlock', 'Scramble Counters', 'Top Control Entry'],
     checklist: [
-      '3+ documented attack chains',
-      'Live reshot executed in wrestling',
-      'Mat return after missed shot',
-      '40+ sessions logged',
+      'Single leg → high-C conversion when opponent posts',
+      'Single leg → inside and outside trip finishes',
+      'Double leg — lift-and-drive or ankle-block finish',
+      'Front headlock from failed shot → arm-in guillotine entry',
+      'Sprawl → mat return via wrist control',
+      'Sprawl → go-behind (step over, establish waist)',
+      'Re-shot — immediate level change after being sprawled on',
+      'Referee\'s position top — legal hand placement',
+      'Standup from bottom — base, distance, clean execution',
+      'Link two attacks in one live sequence',
+      'Finish at least one live takedown per session',
+      '50+ sessions logged',
       'Coach signoff',
     ],
-    weeks: 'TBD — CHRIS',
-    tbd: true,
+    weeks: '50+ SESSIONS',
+    tbd: false,
   },
   {
     levelKey: 'level_3', num: 3,
     label: 'PRESSURE', material: 'STEEL',
     identity: 'You take what you want.',
     badge: '/pressure-badge-wrestling.png',
-    skills: ['Riding', 'Breakdowns', 'Hip Control', 'Chest Pressure', 'Top Control Chains'],
+    skills: ['Breakdown & Ride', 'Near Fall Series', 'Gut Wrench', 'Turk & Cradle', 'Standup Prevention'],
     checklist: [
-      '50+ live rounds logged',
-      '6 documented takedown chains',
-      '70%+ mat return rate in live wrestling',
-      'Win 5 situational sparring rounds',
+      'Spiral ride — inside tricep and ankle grip, chest on back',
+      'Tight waist breakdown — clear two-on-one defensive grip',
+      'Cross-body ride — prevent standup for full round',
+      'Gut wrench — over/under grip, barrel roll to near fall',
+      'Turk (leg lace) — from breakdown, tilt to near fall',
+      'Near cradle — head and knee lock, squeeze to nearfall',
+      'Bar arm — far arm trapped from top, turn to near fall',
+      'Half nelson — from belly-down, roll to back with control',
+      'Control top position 2+ full 2-minute rounds',
+      'Takedown success rate above 50% (3-session coach-tracked)',
+      '80+ sessions logged',
       'Coach signoff',
     ],
-    weeks: 'TBD — CHRIS',
-    tbd: true,
+    weeks: '80+ SESSIONS',
+    tbd: false,
   },
   {
     levelKey: 'level_4', num: 4,
     label: 'SCRAMBLE', material: 'SILVER',
     identity: 'You win the chaos.',
     badge: '/scramble-badge-wrestling.png',
-    skills: ['Recovery', 'Reversal', 'Read & React', 'Scramble to Top', 'Transition Defense'],
+    skills: ['Scramble Reads', 'Reversal System', 'Hip Heist', 'Granby Roll', 'Reattack Chains'],
     checklist: [
-      'Win 3 scramble drills vs. peers',
-      'Demonstrate reversal in live rolling',
-      'Recover from bad position 5x in live wrestling',
+      'Identify all 4 scramble types and correct first-move decisions',
+      'Re-shoot off scramble — immediate level change without resetting',
+      'Hip heist (Peterson roll) — from opponent\'s overhook on bottom',
+      'Granby roll — defensive inversion to scramble recovery',
+      'Switch — from referee\'s bottom before opponent\'s weight settles',
+      'Stand-in-base — proper timing, clean hand clearing',
+      'Sit-out — sit, turn in, recover to neutral',
+      'Immediate reattack — second link in chain before opponent resets',
+      'Feint high, attack low (misdirection)',
+      '60%+ scramble win rate (coach-tracked over 3 sessions)',
+      '110+ sessions logged',
       'Coach signoff',
     ],
-    weeks: 'TBD — CHRIS',
-    tbd: true,
+    weeks: '110+ SESSIONS',
+    tbd: false,
   },
   {
     levelKey: 'level_5', num: 5,
     label: 'COMPETITOR', material: 'GOLD',
     identity: 'You dictate the match.',
     badge: '/competitor-badge-wrestling.png',
-    skills: ['Match Pacing', 'Strategy', 'Fatigue Management', 'Situational Offense', 'Film Review'],
+    skills: ['Match Management', 'Clock Awareness', 'Opponent Scouting', 'Fatigue-Phase Wrestling', 'Counter Selection'],
     checklist: [
-      'Compete in a sanctioned event',
-      'Pre-comp strategy briefing with coach',
-      'Demonstrate fatigue management in live rounds',
-      'Post-match coach review sign-off',
+      'Riding time — ride vs. release decision based on score',
+      'Stalling identification — uses positioning and calls to counter',
+      'Clock management — knows exact score needed with 1:00 remaining',
+      'Defending a lead — control vs. attack decision correct with +2 score',
+      'Attacking a deficit — forces action, does not wait',
+      'Scouting — identify opponent\'s primary attack and defensive pattern',
+      'Counter selection — match own attack to opponent\'s defensive gap',
+      'Technique maintained in minute 4 of a 4-minute round',
+      'Takedown attempt executed in final 30 seconds of a hard round',
+      '5+ dual meets or tournaments with consistent record',
+      'Pre-match gameplan articulated before each match',
+      'Visible tactical adjustment between periods',
+      '150+ sessions logged',
+      'Coach signoff',
     ],
-    weeks: 'TBD — CHRIS',
-    tbd: true,
+    weeks: '150+ SESSIONS',
+    tbd: false,
   },
   {
     levelKey: 'level_6', num: 6,
     label: 'ELITE', material: 'PLATINUM',
-    identity: "You're the problem.",
+    identity: 'You are the problem in the room.',
     badge: '/elite-badge-wrestling.png',
-    skills: ['Advanced Chains', 'Counter-wrestling', 'Clinic Execution', 'Teaching Others', 'Match Calling'],
+    skills: ['Signature System', 'Teaching All 15 Chains', 'Real-Time Adaptation', 'Competition Dominance', 'Coach Reciprocity'],
     checklist: [
-      'Teach a technique to junior wrestlers',
-      'Demonstrate elite chain in film session',
-      'Consistent dominance in the room',
-      'Coach nomination required',
+      'Define signature chain (3+ linked attacks) by name',
+      'Demonstrate signature chain in under 60 seconds',
+      'Signature chain used successfully in competition or high-level sparring',
+      'Alternate version of signature chain when primary is scouted',
+      'Accurately teach all 15 chains from Tiers 1–5',
+      'Identify and correct technique errors verbally',
+      'Identify and correct technique errors by demonstration',
+      'Switch systems mid-round based on opponent\'s reaction — coach confirms',
+      'Post-round verbal explanation: what adjustment was made and why',
+      '200+ wrestling sessions',
+      'Consistent regional-level competition results',
+      'Coach nomination required — this tier is Frankie Edgar\'s standard',
     ],
-    weeks: 'TBD — CHRIS',
-    tbd: true,
+    weeks: '200+ SESSIONS',
+    tbd: false,
   },
 ];
 
@@ -387,7 +428,7 @@ export default function WrestlingRoadmapClient({ currentTierKey }: { currentTier
             </div>
           </div>
 
-          {/* TBD flag */}
+          {/* TBD flag — only shown when tbd is true */}
           {selected.tbd && (
             <div style={{
               margin: '18px 16px 0',
@@ -403,6 +444,22 @@ export default function WrestlingRoadmapClient({ currentTierKey }: { currentTier
             </div>
           )}
 
+          {/* Frankie note — Tier 6 only */}
+          {selected.num === 6 && (
+            <div style={{
+              margin: '12px 16px 0',
+              padding: '11px 13px',
+              background: 'rgba(200,148,58,0.05)',
+              border: '1px solid rgba(200,148,58,0.14)',
+              borderLeft: '3px solid rgba(200,148,58,0.40)',
+            }}>
+              <div style={{
+                fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.16em',
+                color: 'rgba(200,148,58,0.60)',
+              }}>FRANKIE EDGAR STANDARD — ELITE TIER REQUIRES COACH NOMINATION</div>
+            </div>
+          )}
+
           {/* Gym note */}
           <div style={{
             margin: '12px 16px 0',
@@ -414,7 +471,7 @@ export default function WrestlingRoadmapClient({ currentTierKey }: { currentTier
               fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.16em',
               color: 'rgba(138,155,174,0.40)',
             }}>
-              ELITE ACADEMY · JACKSON, NJ — CRITERIA SUBJECT TO COACH VALIDATION
+              IRON ARMY · TOMS RIVER, NJ — ALL CRITERIA SUBJECT TO COACH VERIFICATION
             </div>
           </div>
 
