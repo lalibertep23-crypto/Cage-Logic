@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { createClient } from '@/lib/supabase/server';
-import { BackButton } from '@/components/ui/back-button';
+import { BrandNav } from '@/components/ui/brand-nav';
 import { C, fonts } from '@/lib/design-tokens';
 
 export const dynamic = 'force-dynamic';
@@ -316,13 +316,8 @@ export default async function MMAPage() {
           background: 'linear-gradient(to bottom, rgba(5,5,5,0.30) 0%, rgba(5,5,5,0.55) 50%, rgba(5,5,5,1) 100%)',
         }} />
         {/* Header overlay */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '12px 16px',
-        }}>
-          <BackButton href="/progression" size={44} />
-          <div style={{ width: 44 }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+          <BrandNav backHref="/progression" glass={false} />
         </div>
         {/* Title */}
         <div style={{ position: 'absolute', bottom: 20, left: 20 }}>

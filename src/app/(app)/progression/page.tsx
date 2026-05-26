@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { C, fonts } from '@/lib/design-tokens';
-import { BackButton } from '@/components/ui/back-button';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -83,7 +83,7 @@ function mmaRank(rankColor: string): RankDisplay {
   };
   return {
     rankLine:   LABELS[rankColor] ?? rankColor.toUpperCase(),
-    rightImage: '/championship-belt.png',
+    rightImage: '/mma-hero_bright.png',
   };
 }
 
@@ -101,12 +101,12 @@ function wrestlingRank(rankColor: string): RankDisplay {
 }
 function boxingRank(rankColor: string): RankDisplay {
   const TIERS: Record<string, { label: string; image: string }> = {
-    foundation:        { label: 'RAW CANVAS',        image: '/boxing-foundation.png' },
-    philly_red:        { label: 'PHILADELPHIA RED',   image: '/boxing-philly.png' },
-    commonwealth_blue: { label: 'COMMONWEALTH BLUE',  image: '/boxing-commonwealth.png' },
-    mexican_gold:      { label: 'MEXICAN GOLD',       image: '/boxing-mexican.png' },
-    la_habana_gold:    { label: 'LA HABANA GOLD',     image: '/boxing-habana.png' },
-    sweet_science:     { label: 'SWEET SCIENCE',      image: '/boxing-sweet-science.png' },
+    foundation:        { label: 'RAW CANVAS',        image: '/C1-boxing-foundation.png' },
+    philly_red:        { label: 'PHILADELPHIA RED',   image: '/C2-boxing-technical.png' },
+    commonwealth_blue: { label: 'COMMONWEALTH BLUE',  image: '/C3-boxing-pressure.png' },
+    mexican_gold:      { label: 'MEXICAN GOLD',       image: '/C4-boxing-combination.png' },
+    la_habana_gold:    { label: 'LA HABANA GOLD',     image: '/C5-boxing-contender.png' },
+    sweet_science:     { label: 'SWEET SCIENCE',      image: '/C6-boxing-elite.png' },
   };
   const tier = TIERS[rankColor] ?? TIERS['foundation'];
   return { rankLine: tier.label, rightImage: tier.image };
@@ -185,10 +185,10 @@ function DisciplineCard({
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(14,11,7,0.90)' }}/>
       )}
 
-      {/* Layer 2: directional scrim — strong left, open right */}
+      {/* Layer 2: directional scrim — strong left, opens earlier so art breathes */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(to right, rgba(6,4,2,0.97) 0%, rgba(6,4,2,0.82) 26%, rgba(6,4,2,0.38) 46%, rgba(6,4,2,0.00) 100%)',
+        background: 'linear-gradient(to right, rgba(6,4,2,0.97) 0%, rgba(6,4,2,0.80) 20%, rgba(6,4,2,0.28) 38%, rgba(6,4,2,0.00) 100%)',
       }}/>
 
       {/* Layer 3: accent border */}
@@ -205,13 +205,13 @@ function DisciplineCard({
         display: 'flex', alignItems: 'center',
       }}>
 
-        {/* Badge — circular crop handles any background type */}
+        {/* Badge — circular crop, smaller to let art breathe right */}
         <div style={{
-          width: 108, flexShrink: 0,
+          width: 84, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <div style={{
-            width: 96, height: 96,
+            width: 70, height: 70,
             borderRadius: '50%',
             background: 'rgba(4,3,1,0.65)',
             overflow: 'hidden',
@@ -222,7 +222,7 @@ function DisciplineCard({
               src={config.badge}
               alt={config.label}
               fill
-              sizes="96px"
+              sizes="70px"
               style={{
                 objectFit: 'cover',
                 opacity: hasData ? 1.0 : 0.22,
@@ -332,25 +332,22 @@ export default async function ProgressionPage() {
       <div style={{ position: 'relative', zIndex: 1 }}>
 
         {/* ── Nav Bar ── */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '12px 16px 10px',
-          background: 'rgba(5,4,3,0.60)',
-          backdropFilter: 'blur(10px)',
-        }}>
-          <BackButton href="/home" size={44} />
-          <Link href="/progression/new" style={{ textDecoration: 'none' }}>
-            <div style={{
-              width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: '1px solid rgba(242,239,232,0.16)',
-            }}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"
-                   stroke="rgba(242,239,232,0.60)" strokeWidth="1.4" strokeLinecap="round">
-                <circle cx="8" cy="8" r="6"/><path d="M8 5v6M5 8h6"/>
-              </svg>
-            </div>
-          </Link>
-        </div>
+        <BrandNav
+          backHref="/home"
+          rightSlot={
+            <Link href="/progression/new" style={{ textDecoration: 'none' }}>
+              <div style={{
+                width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: '1px solid rgba(242,239,232,0.16)',
+              }}>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"
+                     stroke="rgba(242,239,232,0.60)" strokeWidth="1.4" strokeLinecap="round">
+                  <circle cx="8" cy="8" r="6"/><path d="M8 5v6M5 8h6"/>
+                </svg>
+              </div>
+            </Link>
+          }
+        />
 
         {/* ── Hero ── */}
         <div style={{
@@ -424,25 +421,3 @@ export default async function ProgressionPage() {
                   color: 'rgba(242,239,232,0.50)', marginTop: 3,
                 }}>STRIPE, BELT, OR OTHER RANK</div>
               </div>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 7h10M8 3l4 4-4 4" stroke="#C8943A" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
-            </div>
-          </Link>
-        </div>
-
-        {/* Footer */}
-        <div style={{ padding: '28px 24px 12px', textAlign: 'center' }}>
-          <div style={{
-            fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.10em',
-            color: 'rgba(242,239,232,0.28)', lineHeight: 2.0,
-          }}>
-            The rank is just a reflection of the journey.<br/>
-            The real reward is who you become along the way.
-          </div>
-        </div>
-
-      </div>
-    </main>
-  );
-}
