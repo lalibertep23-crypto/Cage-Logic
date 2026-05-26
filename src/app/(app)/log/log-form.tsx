@@ -4,20 +4,20 @@ import { useActionState, useEffect, useMemo, useRef, useState } from 'react';
 import { logSessionAction, type LogState } from './actions';
 import { X } from 'lucide-react';
 
-// ── Palette ──────────────────────────────────────────────────────────────────
+// ── Palette (locked design tokens) ───────────────────────────────────────────
 const C = {
-  bg:       '#1A1713',
-  bgRaised: '#252118',
-  bgSunk:   '#13110E',
-  amber:    '#D4922E',
-  amberLow: '#7A4F1A',
-  green:    '#3D8B55',
-  text:     '#F5F0E8',
-  mid:      '#D8D2C8',
-  midLow:   '#B8B2A8',
-  brick:    '#A83030',
-  line:     'rgba(245,240,232,0.5)',
-  lineHard: 'rgba(245,240,232,0.16)',
+  bg:       '#050505',
+  bgRaised: '#111111',
+  bgSunk:   '#0A0A0A',
+  amber:    '#C8943A',
+  amberLow: 'rgba(200,148,58,0.30)',
+  green:    '#4A7A5A',
+  text:     '#F2EFE8',
+  mid:      'rgba(242,239,232,0.70)',
+  midLow:   'rgba(242,239,232,0.45)',
+  brick:    '#A43A2F',
+  line:     'rgba(242,239,232,0.18)',
+  lineHard: 'rgba(242,239,232,0.10)',
 };
 
 // ── Shared style objects ─────────────────────────────────────────────────────
@@ -422,6 +422,24 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="kne · sweep · rnc · guillotine"
                 autoFocus
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter') return;
+                  e.preventDefault(); // always block form submission
+                  const trimmed = query.trim();
+                  if (!trimmed) return;
+                  if (filtered.length === 1) {
+                    // Single match — auto-select it
+                    setSelectedIds((ids) => [...ids, filtered[0].id]);
+                    setQuery('');
+                  } else if (filtered.length === 0) {
+                    // No library match — add as custom entry
+                    if (!customEntries.some((c) => c.name.toLowerCase() === trimmed.toLowerCase())) {
+                      setCustomEntries((prev) => [...prev, { localId: Date.now(), name: trimmed }]);
+                    }
+                    setQuery('');
+                  }
+                  // Multiple matches: just block submission and keep typing
+                }}
                 style={{
                   width: '100%',
                   background: 'transparent',

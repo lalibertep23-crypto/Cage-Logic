@@ -25,6 +25,12 @@ function sorenessColor(n: number): string {
   return C.brick;
 }
 
+function energyColor(n: number): string {
+  if (n >= 7) return C.green;
+  if (n >= 4) return C.amber;
+  return C.brick;
+}
+
 const REGION_OPTIONS = [
   { value: 'head',       label: 'HEAD' },
   { value: 'neck',       label: 'NECK' },
@@ -42,11 +48,12 @@ const REGION_OPTIONS = [
 
 const initialState: SorenessState = {};
 
-type Defaults = { overall: number | null; regions: string[] };
+type Defaults = { overall: number | null; energy: number | null; regions: string[] };
 
 export function SorenessForm({ defaults }: { defaults: Defaults }) {
   const [state, formAction, pending] = useActionState(logSorenessAction, initialState);
   const [overall, setOverall] = useState<number | null>(defaults.overall);
+  const [energy, setEnergy] = useState<number | null>(defaults.energy);
   const [regions, setRegions] = useState<string[]>(defaults.regions);
 
   function toggleRegion(v: string) {
@@ -111,6 +118,62 @@ export function SorenessForm({ defaults }: { defaults: Defaults }) {
             {state.fieldErrors.overall}
           </p>
         )}
+      </div>
+
+      {/* ── Energy scale ─────────────────────────────────────────────── */}
+      <div>
+        <span style={{
+          fontFamily: 'var(--font-bebas)', fontSize: 13, letterSpacing: '0.22em',
+          color: C.midLow, display: 'block', marginBottom: 4,
+        }}>
+          ENERGY LEVEL
+        </span>
+        <span style={{
+          fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.1em',
+          color: C.dimmer, display: 'block', marginBottom: 10,
+        }}>
+          — how you felt today, separate from pain
+        </span>
+        <div style={{ display: 'flex', background: C.bgSunk, gap: 1 }}>
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => {
+            const isSelected = energy === n;
+            const color = energyColor(n);
+            return (
+              <button
+                key={n}
+                type="button"
+                onClick={() => setEnergy(n)}
+                style={{
+                  flex: 1,
+                  height: 44,
+                  background: isSelected ? color : 'transparent',
+                  color: isSelected ? C.bg : C.midLow,
+                  border: 'none',
+                  fontFamily: 'var(--font-dm-mono)',
+                  fontSize: 10,
+                  letterSpacing: '0.04em',
+                  cursor: 'pointer',
+                  transition: 'background 80ms',
+                }}
+              >
+                {n}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Hidden radio */}
+        {[0,1,2,3,4,5,6,7,8,9,10].map((n) => (
+          <input
+            key={n}
+            type="radio"
+            name="energy"
+            value={n}
+            checked={energy === n}
+            onChange={() => {}}
+            style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
+          />
+        ))}
       </div>
 
       {/* ── Regions ──────────────────────────────────────────────────── */}

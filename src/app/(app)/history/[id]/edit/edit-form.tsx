@@ -5,17 +5,17 @@ import Link from 'next/link';
 import { editSessionAction, type EditState } from './actions';
 
 const C = {
-  bg:       '#1A1713',
-  bgRaised: '#252118',
-  bgSunk:   '#13110E',
-  amber:    '#D4922E',
-  amberLow: 'rgba(201,130,42,0.35)',
-  text:     '#F5F0E8',
-  mid:      '#D8D2C8',
-  midLow:   '#B8B2A8',
-  brick:    '#A83030',
-  line:     'rgba(245,240,232,0.5)',
-  lineHard: 'rgba(245,240,232,0.16)',
+  bg:       '#050505',
+  bgRaised: '#111111',
+  bgSunk:   '#0A0A0A',
+  amber:    '#C8943A',
+  amberLow: 'rgba(200,148,58,0.30)',
+  text:     '#F2EFE8',
+  mid:      'rgba(242,239,232,0.70)',
+  midLow:   'rgba(242,239,232,0.45)',
+  brick:    '#A43A2F',
+  line:     'rgba(242,239,232,0.18)',
+  lineHard: 'rgba(242,239,232,0.10)',
 };
 
 const SESSION_TYPES = [
@@ -49,7 +49,7 @@ const labelStyle: React.CSSProperties = {
 };
 
 type TagOption = { id: string; label: string; position: string | null };
-type RollOption = { id: string; round_number: number | null; partner_label: string | null; felt: string };
+type RollOption = { id: string; round_number: number | null; partner_label: string | null; felt: string | null };
 
 type Props = {
   id: string;

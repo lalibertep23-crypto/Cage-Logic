@@ -150,10 +150,9 @@ function Panel({
   );
 }
 
-/** BRS panel — same shape but shows the score if it exists.
- * BRS is a trait measure — re-test window is 30 days.
- * CTA is user-initiated only: active if never taken or 25+ days ago.
- * If taken within 25 days, show "RETAKE IN X DAYS" — no link. */
+/** BRS panel — shows score if it exists, CTA always available.
+ * BRS is a trait measure. Athlete decides when to re-test — no app-imposed schedule.
+ * Last taken date shown as context only. */
 function BrsPanel({
   score,
   takenAt,
@@ -161,13 +160,6 @@ function BrsPanel({
   score: number | null;
   takenAt: string | null;
 }) {
-  const daysSinceBrs = takenAt
-    ? Math.floor((Date.now() - new Date(takenAt).getTime()) / 86_400_000)
-    : null;
-  const retakeReady   = daysSinceBrs === null || daysSinceBrs >= 25;
-  const daysUntilRetake = daysSinceBrs !== null && !retakeReady
-    ? 25 - daysSinceBrs
-    : 0;
 
   return (
     <div style={{
@@ -180,7 +172,7 @@ function BrsPanel({
       {/* Background image — shifted right so brain clears text zone */}
       <div style={{
         position: 'absolute', inset: 0,
-        backgroundImage: 'url(/mental-brs_bright.jpg)',
+        backgroundImage: 'url(/mental-brs_bright.png)',
         backgroundSize: '130%',
         backgroundPosition: '85% center',
         filter: 'saturate(1.5) contrast(1.1)',
@@ -259,8 +251,8 @@ function BrsPanel({
         </span>
       )}
 
-      {/* CTA — user-initiated only. Active when no prior score or 25+ days since last. */}
-      {retakeReady ? (
+      {/* CTA — always available. Athlete initiates when ready. */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <Link href="/mental/brs" style={{ textDecoration: 'none', display: 'inline-block' }}>
           <div style={{
             display: 'inline-flex',
@@ -277,16 +269,17 @@ function BrsPanel({
             {score != null ? 'RE-TEST' : 'RUN IT'} →
           </div>
         </Link>
-      ) : (
-        <span style={{
-          fontFamily: 'var(--font-dm-mono)',
-          fontSize: 9,
-          letterSpacing: '0.12em',
-          color: C.dimmer,
-        }}>
-          RETAKE IN {daysUntilRetake} {daysUntilRetake === 1 ? 'DAY' : 'DAYS'}
-        </span>
-      )}
+        {takenAt && (
+          <span style={{
+            fontFamily: 'var(--font-dm-mono)',
+            fontSize: 9,
+            letterSpacing: '0.12em',
+            color: C.dimmer,
+          }}>
+            LAST: {format(parseISO(takenAt), 'MMM d').toUpperCase()}
+          </span>
+        )}
+      </div>
       </div>
     </div>
   );
@@ -384,7 +377,7 @@ export default async function MentalHubPage() {
           body="Regulation and reset. Pre-training or pre-comp. Logged automatically."
           cta="START SESSION"
           href="/breathwork"
-          bgImage="/mental-breath_bright.jpg"
+          bgImage="/mental-breath_bright.png"
         />
 
         {/* 4 — After a loss */}

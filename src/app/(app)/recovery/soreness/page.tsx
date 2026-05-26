@@ -21,13 +21,14 @@ export default async function SorenessPage() {
 
   const { data: existing } = await supabase
     .from('daily_soreness_logs')
-    .select('overall_soreness_0_10, body_regions')
+    .select('overall_soreness_0_10, energy_0_10, body_regions')
     .eq('athlete_id', user.id)
     .eq('log_date', localDateString(new Date()))
     .maybeSingle();
 
   const defaults = {
     overall: existing ? ((existing.overall_soreness_0_10 as number | null) ?? null) : null,
+    energy: existing ? ((existing.energy_0_10 as number | null) ?? null) : null,
     regions: existing ? ((existing.body_regions as string[] | null) ?? []) : [],
   };
 

@@ -214,6 +214,7 @@ export default async function CompetitionDetailPage({
     : `${Math.abs(daysOut)} DAY${Math.abs(daysOut) === 1 ? '' : 'S'} AGO`;
 
   const prepLinks: { label: string; href: string }[] = [];
+  prepLinks.push({ label: 'GAMEPLAN', href: `/competitions/${id}/prep/gameplan` });
   if (phase.key !== 'long_horizon') {
     prepLinks.push({ label: 'TAPER PLAN', href: `/competitions/${id}/prep/taper` });
   }

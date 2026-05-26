@@ -29,6 +29,7 @@ const Schema = z.object({
     .int()
     .min(0, 'Pick a value.')
     .max(10),
+  energy: z.coerce.number().int().min(0).max(10).optional().nullable(),
   regions: z.array(z.enum(REGIONS)).default([]),
   notes: z.string().max(500).optional(),
 });
@@ -54,8 +55,10 @@ export async function logSorenessAction(
     (REGIONS as readonly string[]).includes(r)
   );
 
+  const rawEnergy = formData.get('energy');
   const parsed = Schema.safeParse({
     overall: formData.get('overall'),
+    energy: rawEnergy !== null && rawEnergy !== '' ? rawEnergy : null,
     regions: cleanRegions,
     notes: (formData.get('notes') as string) || undefined,
   });
@@ -81,6 +84,7 @@ export async function logSorenessAction(
       athlete_id: user.id,
       log_date: localDateString(new Date()),
       overall_soreness_0_10: parsed.data.overall,
+      energy_0_10: parsed.data.energy ?? null,
       body_regions: parsed.data.regions,
       notes: parsed.data.notes,
     },

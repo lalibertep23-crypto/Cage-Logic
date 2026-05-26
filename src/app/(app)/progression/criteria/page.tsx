@@ -330,6 +330,66 @@ const DEMO_PHASES: Record<string, PhaseData> = {
     coachTip: 'The black belt means you know enough to know how much you do not know. That is where real progress begins.',
   },
 
+  'black_1': {
+    phase: 'FIRST DEGREE — THE TEACHER',
+    phaseDesc: 'The first degree is a teaching belt. Your mat is producing practitioners who reflect your understanding.',
+    objective: 'Produce a Blue Belt',
+    objectiveNote: 'An athlete you personally guided to blue belt.',
+    requirements: [
+      'Minimum 3 Years at Black Belt',
+      'Teaching Consistently — Classes, Private Instruction, or Both',
+      'First Practitioner You Personally Promoted to Blue Belt',
+      'Active Competitor or High-Level Rolling Partner',
+      'Recognized Instructor in the Community',
+    ],
+    coachTip: 'The first degree is earned by what you gave to the sport — not by what you took from it.',
+  },
+
+  'black_2': {
+    phase: 'SECOND DEGREE — THE LINEAGE',
+    phaseDesc: 'Your lineage is real. Athletes you have trained are now training others.',
+    objective: 'Build a Lineage',
+    objectiveNote: 'A student you promoted who has since promoted another.',
+    requirements: [
+      'Minimum 6 Years at Black Belt',
+      'Promoted at Least One Black Belt or Multiple Colored Belt Practitioners',
+      'Program or School — Running or Mentoring a Team',
+      'Active in Competition or High-Level Practice Community',
+      'Contribution to the Art Beyond Your Own Mat',
+    ],
+    coachTip: 'The second degree is the first time the belt stops being about you.',
+  },
+
+  'black_3': {
+    phase: 'THIRD DEGREE — THE LEGACY',
+    phaseDesc: 'Your impact on the art is documented. Other black belts trained under you.',
+    objective: 'Shape the Next Generation of Black Belts',
+    objectiveNote: 'Multiple black belt promotions with documented lineage.',
+    requirements: [
+      'Minimum 9 Years at Black Belt',
+      'Multiple Black Belt Promotions',
+      'Institutional Contribution — School, Organization, or National Body',
+      'Recognized Authority on Technical and Cultural Standards',
+      'Ongoing Teaching and Competition Presence',
+    ],
+    coachTip: 'At third degree, people are watching how you do things not just what you do.',
+  },
+
+  'black_4': {
+    phase: 'FOURTH DEGREE — THE ELDER',
+    phaseDesc: 'You are part of the history of the art. The mat respects you before you step on it.',
+    objective: 'Define the Standard',
+    objectiveNote: 'Your example is the curriculum.',
+    requirements: [
+      'Minimum 13 Years at Black Belt',
+      'Distinguished Teaching Career',
+      'Significant Competitive Legacy or High-Level Coaching Record',
+      'Contribution to the Global Spread of the Art',
+      'Character — The Belt Means the Same Thing It Did on Day One',
+    ],
+    coachTip: 'You have been doing this long enough to know that none of it was about the belt. That is the lesson.',
+  },
+
 };
 
 export default async function CriteriaPage({
@@ -350,8 +410,23 @@ export default async function CriteriaPage({
   const currentStripe = parseInt(parts[1] ?? '0', 10);
   const meta = BELT_META[beltKey] ?? BELT_META['white']!;
 
+  // Black belt degree images — all degrees use the degree-specific images.
+  // No plain black-belt.png in public; degree 0 defaults to first-degree.png.
+  const BLACK_DEGREE_IMAGES: Record<number, string> = {
+    0: '/first-degree.png',
+    1: '/first-degree.png',
+    2: '/second-degree.png',
+    3: '/third-degree.png',
+    4: '/fourth-degree.png',
+  };
+  const beltImage = beltKey === 'black'
+    ? (BLACK_DEGREE_IMAGES[currentStripe] ?? '/first-degree.png')
+    : meta.image;
+
   // Header title
-  const headerTitle = currentStripe > 0
+  const headerTitle = beltKey === 'black' && currentStripe > 0
+    ? `BLACK BELT • ${currentStripe}${currentStripe === 1 ? 'ST' : currentStripe === 2 ? 'ND' : currentStripe === 3 ? 'RD' : 'TH'} DEGREE`
+    : currentStripe > 0
     ? `${meta.label} • STRIPE ${currentStripe}`
     : meta.label;
 
@@ -438,7 +513,7 @@ export default async function CriteriaPage({
         {/* Belt image */}
         <div style={{ position: 'relative', width: '100%', height: 148, overflow: 'hidden' }}>
           <Image
-            src={meta.image}
+            src={beltImage}
             alt={meta.label}
             fill
             sizes="100vw"

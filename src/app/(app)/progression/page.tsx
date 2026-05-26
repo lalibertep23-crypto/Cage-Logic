@@ -99,12 +99,18 @@ function wrestlingRank(rankColor: string): RankDisplay {
   const tier = TIERS[rankColor] ?? TIERS['level_1'];
   return { rankLine: tier.label, rightImage: tier.image };
 }
-const BOXING_IMG: Record<string, string> = {
-  level_1: '/competitor-badge-wrestling.png',
-  level_2: '/competitor-badge-wrestling.png',
-  level_3: '/championship-belt.png',
-  level_4: '/championship-belt.png',
-};
+function boxingRank(rankColor: string): RankDisplay {
+  const TIERS: Record<string, { label: string; image: string }> = {
+    foundation:        { label: 'RAW CANVAS',        image: '/boxing-foundation.png' },
+    philly_red:        { label: 'PHILADELPHIA RED',   image: '/boxing-philly.png' },
+    commonwealth_blue: { label: 'COMMONWEALTH BLUE',  image: '/boxing-commonwealth.png' },
+    mexican_gold:      { label: 'MEXICAN GOLD',       image: '/boxing-mexican.png' },
+    la_habana_gold:    { label: 'LA HABANA GOLD',     image: '/boxing-habana.png' },
+    sweet_science:     { label: 'SWEET SCIENCE',      image: '/boxing-sweet-science.png' },
+  };
+  const tier = TIERS[rankColor] ?? TIERS['foundation'];
+  return { rankLine: tier.label, rightImage: tier.image };
+}
 
 const DISCIPLINES: DisciplineConfig[] = [
   {
@@ -127,14 +133,14 @@ const DISCIPLINES: DisciplineConfig[] = [
   },
   {
     key: 'boxing', label: 'BOXING',
-    badge: '/boxing-navigation-badge.png', accentColor: '#7A8A96',
-    getHref: () => '#',
-    getRank: (rc) => levelRank(rc, BOXING_IMG),
+    badge: '/boxing-navigation-badge.png', accentColor: '#8A9BAE',
+    getHref: () => '/progression/boxing',
+    getRank: (rc) => boxingRank(rc),
   },
   {
     key: 'mma', label: 'MMA',
     badge: '/mma-navigation-badge.png', accentColor: '#C8943A',
-    getHref: () => '#',
+    getHref: () => '/progression/mma',
     getRank: mmaRank,
   },
 ];
@@ -376,10 +382,14 @@ export default async function ProgressionPage() {
             const rankColor = data ? data.rank_color : '';
             const stripes   = data ? data.stripes : 0;
             const isLocked  = config.getHref(rankColor, stripes) === '#';
-            const href      = hasData ? config.getHref(rankColor, stripes) : '#';
+            // MMA is always accessible — it's a synthesis screen, not enrollment-gated
+            const alwaysOn  = config.key === 'mma';
+            const href      = (hasData || alwaysOn) ? config.getHref(rankColor, stripes) : '#';
             const rankInfo  = hasData
               ? config.getRank(rankColor, stripes)
-              : { rankLine: 'NOT ENROLLED', rightImage: '' };
+              : alwaysOn
+                ? { rankLine: 'COMPLETE FIGHTER', rightImage: '/mma-navigation-badge.png' }
+                : { rankLine: 'NOT ENROLLED', rightImage: '' };
 
             return (
               <Link key={config.key} href={href} style={{ textDecoration: 'none', display: 'block' }}>
@@ -387,7 +397,7 @@ export default async function ProgressionPage() {
                   config={config}
                   rankLine={rankInfo.rankLine}
                   rightImage={rankInfo.rightImage}
-                  hasData={hasData}
+                  hasData={hasData || alwaysOn}
                   isLocked={isLocked}
                 />
               </Link>

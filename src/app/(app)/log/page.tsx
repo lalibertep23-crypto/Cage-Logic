@@ -48,21 +48,21 @@ export default async function LogPage() {
   }));
 
   return (
-    <main style={{ background: '#1A1713', minHeight: '100vh', color: '#F5F0E8' }}>
+    <main style={{ background: '#050505', minHeight: '100vh', color: '#F2EFE8' }}>
       {/* ── Hero — image + title merged ───────────────────────────── */}
       <div style={{ position: 'relative', height: 200, overflow: 'hidden' }}>
-        {/* Image */}
+        {/* Image — iron-army-mat.png until log-session_bright.jpg is generated */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/log-session_bright.jpg)',
+          backgroundImage: 'url(/iron-army-mat.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center 30%',
-          filter: 'saturate(1.3) contrast(1.1)',
+          filter: 'saturate(1.1) contrast(1.05)',
         }} />
         {/* Gradient */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to bottom, rgba(15,13,11,0.05) 0%, rgba(15,13,11,0.2) 40%, rgba(15,13,11,0.85) 78%, rgba(15,13,11,1) 100%), linear-gradient(to right, rgba(15,13,11,0.65) 0%, rgba(15,13,11,0) 50%)',
+          background: 'linear-gradient(to bottom, rgba(5,5,5,0.05) 0%, rgba(5,5,5,0.25) 40%, rgba(5,5,5,0.88) 78%, rgba(5,5,5,1) 100%), linear-gradient(to right, rgba(5,5,5,0.70) 0%, rgba(5,5,5,0) 55%)',
         }} />
         {/* Title overlaid — bottom-left anchor */}
         <div style={{
@@ -70,17 +70,17 @@ export default async function LogPage() {
           display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 3, height: 28, background: '#D4922E', flexShrink: 0 }} />
+            <div style={{ width: 3, height: 28, background: '#C8943A', flexShrink: 0 }} />
             <div>
-              <div style={{ fontFamily: 'var(--font-anton)', fontSize: 28, letterSpacing: '0.08em', lineHeight: 1, color: '#F5F0E8' }}>LOG SESSION</div>
-              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em', color: 'rgba(245,240,232,0.5)', marginTop: 4 }}>
+              <div style={{ fontFamily: 'var(--font-anton)', fontSize: 28, letterSpacing: '0.08em', lineHeight: 1, color: '#F2EFE8' }}>LOG SESSION</div>
+              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em', color: 'rgba(242,239,232,0.45)', marginTop: 4 }}>
                 WHAT DID YOU PUT IN TODAY
               </div>
             </div>
           </div>
           <Link href="/home" style={{
             fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em',
-            color: 'rgba(245,240,232,0.3)', textDecoration: 'none',
+            color: 'rgba(242,239,232,0.28)', textDecoration: 'none',
           }}>
             ← HOME
           </Link>
@@ -90,11 +90,11 @@ export default async function LogPage() {
       {/* Active injury banner */}
       {activeInjuries.length > 0 && (
         <div style={{
-          background: 'rgba(139,58,30,0.25)',
-          borderBottom: '1px solid rgba(139,58,30,0.5)',
+          background: 'rgba(164,58,47,0.20)',
+          borderBottom: '1px solid rgba(164,58,47,0.40)',
           padding: '10px 22px',
           fontFamily: 'var(--font-dm-mono)', fontSize: 9,
-          letterSpacing: '0.1em', color: '#D4922E',
+          letterSpacing: '0.1em', color: '#C8943A',
         }}>
           {activeInjuries.length} active injur{activeInjuries.length === 1 ? 'y' : 'ies'} on file — log how it felt today.
         </div>

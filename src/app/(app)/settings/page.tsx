@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { signOutAction } from './actions';
+import { ConsentToggle } from './consent-toggle';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +28,14 @@ export default async function SettingsPage() {
   if (!user) redirect('/');
 
   const email = user.email ?? '—';
+
+  const { data: athlete } = await supabase
+    .from('athletes')
+    .select('data_licensing_consent')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  const dataConsent = athlete?.data_licensing_consent ?? false;
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
@@ -122,6 +131,15 @@ export default async function SettingsPage() {
               EXPORT MY DATA →
             </a>
           </div>
+        </div>
+
+        {/* Research data consent */}
+        <div style={{ marginTop: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.2em', color: C.dimmer }}>RESEARCH DATA</span>
+            <div style={{ flex: 1, height: 1, background: C.border }} />
+          </div>
+          <ConsentToggle initialConsent={dataConsent} />
         </div>
 
         {/* Privacy */}

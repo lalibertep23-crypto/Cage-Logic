@@ -1,25 +1,27 @@
 // History — Cage Logic design system.
-// Fight tape. Flat rows. No rounded cards. Concrete palette.
+// Fight tape. Hero zone. Stats strip. Flat rows. Cinematic palette.
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { parseISO, startOfWeek, endOfWeek, format } from 'date-fns';
+import { parseISO, startOfWeek, endOfWeek, format, differenceInCalendarDays } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
-// ── Palette ────────────────────────────────────────────────────────────────
+// ── Palette (locked tokens) ────────────────────────────────────────────────
 const C = {
-  bg:        '#1A1713',
-  surface:   '#252118',
-  border:    'rgba(245,240,232,0.13)',
-  borderMid: 'rgba(245,240,232,0.14)',
-  text:      '#F5F0E8',
-  dim:       'rgba(245,240,232,0.38)',
-  dimmer:    'rgba(245,240,232,0.22)',
-  amber:     '#D4922E',
-  amberLow:  'rgba(201,130,42,0.35)',
-  brick:     '#8B3A1E',
+  bg:        '#050505',
+  surface:   '#111111',
+  raised:    '#1E1E1E',
+  border:    'rgba(242,239,232,0.10)',
+  borderMid: 'rgba(242,239,232,0.18)',
+  text:      '#F2EFE8',
+  dim:       'rgba(242,239,232,0.55)',
+  dimmer:    'rgba(242,239,232,0.28)',
+  amber:     '#C8943A',
+  amberHot:  '#FFB627',
+  amberLow:  'rgba(200,148,58,0.30)',
+  brick:     '#A43A2F',
 };
 
 const SESSION_TYPE_LABELS: Record<string, string> = {
@@ -40,6 +42,25 @@ type SessionRow = {
   intensity_1_10: number | null;
 };
 
+// ── Streak helper ──────────────────────────────────────────────────────────
+function computeStreak(sortedDates: string[]): number {
+  if (sortedDates.length === 0) return 0;
+  const dateSet = new Set(sortedDates);
+  const today = format(new Date(), 'yyyy-MM-dd');
+  let streak = 0;
+  let check = new Date();
+  check.setHours(0, 0, 0, 0);
+  // If no session today, start counting from yesterday
+  if (!dateSet.has(today)) check.setDate(check.getDate() - 1);
+  while (true) {
+    const key = format(check, 'yyyy-MM-dd');
+    if (!dateSet.has(key)) break;
+    streak++;
+    check.setDate(check.getDate() - 1);
+  }
+  return streak;
+}
+
 export default async function HistoryPage() {
   const supabase = await createClient();
   const {
@@ -48,16 +69,32 @@ export default async function HistoryPage() {
   if (!user) redirect('/');
 
   const cutoff = format(
-    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
     'yyyy-MM-dd'
   );
-  const { data: sessionRows } = await supabase
-    .from('training_sessions')
-    .select('id, session_date, start_time, duration_minutes, session_type, energy_1_10, intensity_1_10')
-    .eq('athlete_id', user.id)
-    .gte('session_date', cutoff)
-    .order('session_date', { ascending: false })
-    .order('start_time', { ascending: false, nullsFirst: false });
+
+  const [sessionRes, totalRes, athleteRes] = await Promise.all([
+    supabase
+      .from('training_sessions')
+      .select('id, session_date, start_time, duration_minutes, session_type, energy_1_10, intensity_1_10')
+      .eq('athlete_id', user.id)
+      .gte('session_date', cutoff)
+      .order('session_date', { ascending: false })
+      .order('start_time', { ascending: false, nullsFirst: false }),
+    supabase
+      .from('training_sessions')
+      .select('*', { count: 'exact', head: true })
+      .eq('athlete_id', user.id),
+    supabase
+      .from('athletes')
+      .select('training_frequency_per_week')
+      .eq('id', user.id)
+      .maybeSingle(),
+  ]);
+
+  const { data: sessionRows } = sessionRes;
+  const totalSessions = totalRes.count ?? 0;
+  const freqGoal = (athleteRes.data?.training_frequency_per_week as number | null) ?? 4;
 
   const sessions: SessionRow[] = (sessionRows ?? []).map((r) => ({
     id:               r.id as string,
@@ -111,46 +148,105 @@ export default async function HistoryPage() {
   }
   const groups = [...groupsMap.values()].sort((a, b) => (a.key < b.key ? 1 : -1));
 
-  return (
-    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+  // ── Stats computation ──────────────────────────────────────────────────────
+  const sortedUniqueDates = [...new Set(sessions.map((s) => s.session_date))].sort();
+  const streak = computeStreak(sortedUniqueDates);
 
-      {/* ── Page header ───────────────────────────────────────────────── */}
+  const thisWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const thisWeekCount = sessions.filter(
+    (s) => parseISO(s.session_date) >= thisWeekStart
+  ).length;
+
+  return (
+    <main style={{ minHeight: '100vh', background: C.bg, color: C.text, paddingBottom: 80 }}>
+
+      {/* ── Hero Zone ─────────────────────────────────────────────────── */}
       <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 22px 14px',
-        borderBottom: `1px solid ${C.border}`,
+        position: 'relative',
+        height: 220,
+        backgroundImage: `url('/history-hero_bright.jpg'), url('/cage-corner.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center 20%',
+        overflow: 'hidden',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 3, height: 22, background: C.amber }} />
+        {/* Gradient overlay — dark at bottom, lighter at top */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to top, #050505 0%, rgba(5,5,5,0.72) 40%, rgba(5,5,5,0.18) 100%)',
+        }} />
+
+        {/* Proof Bank pill — top right */}
+        <div style={{ position: 'absolute', top: 16, right: 22, zIndex: 1 }}>
+          <Link href="/history/proof-bank" style={{
+            fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em',
+            color: C.amber, textDecoration: 'none',
+            border: `1px solid rgba(200,148,58,0.40)`,
+            padding: '4px 10px',
+            background: 'rgba(5,5,5,0.55)',
+            display: 'inline-block',
+          }}>
+            PROOF BANK →
+          </Link>
+        </div>
+
+        {/* Title block — anchored bottom-left */}
+        <div style={{
+          position: 'absolute', bottom: 20, left: 22, zIndex: 1,
+          display: 'flex', flexDirection: 'column', gap: 5,
+        }}>
+          <span style={{
+            fontFamily: 'var(--font-dm-mono)',
+            fontSize: 9, letterSpacing: '0.24em',
+            color: C.amber,
+          }}>
+            SESSION HISTORY
+          </span>
           <span style={{
             fontFamily: 'var(--font-anton)',
-            fontSize: 22,
-            letterSpacing: '0.08em',
-            color: C.text,
+            fontSize: 38, letterSpacing: '0.05em',
+            color: C.text, lineHeight: 1,
           }}>
             FIGHT TAPE
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href="/history/proof-bank" style={{
-            fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em',
-            color: C.amber, textDecoration: 'none', border: `1px solid rgba(201,130,42,0.35)`,
-            padding: '3px 8px',
-          }}>
-            PROOF BANK →
-          </Link>
-          <span style={{
-            fontFamily: 'var(--font-dm-mono)',
-            fontSize: 9,
-            letterSpacing: '0.18em',
-            color: C.dimmer,
-          }}>
-            30 DAYS
-          </span>
-        </div>
       </div>
 
-      {/* ── Body ──────────────────────────────────────────────────────── */}
+      {/* ── Stats Strip ───────────────────────────────────────────────── */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: '1fr 1fr 1fr',
+        background: C.surface,
+        borderBottom: `1px solid ${C.border}`,
+      }}>
+        {[
+          { value: String(totalSessions), sub: 'TOTAL SESSIONS', hot: false },
+          { value: String(thisWeekCount), sub: `OF ${freqGoal} GOAL`, hot: false },
+          { value: String(streak), sub: 'DAY STREAK', hot: streak > 0 },
+        ].map((stat, i) => (
+          <div key={i} style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            padding: '16px 8px',
+            borderRight: i < 2 ? `1px solid ${C.border}` : 'none',
+          }}>
+            <span style={{
+              fontFamily: 'var(--font-anton)',
+              fontSize: 30, letterSpacing: '0.03em',
+              color: stat.hot ? C.amberHot : C.text,
+              lineHeight: 1,
+            }}>
+              {stat.value}
+            </span>
+            <span style={{
+              fontFamily: 'var(--font-dm-mono)',
+              fontSize: 8, letterSpacing: '0.18em',
+              color: C.dimmer, marginTop: 5,
+            }}>
+              {stat.sub}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Session List ──────────────────────────────────────────────── */}
       <div style={{ padding: '0 22px' }}>
 
         {sessions.length === 0 ? (
@@ -172,122 +268,122 @@ export default async function HistoryPage() {
             </Link>
           </div>
         ) : (
-          groups.map((g, gi) => (
-            <section key={g.key} style={{ marginTop: gi === 0 ? 24 : 32 }}>
+          <>
+            {groups.map((g, gi) => (
+              <section key={g.key} style={{ marginTop: gi === 0 ? 24 : 28 }}>
 
-              {/* Week header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                <span style={{
-                  fontFamily: 'var(--font-dm-mono)',
-                  fontSize: 9,
-                  letterSpacing: '0.22em',
-                  color: C.amberLow,
+                {/* ── Week header ── */}
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10,
                 }}>
-                  {g.label}
-                </span>
-                <div style={{ flex: 1, height: 1, background: C.border }} />
-                <span style={{
-                  fontFamily: 'var(--font-dm-mono)',
-                  fontSize: 9,
-                  letterSpacing: '0.16em',
-                  color: C.dimmer,
-                }}>
-                  {g.sessions.length} {g.sessions.length === 1 ? 'SESSION' : 'SESSIONS'}
-                </span>
-              </div>
+                  <span style={{
+                    fontFamily: 'var(--font-dm-mono)',
+                    fontSize: 9, letterSpacing: '0.22em',
+                    color: C.amber, flexShrink: 0,
+                  }}>
+                    {g.label}
+                  </span>
+                  <div style={{ flex: 1, height: 1, background: C.amber, opacity: 0.18 }} />
+                  <span style={{
+                    fontFamily: 'var(--font-dm-mono)',
+                    fontSize: 9, letterSpacing: '0.16em',
+                    color: C.dimmer, flexShrink: 0,
+                  }}>
+                    {g.sessions.length} {g.sessions.length === 1 ? 'SESSION' : 'SESSIONS'}
+                  </span>
+                </div>
 
-              {/* Session rows */}
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {g.sessions.map((s, si) => {
-                  const typeLabel = s.session_type
-                    ? SESSION_TYPE_LABELS[s.session_type] ?? s.session_type.toUpperCase()
-                    : 'SESSION';
+                {/* ── Rows ── */}
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {g.sessions.map((s, si) => {
+                    const typeLabel = s.session_type
+                      ? SESSION_TYPE_LABELS[s.session_type] ?? s.session_type.toUpperCase()
+                      : 'SESSION';
+                    const hasRefl = reflectionIds.has(s.id);
+                    const techN = techCounts[s.id] ?? 0;
+                    const rollN = rollCounts[s.id] ?? 0;
 
-                  const chips: string[] = [];
-                  if (s.duration_minutes) chips.push(`${s.duration_minutes}MIN`);
-                  const techN = techCounts[s.id] ?? 0;
-                  const rollN = rollCounts[s.id] ?? 0;
-                  if (techN > 0) chips.push(`${techN}T`);
-                  if (rollN > 0) chips.push(`${rollN}R`);
-                  if (reflectionIds.has(s.id)) chips.push('REFL');
+                    const chips: string[] = [];
+                    if (s.duration_minutes) chips.push(`${s.duration_minutes}M`);
+                    if (techN > 0) chips.push(`${techN}T`);
+                    if (rollN > 0) chips.push(`${rollN}R`);
 
-                  // Energy dot color
-                  const eng = s.energy_1_10;
-                  const engColor =
-                    eng == null ? C.dimmer
-                    : eng >= 7  ? C.amber
-                    : eng >= 4  ? '#6B8E5A'
-                    :             C.brick;
-
-                  return (
-                    <Link
-                      key={s.id}
-                      href={`/history/${s.id}`}
-                      style={{
-                        display: 'block',
-                        textDecoration: 'none',
-                        color: C.text,
-                        borderTop: si === 0 ? `1px solid ${C.border}` : 'none',
-                        borderBottom: `1px solid ${C.border}`,
-                      }}
-                    >
-                      <div style={{
-                        display: 'flex', alignItems: 'center',
-                        padding: '14px 0',
-                        gap: 12,
-                      }}>
-
-                        {/* Energy dot */}
+                    return (
+                      <Link
+                        key={s.id}
+                        href={`/history/${s.id}`}
+                        style={{
+                          display: 'block',
+                          textDecoration: 'none',
+                          color: C.text,
+                          borderTop: si === 0 ? `1px solid ${C.border}` : 'none',
+                          borderBottom: `1px solid ${C.border}`,
+                          borderLeft: hasRefl ? `3px solid ${C.amber}` : '3px solid transparent',
+                          paddingLeft: 14,
+                        }}
+                      >
                         <div style={{
-                          width: 8, height: 8, flexShrink: 0,
-                          background: engColor,
-                        }} />
+                          display: 'flex', alignItems: 'center',
+                          padding: '13px 0',
+                          gap: 12,
+                        }}>
 
-                        {/* Date + type */}
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                          <span style={{
-                            fontFamily: 'var(--font-anton)',
-                            fontSize: 15,
-                            letterSpacing: '0.06em',
-                            color: C.text,
-                          }}>
-                            {format(parseISO(s.session_date), 'EEE, MMM d').toUpperCase()}
-                          </span>
-                          {chips.length > 0 && (
+                          {/* Date + chips */}
+                          <div style={{ flex: 1 }}>
+                            <span style={{
+                              fontFamily: 'var(--font-anton)',
+                              fontSize: 15, letterSpacing: '0.06em',
+                              color: C.text, display: 'block',
+                            }}>
+                              {format(parseISO(s.session_date), 'EEE, MMM d').toUpperCase()}
+                            </span>
+                            {chips.length > 0 && (
+                              <span style={{
+                                fontFamily: 'var(--font-dm-mono)',
+                                fontSize: 9, letterSpacing: '0.16em',
+                                color: C.dimmer, marginTop: 3, display: 'block',
+                              }}>
+                                {chips.join(' · ')}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Type label + arrow */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
                             <span style={{
                               fontFamily: 'var(--font-dm-mono)',
-                              fontSize: 9,
-                              letterSpacing: '0.18em',
-                              color: C.dim,
+                              fontSize: 9, letterSpacing: '0.18em',
+                              color: C.amber,
                             }}>
-                              {chips.join(' · ')}
+                              {typeLabel}
                             </span>
-                          )}
+                            <span style={{
+                              fontFamily: 'var(--font-dm-mono)',
+                              fontSize: 14, color: C.amberLow,
+                            }}>→</span>
+                          </div>
                         </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
 
-                        {/* Session type + arrow */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <span style={{
-                            fontFamily: 'var(--font-dm-mono)',
-                            fontSize: 9,
-                            letterSpacing: '0.16em',
-                            color: C.dim,
-                          }}>
-                            {typeLabel}
-                          </span>
-                          <span style={{
-                            fontFamily: 'var(--font-dm-mono)',
-                            fontSize: 12,
-                            color: C.amberLow,
-                          }}>→</span>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
-          ))
+            {/* Footer — 90-day window note */}
+            <div style={{
+              marginTop: 32, paddingBottom: 8,
+              display: 'flex', justifyContent: 'center',
+            }}>
+              <span style={{
+                fontFamily: 'var(--font-dm-mono)',
+                fontSize: 9, letterSpacing: '0.18em',
+                color: C.dimmer,
+              }}>
+                SHOWING LAST 90 DAYS · {totalSessions} TOTAL
+              </span>
+            </div>
+          </>
         )}
       </div>
     </main>
