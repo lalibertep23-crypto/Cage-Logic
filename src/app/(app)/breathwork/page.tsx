@@ -15,18 +15,18 @@ export const dynamic = 'force-dynamic';
 
 // ── Palette ─────────────────────────────────────────────────────────────────
 const C = {
-  bg:        '#1A1713',
-  surface:   '#252118',
-  bgSunk:    '#13110E',
-  border:    'rgba(245,240,232,0.13)',
-  borderMid: 'rgba(245,240,232,0.35)',
-  text:      '#F5F0E8',
-  dim:       'rgba(245,240,232,0.55)',
-  dimmer:    'rgba(245,240,232,0.35)',
-  amber:     '#D4922E',
-  amberLow:  'rgba(201,130,42,0.35)',
+  bg:        '#050505',
+  surface:   '#111111',
+  bgSunk:    '#0A0A0A',
+  border:    'rgba(242,239,232,0.10)',
+  borderMid: 'rgba(242,239,232,0.18)',
+  text:      '#F2EFE8',
+  dim:       'rgba(242,239,232,0.45)',
+  dimmer:    'rgba(242,239,232,0.28)',
+  amber:     '#C8943A',
+  amberLow:  'rgba(200,148,58,0.25)',
   green:     '#3D8B55',
-  greenLow:  'rgba(42,92,63,0.4)',
+  greenLow:  'rgba(42,92,63,0.35)',
 };
 
 const PHASE_1_TARGET = 14;

@@ -8,14 +8,14 @@ import { createClient } from '@/lib/supabase/server';
 export const dynamic = 'force-dynamic';
 
 const C = {
-  bg:      '#1A1713',
-  surface: '#252118',
-  border:  'rgba(245,240,232,0.13)',
-  text:    '#F5F0E8',
-  dim:     'rgba(245,240,232,0.55)',
-  dimmer:  'rgba(245,240,232,0.35)',
-  amber:   '#D4922E',
-  amberLow:'rgba(201,130,42,0.35)',
+  bg:      '#050505',
+  surface: '#111111',
+  border:  'rgba(242,239,232,0.10)',
+  text:    '#F2EFE8',
+  dim:     'rgba(242,239,232,0.45)',
+  dimmer:  'rgba(242,239,232,0.28)',
+  amber:   '#C8943A',
+  amberLow:'rgba(200,148,58,0.25)',
   green:   '#3D8B55',
 };
 

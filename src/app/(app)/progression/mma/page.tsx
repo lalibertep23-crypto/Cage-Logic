@@ -306,7 +306,7 @@ export default async function MMAPage() {
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <div style={{ position: 'relative', height: 280, overflow: 'hidden' }}>
         <Image
-          src="/mma-hero_bright.jpg"
+          src="/mma-hero_bright.png"
           alt="MMA"
           fill sizes="100vw" priority
           style={{ objectFit: 'cover', objectPosition: 'center 20%' }}
