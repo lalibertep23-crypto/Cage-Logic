@@ -80,7 +80,7 @@ function Panel({
       <div style={{
         position: 'absolute', inset: 0,
         background: bgImage
-          ? 'linear-gradient(90deg, rgba(15,13,11,0.97) 0%, rgba(15,13,11,0.97) 38%, rgba(15,13,11,0.55) 62%, rgba(15,13,11,0.05) 100%)'
+          ? 'linear-gradient(90deg, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.97) 38%, rgba(5,5,5,0.55) 62%, rgba(5,5,5,0.05) 100%)'
           : C.surface,
       }} />
 
@@ -96,7 +96,7 @@ function Panel({
         <div>
           <div style={{
             fontFamily: 'var(--font-bebas)',
-            fontSize: 20,
+            fontSize: 24,
             letterSpacing: '0.12em',
             color: accentColor,
             lineHeight: 1,
@@ -181,7 +181,7 @@ function BrsPanel({
       {/* Overlay — opaque on text side, fades earlier to reveal more of image */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(90deg, rgba(15,13,11,0.97) 0%, rgba(15,13,11,0.97) 30%, rgba(15,13,11,0.55) 55%, rgba(15,13,11,0.05) 100%)',
+        background: 'linear-gradient(90deg, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.97) 30%, rgba(5,5,5,0.55) 55%, rgba(5,5,5,0.05) 100%)',
       }} />
       <div style={{
         position: 'relative', zIndex: 1,
@@ -194,7 +194,7 @@ function BrsPanel({
       <div>
         <div style={{
           fontFamily: 'var(--font-bebas)',
-          fontSize: 20,
+          fontSize: 24,
           letterSpacing: '0.12em',
           color: C.green,
           lineHeight: 1,
@@ -322,7 +322,7 @@ export default async function MentalHubPage() {
   }));
 
   return (
-    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', background: C.bg, color: C.text, paddingBottom: 80 }}>
 
       {/* ── Hero — image + title merged ─────────────────────────────── */}
       <div style={{ position: 'relative', height: 220, overflow: 'hidden' }}>
@@ -337,7 +337,7 @@ export default async function MentalHubPage() {
         {/* Gradient */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to bottom, rgba(15,13,11,0.0) 0%, rgba(15,13,11,0.15) 40%, rgba(15,13,11,0.82) 75%, rgba(15,13,11,1) 100%), linear-gradient(to right, rgba(15,13,11,0.75) 0%, rgba(15,13,11,0) 55%)',
+          background: 'linear-gradient(to bottom, rgba(5,5,5,0.0) 0%, rgba(5,5,5,0.15) 40%, rgba(5,5,5,0.82) 75%, rgba(5,5,5,1) 100%), linear-gradient(to right, rgba(5,5,5,0.75) 0%, rgba(5,5,5,0) 55%)',
         }} />
         {/* Title overlaid — bottom-left anchor */}
         <div style={{
