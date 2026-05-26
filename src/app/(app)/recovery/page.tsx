@@ -364,4 +364,89 @@ export default async function RecoveryPage() {
           }}>
             <div>
               <div style={{
-                fontFamily: 'var(
+                fontFamily: 'var(--font-bebas)',
+                fontSize: 24, letterSpacing: '0.12em', color: C.brick, lineHeight: 1,
+              }}>
+                REPORT INJURY
+              </div>
+              <div style={{
+                fontFamily: 'var(--font-dm-mono)',
+                fontSize: 8, letterSpacing: '0.16em', color: C.dimmer, marginTop: 3,
+              }}>
+                INJURY TRACKING · RETURN-TO-ROLL PROTOCOL
+              </div>
+            </div>
+            <p style={{
+              fontFamily: 'var(--font-dm-mono)',
+              fontSize: 13, letterSpacing: '0.04em', lineHeight: 1.6, color: C.dim, margin: 0,
+            }}>
+              Something more than sore. Log it now.
+            </p>
+            <Link href="/recovery/injury/new" style={{ textDecoration: 'none', display: 'inline-block' }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '8px 16px 6px',
+                border: `1px solid ${C.brick}`, color: C.brick,
+                fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.14em',
+              }}>
+                LOG IT →
+              </div>
+            </Link>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── Last 7 days ───────────────────────────────────────────────── */}
+      {recent.length > 0 && (
+        <div style={{ marginTop: 28, padding: '0 22px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <span style={{
+              fontFamily: 'var(--font-dm-mono)',
+              fontSize: 9, letterSpacing: '0.22em', color: C.dimmer,
+            }}>
+              LAST 7 DAYS
+            </span>
+            <div style={{ flex: 1, height: 1, background: C.border }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {recent.map((r, i) => (
+              <div
+                key={r.id}
+                style={{
+                  display: 'flex', alignItems: 'center',
+                  borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
+                  borderBottom: `1px solid ${C.border}`,
+                  padding: '12px 0', gap: 12,
+                }}
+              >
+                <div style={{ width: 8, height: 8, background: sorenessColor(r.overall), flexShrink: 0 }} />
+                <span style={{
+                  fontFamily: 'var(--font-bebas)',
+                  fontSize: 14, letterSpacing: '0.08em', color: C.text, flex: 1,
+                }}>
+                  {format(parseISO(r.log_date), 'EEE, MMM d').toUpperCase()}
+                </span>
+                {r.regions.length > 0 && (
+                  <span style={{
+                    fontFamily: 'var(--font-dm-mono)',
+                    fontSize: 8, letterSpacing: '0.12em', color: C.dimmer,
+                  }}>
+                    {r.regions.map(formatRegion).join(' · ')}
+                  </span>
+                )}
+                <span style={{
+                  fontFamily: 'var(--font-anton)',
+                  fontSize: 18, color: sorenessColor(r.overall), minWidth: 28, textAlign: 'right',
+                }}>
+                  {r.overall != null ? `${r.overall}` : '—'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+    </main>
+  );
+}

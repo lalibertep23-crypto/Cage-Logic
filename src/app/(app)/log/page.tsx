@@ -100,4 +100,7 @@ export default async function LogPage() {
         </div>
       )}
 
-      <LogForm tags={tags} activeI
+      <LogForm tags={tags} activeInjuries={activeInjuries} />
+    </main>
+  );
+}

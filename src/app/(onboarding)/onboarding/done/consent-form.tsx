@@ -60,4 +60,10 @@ export function ConsentForm({ athleteId }: { athleteId: string }) {
         size="lg"
         className="w-full"
         onClick={handleContinue}
-      
+        disabled={isPending}
+      >
+        {isPending ? 'Setting up...' : 'Continue'}
+      </Button>
+    </div>
+  );
+}

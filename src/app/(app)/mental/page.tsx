@@ -72,15 +72,15 @@ function Panel({
           backgroundImage: `url(${bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'right center',
-          filter: 'saturate(1.3) contrast(1.05)',
-          opacity: 0.9,
+          filter: 'saturate(1.5) contrast(1.1)',
+          opacity: 0.95,
         }} />
       )}
-      {/* Overlay — solid black on text side, clear on image side */}
+      {/* Overlay — sharper falloff so image breathes on right side */}
       <div style={{
         position: 'absolute', inset: 0,
         background: bgImage
-          ? 'linear-gradient(90deg, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.88) 30%, rgba(5,5,5,0.4) 58%, rgba(5,5,5,0.0) 100%)'
+          ? 'linear-gradient(90deg, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.78) 20%, rgba(5,5,5,0.12) 42%, rgba(5,5,5,0.0) 100%)'
           : C.surface,
       }} />
 
@@ -122,7 +122,7 @@ function Panel({
           fontSize: 13,
           letterSpacing: '0.04em',
           lineHeight: 1.6,
-          color: C.dim,
+          color: 'rgba(242,239,232,0.68)',
           margin: 0,
         }}>
           {body}
@@ -175,13 +175,13 @@ function BrsPanel({
         backgroundImage: 'url(/mental-brs_bright.png)',
         backgroundSize: '130%',
         backgroundPosition: '85% center',
-        filter: 'saturate(1.5) contrast(1.1)',
-        opacity: 0.7,
+        filter: 'saturate(1.6) contrast(1.15)',
+        opacity: 0.92,
       }} />
-      {/* Overlay — opaque on text side, fades earlier to reveal more of image */}
+      {/* Overlay — sharper falloff */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(90deg, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.88) 30%, rgba(5,5,5,0.4) 58%, rgba(5,5,5,0.0) 100%)',
+        background: 'linear-gradient(90deg, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.78) 20%, rgba(5,5,5,0.12) 42%, rgba(5,5,5,0.0) 100%)',
       }} />
       <div style={{
         position: 'relative', zIndex: 1,
@@ -243,9 +243,9 @@ function BrsPanel({
       ) : (
         <span style={{
           fontFamily: 'var(--font-dm-mono)',
-          fontSize: 10,
+          fontSize: 12,
           letterSpacing: '0.14em',
-          color: C.dimmer,
+          color: C.dim,
         }}>
           NO SCORE YET.
         </span>
@@ -466,4 +466,3 @@ export default async function MentalHubPage() {
     </main>
   );
 }
-                      

@@ -421,3 +421,25 @@ export default async function ProgressionPage() {
                   color: 'rgba(242,239,232,0.50)', marginTop: 3,
                 }}>STRIPE, BELT, OR OTHER RANK</div>
               </div>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7h10M8 3l4 4-4 4" stroke="#C8943A" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            </div>
+          </Link>
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding: '28px 24px 12px', textAlign: 'center' }}>
+          <div style={{
+            fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.10em',
+            color: 'rgba(242,239,232,0.28)', lineHeight: 2.0,
+          }}>
+            The rank is just a reflection of the journey.<br/>
+            The real reward is who you become along the way.
+          </div>
+        </div>
+
+      </div>
+    </main>
+  );
+}
