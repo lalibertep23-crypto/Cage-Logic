@@ -329,7 +329,7 @@ export default async function MentalHubPage() {
         {/* Image */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/cage-logic-hero.jpg)',
+          backgroundImage: 'url(/mental-hero_bright.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center 25%',
           filter: 'saturate(1.3) contrast(1.1)',
@@ -387,7 +387,7 @@ export default async function MentalHubPage() {
           body="Lost a match. Got tapped hard. Bad day. Log it. The system reads the feel and routes from there."
           cta="PROCESS IT"
           href="/mental/post-loss/new"
-          bgImage="/mental-loss_bright.jpg"
+          bgImage="/B2-mental-check-in.png"
         />
       </div>
 

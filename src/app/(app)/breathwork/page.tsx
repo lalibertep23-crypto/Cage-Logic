@@ -114,7 +114,7 @@ export default async function BreathworkPage() {
       <div style={{ position: 'relative', height: 210, overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/breathwork-bg.jpg)',
+          backgroundImage: 'url(/breathwork-bright.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center 40%',
           filter: 'saturate(1.2) contrast(1.1)',
