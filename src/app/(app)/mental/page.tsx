@@ -377,7 +377,7 @@ export default async function MentalHubPage() {
           body="Regulation and reset. Pre-training or pre-comp. Logged automatically."
           cta="START SESSION"
           href="/breathwork"
-          bgImage="/mental-breath_bright.png"
+          bgImage="/mental-breathwork-hero.png"
         />
 
         {/* 4 — After a loss */}
