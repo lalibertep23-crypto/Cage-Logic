@@ -91,7 +91,7 @@ export default async function CompetitionsPage() {
             <div style={{ width: 3, height: 28, background: C.amber, flexShrink: 0 }} />
             <div>
               <div style={{ fontFamily: 'var(--font-anton)', fontSize: 28, letterSpacing: '0.08em', lineHeight: 1 }}>COMPETITIONS</div>
-              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: C.amberLow, marginTop: 3 }}>FIGHT RECORD</div>
+              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: 'rgba(200,148,58,0.80)', marginTop: 3 }}>FIGHT RECORD</div>
             </div>
           </div>
           <Link href="/profile" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.dimmer, textDecoration: 'none', paddingBottom: 2 }}>← PROFILE</Link>

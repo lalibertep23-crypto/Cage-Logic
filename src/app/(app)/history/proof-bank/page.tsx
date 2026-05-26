@@ -75,7 +75,7 @@ export default async function ProofBankPage() {
             <div style={{ fontFamily: 'var(--font-anton)', fontSize: 22, letterSpacing: '0.08em' }}>
               PROOF BANK
             </div>
-            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: C.amberLow, marginTop: 2 }}>
+            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: 'rgba(200,148,58,0.80)', marginTop: 2 }}>
               SKILLS EXECUTED WELL · {entries.length} ENTRIES
             </div>
           </div>

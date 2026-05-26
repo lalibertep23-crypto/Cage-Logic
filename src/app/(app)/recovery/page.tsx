@@ -147,7 +147,7 @@ export default async function RecoveryPage() {
               <div style={{ fontFamily: 'var(--font-anton)', fontSize: 28, letterSpacing: '0.08em', lineHeight: 1, color: C.text }}>
                 RECOVERY
               </div>
-              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: C.amberLow, marginTop: 3 }}>
+              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.18em', color: 'rgba(200,148,58,0.80)', marginTop: 3 }}>
                 SORENESS · INJURY · READINESS
               </div>
             </div>

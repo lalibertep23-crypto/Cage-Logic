@@ -51,7 +51,7 @@ export const C = {
   amber:      colors.brass,       // Default accent
   amberBright: colors.gold,       // Active/highlighted state
   amberGlow:  colors.glow,        // Pulse / glow state
-  amberLow:   'rgba(200,148,58,0.25)',  // Dim accent background
+  amberLow:   'rgba(200,148,58,0.25)',  // Dim accent background/border ONLY — never use as text color (invisible)
 
   // Text
   text:       colors.offwhite,    // Primary
