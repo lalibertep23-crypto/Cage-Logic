@@ -1,5 +1,5 @@
 // BrandNav — standard top nav for all screens.
-// Brain icon (44px) + CAGE LOGIC wordmark + optional right slot.
+// Brain icon (64px) + CAGE LOGIC wordmark + optional right slot.
 // Clicking anywhere on the left block navigates back.
 
 import Link from 'next/link';
@@ -28,12 +28,12 @@ export function BrandNav({
       {/* Left — brain + wordmark */}
       <Link href={backHref} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
         {/* Brain icon */}
-        <div style={{ width: 44, height: 44, position: 'relative', flexShrink: 0 }}>
+        <div style={{ width: 64, height: 64, position: 'relative', flexShrink: 0 }}>
           <Image
             src="/cage-logic-back-button.png"
             alt="Back"
             fill
-            sizes="44px"
+            sizes="64px"
             style={{ objectFit: 'contain', opacity: 0.90 }}
           />
         </div>

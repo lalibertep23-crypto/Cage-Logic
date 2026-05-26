@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { parseISO, format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -339,6 +340,10 @@ export default async function MentalHubPage() {
           position: 'absolute', inset: 0,
           background: 'linear-gradient(to bottom, rgba(5,5,5,0.0) 0%, rgba(5,5,5,0.15) 40%, rgba(5,5,5,0.82) 75%, rgba(5,5,5,1) 100%), linear-gradient(to right, rgba(5,5,5,0.75) 0%, rgba(5,5,5,0) 55%)',
         }} />
+        {/* BrandNav — absolute over hero */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+          <BrandNav backHref="/home" glass={false} />
+        </div>
         {/* Title overlaid — bottom-left anchor */}
         <div style={{
           position: 'absolute', bottom: 18, left: 22, right: 22,

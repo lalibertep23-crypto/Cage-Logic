@@ -19,7 +19,8 @@ type Tier = {
   region:     string;       // short strip label (fits 48px circle)
   regionFull: string;       // full name for hero watermark
   identity:   string;
-  badge:      string;       // placeholder path — swap when assets arrive
+  badge:      string;       // glove art — used in strip circles
+  hero:       string;       // C1-C6 cinematic — used in full-width detail panel
   skills:     string[];
   checklist:  string[];
   sessions:   string;
@@ -30,7 +31,8 @@ const TIERS: Tier[] = [
     levelKey: 'foundation', num: 1,
     label: 'FOUNDATION', region: 'CANVAS', regionFull: 'RAW CANVAS',
     identity: 'Your jab has a snap. Your stance doesn\'t lie.',
-    badge: '/C1-boxing-foundation.png',
+    badge: '/boxing-raw-canvas.png',
+    hero:  '/C1-boxing-foundation.png',
     skills: ['Stance & Guard', 'Jab Mechanics', 'Step-Jab Footwork', 'Pivots', 'Breathing'],
     checklist: [
       'Correct stance — weight 60/40, guard at cheekbone, elbows protecting ribs',
@@ -50,7 +52,8 @@ const TIERS: Tier[] = [
     levelKey: 'philly_red', num: 2,
     label: 'PHILADELPHIA RED', region: 'PHILLY', regionFull: 'PHILADELPHIA',
     identity: 'Your 1-2 is automatic. You move without thinking about moving.',
-    badge: '/C2-boxing-technical.png',
+    badge: '/boxing-philly-red.png',
+    hero:  '/C2-boxing-technical.png',
     skills: ['1-2 Combination', 'Footwork with Punches', 'Bob & Weave', 'Jab Accuracy', 'Hook Introduction'],
     checklist: [
       '1-2 — weight transfer, hip rotation, guard restored immediately after',
@@ -70,7 +73,8 @@ const TIERS: Tier[] = [
     levelKey: 'commonwealth_blue', num: 3,
     label: 'COMMONWEALTH BLUE', region: 'ROYAL', regionFull: 'COMMONWEALTH',
     identity: 'Defense becomes offense. Slipping a punch creates a counter.',
-    badge: '/C3-boxing-pressure.png',
+    badge: '/boxing-commonwealth-blue.png',
+    hero:  '/C3-boxing-pressure.png',
     skills: ['Hook & Uppercuts', 'Slip Outside', 'Slip Inside', 'Pull-Counter', 'Roll Under Hook', 'Body Work'],
     checklist: [
       'Left hook — 90° elbow angle, pivot on lead foot, hip rotation, fist horizontal',
@@ -92,7 +96,8 @@ const TIERS: Tier[] = [
     levelKey: 'mexican_gold', num: 4,
     label: 'MEXICAN GOLD', region: 'MEXICO', regionFull: 'MEXICAN GOLD',
     identity: 'Combinations flow. You fight in sequences, not punches.',
-    badge: '/C4-boxing-combination.png',
+    badge: '/boxing-mexican-gold.png',
+    hero:  '/C4-boxing-combination.png',
     skills: ['3–5 Punch Combinations', 'Signature Combination', 'Counter Timing', 'Ring Control', 'Body-to-Head', 'High-Low Feint'],
     checklist: [
       '5 different 3-punch or longer combinations — drilled and reproducible',
@@ -114,7 +119,8 @@ const TIERS: Tier[] = [
     levelKey: 'la_habana_gold', num: 5,
     label: 'LA HABANA GOLD', region: 'LA HABANA', regionFull: 'LA HABANA',
     identity: 'You can spar. You can think. You can take a punch and come back.',
-    badge: '/C5-boxing-contender.png',
+    badge: '/boxing-la-habana.png',
+    hero:  '/C5-boxing-contender.png',
     skills: ['20 Sparring Rounds', 'Pressure Fighting', 'Outfighting', 'Body Targeting', 'Jab Accuracy in Sparring', 'Composure Under Fire'],
     checklist: [
       '20 documented sparring rounds (technical/controlled pace, 3 minutes each)',
@@ -136,7 +142,8 @@ const TIERS: Tier[] = [
     levelKey: 'sweet_science', num: 6,
     label: 'SWEET SCIENCE', region: 'THE ART', regionFull: 'THE SWEET SCIENCE',
     identity: 'Not just the sport. The art.',
-    badge: '/C6-boxing-elite.png',
+    badge: '/boxing-sweet-science.png',
+    hero:  '/C6-boxing-elite.png',
     skills: ['Ring Generalship', 'Opponent-Specific Adjustment', 'Fight IQ', 'Teaching Ability', 'Composure'],
     checklist: [
       'All Technician Level 1-4 techniques demonstrable on command',
@@ -309,19 +316,19 @@ export default function BoxingRoadmapClient({ currentTierKey }: { currentTierKey
         {/* ── Detail panel ── */}
         <div>
 
-          {/* Badge hero — full width */}
+          {/* Cinematic hero — full width, C1-C6 art */}
           <div style={{
             position: 'relative', height: 220, overflow: 'hidden',
             borderBottom: '1px solid rgba(138,155,174,0.10)',
             background: 'rgba(5,3,2,0.60)',
           }}>
             <Image
-              src={selected.badge}
+              src={selected.hero}
               alt={selected.label}
               fill
               sizes="100vw"
               priority
-              style={{ objectFit: 'contain', objectPosition: 'center', opacity: 0.92 }}
+              style={{ objectFit: 'cover', objectPosition: 'right center', opacity: 0.92 }}
             />
             {/* Bottom fade */}
             <div style={{
