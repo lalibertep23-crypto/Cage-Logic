@@ -72,15 +72,15 @@ function Panel({
           backgroundImage: `url(${bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'right center',
-          filter: 'saturate(1.5) contrast(1.1)',
-          opacity: 0.7,
+          filter: 'saturate(1.3) contrast(1.05)',
+          opacity: 0.9,
         }} />
       )}
       {/* Overlay — solid black on text side, clear on image side */}
       <div style={{
         position: 'absolute', inset: 0,
         background: bgImage
-          ? 'linear-gradient(90deg, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.97) 38%, rgba(5,5,5,0.55) 62%, rgba(5,5,5,0.05) 100%)'
+          ? 'linear-gradient(90deg, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.88) 30%, rgba(5,5,5,0.4) 58%, rgba(5,5,5,0.0) 100%)'
           : C.surface,
       }} />
 
@@ -119,7 +119,7 @@ function Panel({
         {/* Body */}
         <p style={{
           fontFamily: 'var(--font-dm-mono)',
-          fontSize: 11,
+          fontSize: 13,
           letterSpacing: '0.04em',
           lineHeight: 1.6,
           color: C.dim,
@@ -181,7 +181,7 @@ function BrsPanel({
       {/* Overlay — opaque on text side, fades earlier to reveal more of image */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(90deg, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.97) 30%, rgba(5,5,5,0.55) 55%, rgba(5,5,5,0.05) 100%)',
+        background: 'linear-gradient(90deg, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.88) 30%, rgba(5,5,5,0.4) 58%, rgba(5,5,5,0.0) 100%)',
       }} />
       <div style={{
         position: 'relative', zIndex: 1,

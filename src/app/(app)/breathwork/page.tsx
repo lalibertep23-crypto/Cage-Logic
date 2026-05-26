@@ -195,27 +195,25 @@ export default async function BreathworkPage() {
             <div style={{ flex: 1, height: 1, background: C.border }} />
           </div>
 
-          {/* Breath pattern boxes */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2, marginBottom: 16 }}>
+          {/* Breath pattern — horizontal tactical sequence */}
+          <div style={{ display: 'flex', alignItems: 'stretch', borderLeft: `3px solid ${C.amber}`, background: C.surface, marginBottom: 16 }}>
             {[
               { phase: 'IN',    detail: 'NOSE',          secs: '4s', color: C.amber },
-              { phase: 'PAUSE', detail: '',              secs: '1s', color: C.dimmer },
+              { phase: 'PAUSE', detail: 'HOLD',          secs: '1s', color: C.dimmer },
               { phase: 'OUT',   detail: 'MOUTH / GUARD', secs: '6s', color: C.green },
-            ].map((p) => (
+            ].map((p, i) => (
               <div
                 key={p.phase}
                 style={{
-                  background: C.surface,
-                  borderTop: `2px solid ${p.color}`,
-                  padding: '12px 10px',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                  flex: 1,
+                  padding: '18px 12px',
+                  borderRight: i < 2 ? `1px solid ${C.border}` : 'none',
+                  display: 'flex', flexDirection: 'column', gap: 6,
                 }}
               >
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.2em', color: C.dimmer }}>{p.phase}</span>
-                <span style={{ fontFamily: 'var(--font-anton)', fontSize: 28, letterSpacing: '0.04em', color: p.color, lineHeight: 1 }}>{p.secs}</span>
-                {p.detail && (
-                  <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em', color: C.dimmer }}>{p.detail}</span>
-                )}
+                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.22em', color: C.dimmer }}>{p.phase}</span>
+                <span style={{ fontFamily: 'var(--font-anton)', fontSize: 36, letterSpacing: '0.02em', color: p.color, lineHeight: 1 }}>{p.secs}</span>
+                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.dimmer }}>{p.detail}</span>
               </div>
             ))}
           </div>
