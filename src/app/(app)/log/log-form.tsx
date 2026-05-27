@@ -564,6 +564,7 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
                   value={partnerNames[r.id] ?? r.partner}
                   onChange={(e) => setPartnerNames((prev) => ({ ...prev, [r.id]: e.target.value }))}
                   onBlur={(e) => setRolls((rs) => rs.map((x) => x.id === r.id ? { ...x, partner: e.target.value } : x))}
+                  onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
                   style={flatInputStyle}
                 />
               </FlatField>
