@@ -71,9 +71,13 @@ export async function logSessionAction(
   const customTechniques = formData.getAll('customTechnique').map((v) => v.toString().trim()).filter(Boolean);
 
   // Rolls: read indexed entries up to a sane max (12).
+  const BELTS = ['white', 'blue', 'purple', 'brown', 'black'] as const;
   type RollRow = {
     partner_label: string | null;
     partner_relative_size: string | null;
+    partner_belt: string | null;
+    partner_stripes: number | null;
+    partner_weight_lbs: number | null;
     outcome: (typeof OUTCOMES)[number] | null;
     felt: string | null;
   };
@@ -82,13 +86,21 @@ export async function logSessionAction(
     const outcomeRaw = formData.get(`rolls[${i}].outcome`)?.toString();
     if (!outcomeRaw) continue;
     if (!(OUTCOMES as readonly string[]).includes(outcomeRaw)) continue;
-    const sizeRaw = formData.get(`rolls[${i}].size`)?.toString();
-    const partner = emptyToUndefined(formData.get(`rolls[${i}].partner`)) ?? null;
-    const felt = emptyToUndefined(formData.get(`rolls[${i}].felt`)) ?? null;
+    const sizeRaw    = formData.get(`rolls[${i}].size`)?.toString();
+    const beltRaw    = formData.get(`rolls[${i}].partner_belt`)?.toString();
+    const stripesRaw = formData.get(`rolls[${i}].partner_stripes`)?.toString();
+    const weightRaw  = formData.get(`rolls[${i}].partner_weight_lbs`)?.toString();
+    const partner    = emptyToUndefined(formData.get(`rolls[${i}].partner`)) ?? null;
+    const felt       = emptyToUndefined(formData.get(`rolls[${i}].felt`)) ?? null;
+    const stripesNum = stripesRaw ? parseInt(stripesRaw, 10) : null;
+    const weightNum  = weightRaw  ? parseInt(weightRaw,  10) : null;
     rolls.push({
       partner_label: partner,
       partner_relative_size:
         sizeRaw && (SIZES as readonly string[]).includes(sizeRaw) ? sizeRaw : null,
+      partner_belt:   beltRaw && (BELTS as readonly string[]).includes(beltRaw) ? beltRaw : null,
+      partner_stripes: !isNaN(stripesNum as number) && stripesNum !== null && stripesNum >= 0 && stripesNum <= 4 ? stripesNum : null,
+      partner_weight_lbs: !isNaN(weightNum as number) && weightNum !== null && weightNum > 0 ? weightNum : null,
       outcome: outcomeRaw as (typeof OUTCOMES)[number],
       felt,
     });
@@ -187,6 +199,9 @@ export async function logSessionAction(
       round_number: i + 1,
       partner_label: r.partner_label,
       partner_relative_size: r.partner_relative_size,
+      partner_belt: r.partner_belt,
+      partner_stripes: r.partner_stripes,
+      partner_weight_lbs: r.partner_weight_lbs,
       outcome: r.outcome,
       felt: r.felt,
     }));
@@ -195,6 +210,33 @@ export async function logSessionAction(
       .insert(rollRows)
       .select('id');
     if (rollErr) return { error: `Saved session but rolls failed: ${rollErr.message}` };
+
+    // 4b) Upsert favorite_partners for named rolls (non-blocking)
+    const namedRolls = rolls.filter((r) => r.partner_label);
+    if (namedRolls.length > 0) {
+      for (const r of namedRolls) {
+        await supabase.from('favorite_partners').upsert(
+          {
+            athlete_id: user.id,
+            name: r.partner_label!,
+            belt: r.partner_belt,
+            stripes: r.partner_stripes,
+            weight_lbs: r.partner_weight_lbs,
+            last_rolled_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+          {
+            onConflict: 'athlete_id,name',
+            ignoreDuplicates: false,
+          }
+        );
+        // Increment roll_count separately (upsert can't do arithmetic)
+        await supabase.rpc('increment_partner_roll_count', {
+          p_athlete_id: user.id,
+          p_name: r.partner_label!,
+        });
+      }
+    }
 
     // 5) Insert submission chain steps (non-blocking)
     if (insertedRolls) {

@@ -123,12 +123,13 @@ const POSITION_LABEL: Record<string, string> = {
 };
 
 const initialState: LogState = {};
+type SavedPartner = { name: string; belt: string | null; stripes: number | null; weightLbs: number | null; rollCount: number };
 type RollRow = { id: number; partner: string };
 
 // ── Main form ────────────────────────────────────────────────────────────────
 type ActiveInjury = { id: string; body_region: string; side: string | null };
 
-export function LogForm({ tags, activeInjuries = [], savedCustom = [] }: { tags: TagOption[]; activeInjuries?: ActiveInjury[]; savedCustom?: string[] }) {
+export function LogForm({ tags, activeInjuries = [], savedCustom = [], savedPartners = [] }: { tags: TagOption[]; activeInjuries?: ActiveInjury[]; savedCustom?: string[]; savedPartners?: SavedPartner[] }) {
   type ChainStep = { id: number; position: string; technique: string; result: string };
   type CustomEntry = { localId: number; name: string };
 
@@ -146,6 +147,10 @@ export function LogForm({ tags, activeInjuries = [], savedCustom = [] }: { tags:
   // write on every keystroke, which dismisses the iOS keyboard mid-type.
   // Syncs back into rolls on blur only.
   const [partnerNames, setPartnerNames] = useState<Record<number, string>>({});
+  const [partnerBelts, setPartnerBelts]       = useState<Record<number, string>>({});
+  const [partnerStripes, setPartnerStripes]   = useState<Record<number, number>>({});
+  const [partnerWeights, setPartnerWeights]   = useState<Record<number, string>>({});
+  const [partnerDropdown, setPartnerDropdown] = useState<Record<number, boolean>>({});
   const [rollChains, setRollChains] = useState<Record<number, ChainStep[]>>({});
   const [chainOpen, setChainOpen]   = useState<Record<number, boolean>>({});
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -587,24 +592,135 @@ export function LogForm({ tags, activeInjuries = [], savedCustom = [] }: { tags:
                 </button>
               </div>
 
+              {/* Partner name + autocomplete */}
               <FlatField label="PARTNER">
-                <input
-                  name={`rolls[${idx}].partner`}
-                  type="text"
-                  maxLength={80}
-                  placeholder="e.g. blue belt, bigger"
-                  value={partnerNames[r.id] ?? r.partner}
-                  onChange={(e) => setPartnerNames((prev) => ({ ...prev, [r.id]: e.target.value }))}
-                  onBlur={(e) => setRolls((rs) => rs.map((x) => x.id === r.id ? { ...x, partner: e.target.value } : x))}
-                  onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
-                  style={flatInputStyle}
-                />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    name={`rolls[${idx}].partner`}
+                    type="text"
+                    maxLength={80}
+                    placeholder="Name or handle"
+                    value={partnerNames[r.id] ?? r.partner}
+                    onChange={(e) => {
+                      setPartnerNames((prev) => ({ ...prev, [r.id]: e.target.value }));
+                      setPartnerDropdown((prev) => ({ ...prev, [r.id]: e.target.value.length > 0 }));
+                    }}
+                    onBlur={(e) => {
+                      setRolls((rs) => rs.map((x) => x.id === r.id ? { ...x, partner: e.target.value } : x));
+                      // Delay close so click on suggestion fires first
+                      setTimeout(() => setPartnerDropdown((prev) => ({ ...prev, [r.id]: false })), 150);
+                    }}
+                    onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
+                    style={flatInputStyle}
+                  />
+                  {partnerDropdown[r.id] && (() => {
+                    const q = (partnerNames[r.id] ?? '').toLowerCase();
+                    const matches = savedPartners.filter((p) => p.name.toLowerCase().includes(q));
+                    if (!matches.length) return null;
+                    return (
+                      <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#1A1A1A', border: `1px solid ${C.line}`, zIndex: 10, maxHeight: 160, overflowY: 'auto' }}>
+                        {matches.map((p) => (
+                          <button
+                            key={p.name}
+                            type="button"
+                            onMouseDown={() => {
+                              setPartnerNames((prev) => ({ ...prev, [r.id]: p.name }));
+                              setRolls((rs) => rs.map((x) => x.id === r.id ? { ...x, partner: p.name } : x));
+                              if (p.belt)     setPartnerBelts((prev)   => ({ ...prev, [r.id]: p.belt! }));
+                              if (p.stripes != null) setPartnerStripes((prev) => ({ ...prev, [r.id]: p.stripes! }));
+                              if (p.weightLbs) setPartnerWeights((prev) => ({ ...prev, [r.id]: String(p.weightLbs) }));
+                              setPartnerDropdown((prev) => ({ ...prev, [r.id]: false }));
+                            }}
+                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '8px 12px', background: 'none', border: 'none', borderBottom: `1px solid ${C.lineHard}`, color: C.text, fontFamily: 'var(--font-dm-mono)', fontSize: 12, cursor: 'pointer', textAlign: 'left' }}
+                          >
+                            <span>{p.name}</span>
+                            <span style={{ color: C.midLow, fontSize: 10 }}>
+                              {p.belt ? p.belt.toUpperCase() : ''}{p.stripes != null ? ` ·${p.stripes}` : ''}{p.weightLbs ? ` · ${p.weightLbs}lb` : ''} · ×{p.rollCount}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    );
+                  })()}
+                </div>
               </FlatField>
 
+              {/* Opponent belt */}
               <div>
-                <span style={labelStyle}>SIZE</span>
-                <RollSegment name={`rolls[${idx}].size`} options={SIZES} defaultValue="same" />
+                <span style={labelStyle}>OPPONENT BELT</span>
+                <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                  {(['white','blue','purple','brown','black'] as const).map((belt) => {
+                    const BELT_COLOR: Record<string,string> = { white: '#E8E8E8', blue: '#2B5BAA', purple: '#5B3580', brown: '#6B3A2A', black: '#1A1A1A' };
+                    const selected = (partnerBelts[r.id] ?? '') === belt;
+                    return (
+                      <button
+                        key={belt}
+                        type="button"
+                        onClick={() => setPartnerBelts((prev) => ({ ...prev, [r.id]: selected ? '' : belt }))}
+                        style={{
+                          padding: '6px 10px',
+                          background: selected ? BELT_COLOR[belt] : C.bgRaised,
+                          border: `1px solid ${selected ? BELT_COLOR[belt] : C.lineHard}`,
+                          color: selected && belt !== 'white' && belt !== 'yellow' ? '#F2EFE8' : (selected ? '#111' : C.mid),
+                          fontFamily: 'var(--font-bebas)',
+                          fontSize: 11,
+                          letterSpacing: '0.1em',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {belt.toUpperCase()}
+                      </button>
+                    );
+                  })}
+                </div>
+                <input type="hidden" name={`rolls[${idx}].partner_belt`} value={partnerBelts[r.id] ?? ''} />
               </div>
+
+              {/* Stripes */}
+              {(partnerBelts[r.id] ?? '') !== '' && (partnerBelts[r.id] ?? '') !== 'black' && (
+                <div>
+                  <span style={labelStyle}>STRIPES</span>
+                  <div style={{ display: 'flex', gap: 4 }}>
+                    {([0,1,2,3,4] as const).map((s) => {
+                      const sel = (partnerStripes[r.id] ?? -1) === s;
+                      return (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setPartnerStripes((prev) => ({ ...prev, [r.id]: sel ? -1 : s }))}
+                          style={{
+                            width: 32, height: 32,
+                            background: sel ? C.amber : C.bgRaised,
+                            border: `1px solid ${sel ? C.amber : C.lineHard}`,
+                            color: sel ? '#111' : C.mid,
+                            fontFamily: 'var(--font-bebas)',
+                            fontSize: 13,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {s}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <input type="hidden" name={`rolls[${idx}].partner_stripes`} value={(partnerStripes[r.id] ?? -1) >= 0 ? String(partnerStripes[r.id]) : ''} />
+                </div>
+              )}
+
+              {/* Weight */}
+              <FlatField label="OPPONENT WEIGHT (LBS)">
+                <input
+                  type="number"
+                  name={`rolls[${idx}].partner_weight_lbs`}
+                  placeholder="185"
+                  min={50}
+                  max={400}
+                  value={partnerWeights[r.id] ?? ''}
+                  onChange={(e) => setPartnerWeights((prev) => ({ ...prev, [r.id]: e.target.value }))}
+                  onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
+                  style={{ ...flatInputStyle, MozAppearance: 'textfield' } as React.CSSProperties}
+                />
+              </FlatField>
 
               <div>
                 <span style={labelStyle}>OUTCOME</span>

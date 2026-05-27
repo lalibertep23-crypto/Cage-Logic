@@ -47,6 +47,22 @@ export default async function LogPage() {
     side: (r.side as string | null) ?? null,
   }));
 
+  // Saved partners — ordered by most recent roll
+  const { data: partnerRows } = await supabase
+    .from('favorite_partners')
+    .select('name, belt, stripes, weight_lbs, roll_count')
+    .eq('athlete_id', user.id)
+    .order('last_rolled_at', { ascending: false, nullsFirst: false })
+    .limit(50);
+
+  const savedPartners = (partnerRows ?? []).map((r) => ({
+    name:       r.name        as string,
+    belt:       (r.belt       as string | null) ?? null,
+    stripes:    (r.stripes    as number | null) ?? null,
+    weightLbs:  (r.weight_lbs as number | null) ?? null,
+    rollCount:  (r.roll_count as number) ?? 1,
+  }));
+
   // Athlete's previously submitted custom techniques — deduplicated, most recent first
   const { data: customRows } = await supabase
     .from('custom_technique_submissions')
@@ -131,7 +147,7 @@ export default async function LogPage() {
         </div>
       )}
 
-      <LogForm tags={tags} activeInjuries={activeInjuries} savedCustom={savedCustom} />
+      <LogForm tags={tags} activeInjuries={activeInjuries} savedCustom={savedCustom} savedPartners={savedPartners} />
     </main>
   );
 }
