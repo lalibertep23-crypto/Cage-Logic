@@ -257,6 +257,15 @@ export async function logSessionAction(
     }
   }
 
+  // Upsert current training focus (non-blocking)
+  const focusRaw = formData.get('currentFocus')?.toString().trim();
+  if (focusRaw) {
+    await supabase.from('athlete_focus_areas').upsert(
+      { athlete_id: user.id, focus_text: focusRaw, updated_at: new Date().toISOString() },
+      { onConflict: 'athlete_id' }
+    );
+  }
+
   revalidatePath('/home');
   redirect('/home');
 }

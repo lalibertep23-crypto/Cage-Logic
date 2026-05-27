@@ -47,6 +47,15 @@ export default async function LogPage() {
     side: (r.side as string | null) ?? null,
   }));
 
+  // Current training focus
+  const { data: focusRow } = await supabase
+    .from('athlete_focus_areas')
+    .select('focus_text')
+    .eq('athlete_id', user.id)
+    .maybeSingle();
+
+  const currentFocus = (focusRow?.focus_text as string | null) ?? '';
+
   // Saved partners — ordered by most recent roll
   const { data: partnerRows } = await supabase
     .from('favorite_partners')
@@ -147,7 +156,7 @@ export default async function LogPage() {
         </div>
       )}
 
-      <LogForm tags={tags} activeInjuries={activeInjuries} savedCustom={savedCustom} savedPartners={savedPartners} />
+      <LogForm tags={tags} activeInjuries={activeInjuries} savedCustom={savedCustom} savedPartners={savedPartners} currentFocus={currentFocus} />
     </main>
   );
 }

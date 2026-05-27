@@ -129,7 +129,7 @@ type RollRow = { id: number; partner: string };
 // ── Main form ────────────────────────────────────────────────────────────────
 type ActiveInjury = { id: string; body_region: string; side: string | null };
 
-export function LogForm({ tags, activeInjuries = [], savedCustom = [], savedPartners = [] }: { tags: TagOption[]; activeInjuries?: ActiveInjury[]; savedCustom?: string[]; savedPartners?: SavedPartner[] }) {
+export function LogForm({ tags, activeInjuries = [], savedCustom = [], savedPartners = [], currentFocus = '' }: { tags: TagOption[]; activeInjuries?: ActiveInjury[]; savedCustom?: string[]; savedPartners?: SavedPartner[]; currentFocus?: string }) {
   type ChainStep = { id: number; position: string; technique: string; result: string };
   type CustomEntry = { localId: number; name: string };
 
@@ -151,6 +151,7 @@ export function LogForm({ tags, activeInjuries = [], savedCustom = [], savedPart
   const [partnerStripes, setPartnerStripes]   = useState<Record<number, number>>({});
   const [partnerWeights, setPartnerWeights]   = useState<Record<number, string>>({});
   const [partnerDropdown, setPartnerDropdown] = useState<Record<number, boolean>>({});
+  const [focusText, setFocusText] = useState<string>(currentFocus);
   const [rollChains, setRollChains] = useState<Record<number, ChainStep[]>>({});
   const [chainOpen, setChainOpen]   = useState<Record<number, boolean>>({});
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -661,7 +662,7 @@ export function LogForm({ tags, activeInjuries = [], savedCustom = [], savedPart
                           padding: '6px 10px',
                           background: selected ? BELT_COLOR[belt] : C.bgRaised,
                           border: `1px solid ${selected ? BELT_COLOR[belt] : C.lineHard}`,
-                          color: selected && belt !== 'white' && belt !== 'yellow' ? '#F2EFE8' : (selected ? '#111' : C.mid),
+                          color: selected && belt !== 'white' ? '#F2EFE8' : (selected ? '#111' : C.mid),
                           fontFamily: 'var(--font-bebas)',
                           fontSize: 11,
                           letterSpacing: '0.1em',
@@ -841,6 +842,22 @@ export function LogForm({ tags, activeInjuries = [], savedCustom = [], savedPart
             <textarea name="followUpNotes" maxLength={2000} placeholder="Anything else worth noting." rows={2} style={{ ...flatInputStyle, resize: 'none' }} />
           </FlatField>
         </div>
+      </LogSection>
+
+      {/* ── CURRENT FOCUS ─────────────────────────────────────────────────── */}
+      <LogSection number="06" title="CURRENT FOCUS" optional>
+        <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow, letterSpacing: '0.08em', marginBottom: 12 }}>
+          What are you dialing in this training cycle? Updates every session.
+        </p>
+        <textarea
+          maxLength={500}
+          placeholder="e.g. back takes · guard retention · setting up the arm drag"
+          rows={3}
+          value={focusText}
+          onChange={(e) => setFocusText(e.target.value)}
+          style={{ ...flatInputStyle, resize: 'none' }}
+        />
+        <input type="hidden" name="currentFocus" value={focusText} />
       </LogSection>
 
       {state.error && (
