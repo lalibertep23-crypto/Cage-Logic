@@ -76,6 +76,21 @@ function levelRank(rankColor: string, images: Record<string, string>): RankDispl
   };
 }
 
+function samboRank(rankColor: string): RankDisplay {
+  const TIERS: Record<string, string> = {
+    level_1: 'НОВИЧОК',
+    level_2: 'ТРЕТИЙ РАЗРЯД',
+    level_3: 'ВТОРОЙ РАЗРЯД',
+    level_4: 'ПЕРВЫЙ РАЗРЯД',
+    level_5: 'КМС',
+    level_6: 'МС',
+  };
+  return {
+    rankLine:   TIERS[rankColor] ?? 'НОВИЧОК',
+    rightImage: '', // no right-image asset yet — card renders dark bg fallback
+  };
+}
+
 function mmaRank(rankColor: string): RankDisplay {
   const LABELS: Record<string, string> = {
     foundation: 'FOUNDATION', intermediate: 'INTERMEDIATE',
@@ -142,6 +157,13 @@ const DISCIPLINES: DisciplineConfig[] = [
     badge: '/mma-navigation-badge.png', accentColor: '#C8943A',
     getHref: () => '/progression/mma',
     getRank: mmaRank,
+  },
+  {
+    key: 'sambo', label: 'SAMBO',
+    badge: '/wrestling-navigation-badge.png', // temp — sambo nav badge pending
+    accentColor: '#B83A30',
+    getHref: () => '/progression/sambo',
+    getRank: (rc) => samboRank(rc),
   },
 ];
 
@@ -367,7 +389,7 @@ export default async function ProgressionPage() {
             <div style={{
               fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.22em',
               color: 'rgba(200,148,58,0.60)',
-            }}>{activeCount} OF 5 ACTIVE</div>
+            }}>{activeCount} OF 6 ACTIVE</div>
           </div>
         </div>
 
