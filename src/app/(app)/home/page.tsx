@@ -311,12 +311,12 @@ export default async function HomePage() {
           position: 'absolute', inset: 0,
           backgroundImage: `url(${wrapImage})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center 20%',
+          backgroundPosition: 'center 42%',
         }}/>
         {/* Gradient — preserve readability at bottom, reveal fighter above */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to bottom, rgba(5,4,3,0.18) 0%, rgba(5,4,3,0.08) 30%, rgba(5,4,3,0.72) 68%, rgba(5,4,3,0.97) 100%)',
+          background: 'linear-gradient(to bottom, rgba(5,4,3,0.18) 0%, rgba(5,4,3,0.06) 28%, rgba(5,4,3,0.65) 72%, rgba(5,4,3,0.97) 100%)',
         }}/>
         {/* Right-side vignette — keeps fighter face lit */}
         <div style={{
