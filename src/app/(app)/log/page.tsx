@@ -3,9 +3,9 @@
 // position), optional rolls (dynamic rows), energy/intensity/reflection.
 
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { LogForm, type TagOption } from './log-form';
+import { BrainWatermark } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,24 +51,44 @@ export default async function LogPage() {
     <main style={{ background: '#050505', minHeight: '100vh', color: '#F2EFE8' }}>
       {/* ── Hero — image + title merged ───────────────────────────── */}
       <div style={{ position: 'relative', height: 200, overflow: 'hidden' }}>
-        {/* Image — iron-army-mat.png until log-session_bright.jpg is generated */}
+        {/* Iron Army mat — log screen lives at the gym */}
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: 'url(/iron-army-mat.png)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center 30%',
-          filter: 'saturate(1.1) contrast(1.05)',
+          backgroundPosition: 'center 35%',
+          filter: 'saturate(0.70) contrast(1.10) brightness(0.55)',
         }} />
-        {/* Gradient */}
+        {/* Deep overlay — left anchor for text, bottom solid */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to bottom, rgba(5,5,5,0.05) 0%, rgba(5,5,5,0.25) 40%, rgba(5,5,5,0.88) 78%, rgba(5,5,5,1) 100%), linear-gradient(to right, rgba(5,5,5,0.70) 0%, rgba(5,5,5,0) 55%)',
+          background: 'linear-gradient(to bottom, rgba(5,4,3,0.22) 0%, rgba(5,4,3,0.15) 35%, rgba(5,4,3,0.82) 72%, rgba(5,4,3,0.99) 100%), linear-gradient(to right, rgba(5,4,3,0.88) 0%, rgba(5,4,3,0.10) 60%)',
         }} />
-        {/* Title overlaid — bottom-left anchor */}
+        {/* Edge vignette */}
         <div style={{
-          position: 'absolute', bottom: 18, left: 22, right: 22,
-          display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
+          position: 'absolute', inset: 0,
+          background: 'radial-gradient(ellipse at 55% 40%, rgba(5,4,3,0) 35%, rgba(5,4,3,0.60) 100%)',
+        }} />
+        {/* Iron Army logo — gym identity mark, centered top */}
+        <div style={{
+          position: 'absolute', top: 16, left: 0, right: 0,
+          display: 'flex', justifyContent: 'center', zIndex: 2,
         }}>
+          <img
+            src="/iron-army-logo.jpg"
+            alt="Iron Army Academy"
+            style={{
+              height: 44,
+              objectFit: 'contain',
+              opacity: 0.72,
+              filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.90)) grayscale(0.30)',
+            }}
+          />
+        </div>
+        {/* Brand watermark */}
+        <BrainWatermark />
+        {/* Title — bottom-left anchor */}
+        <div style={{ position: 'absolute', bottom: 18, left: 22 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 3, height: 28, background: '#C8943A', flexShrink: 0 }} />
             <div>
@@ -78,12 +98,6 @@ export default async function LogPage() {
               </div>
             </div>
           </div>
-          <Link href="/home" style={{
-            fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em',
-            color: 'rgba(242,239,232,0.28)', textDecoration: 'none',
-          }}>
-            ← HOME
-          </Link>
         </div>
       </div>
 

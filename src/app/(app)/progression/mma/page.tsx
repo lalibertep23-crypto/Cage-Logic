@@ -172,62 +172,26 @@ function ComponentRow({
   );
 }
 
-// ── Icons (inline SVG) ─────────────────────────────────────────────────────
+// ── Icons (photorealistic PNGs) ────────────────────────────────────────────
 
-const IconBase = (
-  <svg width="18" height="18" viewBox="0 0 20 20" fill="none"
-       stroke={AMBER} strokeWidth="1.4" strokeLinecap="round">
-    <circle cx="10" cy="10" r="7.5"/>
-    <circle cx="10" cy="10" r="3.5"/>
-    <circle cx="10" cy="10" r="1" fill={AMBER}/>
-    <line x1="10" y1="2" x2="10" y2="4"/>
-    <line x1="10" y1="16" x2="10" y2="18"/>
-    <line x1="2" y1="10" x2="4" y2="10"/>
-    <line x1="16" y1="10" x2="18" y2="10"/>
-  </svg>
-);
+function PngIcon({ src, alt }: { src: string; alt: string }) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={28}
+      height={28}
+      style={{ objectFit: 'contain' }}
+    />
+  );
+}
 
-const IconGasTank = (
-  <svg width="18" height="18" viewBox="0 0 20 20" fill="none"
-       stroke={SILVER} strokeWidth="1.4" strokeLinecap="round">
-    <path d="M6 17c0-2.5-1.5-3.5-1.5-6.5a5.5 5.5 0 0111 0C15.5 13.5 14 14.5 14 17H6z"/>
-    <line x1="7" y1="17" x2="13" y2="17"/>
-    <line x1="10" y1="5.5" x2="10" y2="8.5"/>
-  </svg>
-);
-
-const IconShield = (
-  <svg width="18" height="18" viewBox="0 0 20 20" fill="none"
-       stroke={AMBER} strokeWidth="1.4" strokeLinecap="round">
-    <path d="M10 2.5l6.5 2.5v5C16.5 14 13.5 17 10 18c-3.5-1-6.5-4-6.5-8v-5L10 2.5z"/>
-    <path d="M7 10l2 2 4-4"/>
-  </svg>
-);
-
-const IconOS = (
-  <svg width="18" height="18" viewBox="0 0 20 20" fill="none"
-       stroke={AMBER} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M11.5 3l-5 7h6l-3.5 7"/>
-  </svg>
-);
-
-const IconCoach = (
-  <svg width="18" height="18" viewBox="0 0 20 20" fill="none"
-       stroke={SILVER} strokeWidth="1.4" strokeLinecap="round">
-    <circle cx="10" cy="6.5" r="3"/>
-    <path d="M3.5 18.5c0-3.5 2.9-6 6.5-6s6.5 2.5 6.5 6"/>
-  </svg>
-);
-
-const IconCrown = (
-  <svg width="18" height="18" viewBox="0 0 20 20" fill="none"
-       stroke={SILVER} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3.5 14.5h13l2-8.5-4.5 3.5-4-7-4 7L2 6l1.5 8.5z"/>
-    <line x1="5" y1="14.5" x2="5" y2="16.5"/>
-    <line x1="15" y1="14.5" x2="15" y2="16.5"/>
-    <line x1="5" y1="16.5" x2="15" y2="16.5"/>
-  </svg>
-);
+const IconBase      = <PngIcon src="/mma-base-score.png"     alt="Base Score" />;
+const IconGasTank   = <PngIcon src="/mma-gas-tank.png"       alt="Gas Tank" />;
+const IconShield    = <PngIcon src="/mma-survival-score.png" alt="Survival Score" />;
+const IconOS        = <PngIcon src="/mma-os-score.png"       alt="O.S. Score" />;
+const IconCoach     = <PngIcon src="/mma-coach-score.png"    alt="Coach Score" />;
+const IconCrown     = <PngIcon src="/mma-brand-identity.png" alt="Brand Identity" />;
 
 // ── Page ───────────────────────────────────────────────────────────────────
 

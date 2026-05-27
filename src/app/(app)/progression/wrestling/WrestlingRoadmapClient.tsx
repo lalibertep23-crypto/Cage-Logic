@@ -8,7 +8,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { BackButton } from '@/components/ui/back-button';
+import { BrandNav } from '@/components/ui/brand-nav';
 import { C, fonts } from '@/lib/design-tokens';
 
 type Tier = {
@@ -189,39 +189,36 @@ export default function WrestlingRoadmapClient({ currentTierKey }: { currentTier
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 96, position: 'relative' }}>
 
-      {/* Background */}
+      {/* Background — Iron Army mat, cinematic */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
-        <img src="/concrete-dark.jpg" alt=""
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(5,3,2,0.88)' }}/>
+        <img src="/iron-army-mat.png" alt=""
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}/>
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(5,3,2,0.84)' }}/>
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'radial-gradient(ellipse 80% 40% at 50% 0%, rgba(138,155,174,0.05) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(138,155,174,0.06) 0%, transparent 65%)',
         }}/>
       </div>
 
       <div style={{ position: 'relative', zIndex: 1 }}>
 
-        {/* ── Header ── */}
+        {/* ── BrandNav ── */}
+        <BrandNav backHref="/progression" glass={false} />
+
+        {/* ── Page title ── */}
         <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '12px 16px 10px',
+          padding: '0 20px 14px',
           borderBottom: '1px solid rgba(138,155,174,0.12)',
-          background: 'rgba(5,3,2,0.70)',
-          backdropFilter: 'blur(10px)',
         }}>
-          <BackButton href="/progression" size={44} />
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              fontFamily: fonts.header, fontSize: 18, letterSpacing: '0.08em',
-              color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.90)',
-            }}>WRESTLING</div>
-            <div style={{
-              fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.24em',
-              color: ACCENT, marginTop: 2,
-            }}>— FORGED. NOT AWARDED. —</div>
-          </div>
-          <div style={{ width: 44 }}/>
+          <div style={{
+            fontFamily: fonts.header, fontSize: 30, letterSpacing: '0.10em',
+            color: '#fff', lineHeight: 1,
+            textShadow: '0 2px 16px rgba(0,0,0,0.90)',
+          }}>WRESTLING</div>
+          <div style={{
+            fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.24em',
+            color: 'rgba(138,155,174,0.65)', marginTop: 4,
+          }}>FORGED. NOT AWARDED.</div>
         </div>
 
         {/* ── Tier progress bar ── */}

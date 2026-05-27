@@ -299,14 +299,22 @@ export default async function HistoryPage() {
                     const typeLabel = s.session_type
                       ? SESSION_TYPE_LABELS[s.session_type] ?? s.session_type.toUpperCase()
                       : 'SESSION';
-                    const hasRefl = reflectionIds.has(s.id);
-                    const techN = techCounts[s.id] ?? 0;
-                    const rollN = rollCounts[s.id] ?? 0;
 
                     const chips: string[] = [];
-                    if (s.duration_minutes) chips.push(`${s.duration_minutes}M`);
+                    if (s.duration_minutes) chips.push(`${s.duration_minutes}MIN`);
+                    const techN = techCounts[s.id] ?? 0;
+                    const rollN = rollCounts[s.id] ?? 0;
                     if (techN > 0) chips.push(`${techN}T`);
                     if (rollN > 0) chips.push(`${rollN}R`);
+                    if (reflectionIds.has(s.id)) chips.push('REFL');
+
+                    // Energy dot color
+                    const eng = s.energy_1_10;
+                    const engColor =
+                      eng == null ? C.dimmer
+                      : eng >= 7  ? C.amber
+                      : eng >= 4  ? '#6B8E5A'
+                      :             C.brick;
 
                     return (
                       <Link
@@ -318,48 +326,56 @@ export default async function HistoryPage() {
                           color: C.text,
                           borderTop: si === 0 ? `1px solid ${C.border}` : 'none',
                           borderBottom: `1px solid ${C.border}`,
-                          borderLeft: hasRefl ? `3px solid ${C.amber}` : '3px solid transparent',
-                          paddingLeft: 14,
                         }}
                       >
                         <div style={{
                           display: 'flex', alignItems: 'center',
-                          padding: '13px 0',
+                          padding: '14px 0',
                           gap: 12,
                         }}>
 
-                          {/* Date + chips */}
-                          <div style={{ flex: 1 }}>
+                          {/* Energy dot */}
+                          <div style={{
+                            width: 8, height: 8, flexShrink: 0,
+                            background: engColor,
+                          }} />
+
+                          {/* Date + type */}
+                          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
                             <span style={{
                               fontFamily: 'var(--font-anton)',
-                              fontSize: 15, letterSpacing: '0.06em',
-                              color: C.text, display: 'block',
+                              fontSize: 15,
+                              letterSpacing: '0.06em',
+                              color: C.text,
                             }}>
                               {format(parseISO(s.session_date), 'EEE, MMM d').toUpperCase()}
                             </span>
                             {chips.length > 0 && (
                               <span style={{
                                 fontFamily: 'var(--font-dm-mono)',
-                                fontSize: 9, letterSpacing: '0.16em',
-                                color: C.dimmer, marginTop: 3, display: 'block',
+                                fontSize: 9,
+                                letterSpacing: '0.18em',
+                                color: C.dim,
                               }}>
                                 {chips.join(' · ')}
                               </span>
                             )}
                           </div>
 
-                          {/* Type label + arrow */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                          {/* Session type + arrow */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                             <span style={{
                               fontFamily: 'var(--font-dm-mono)',
-                              fontSize: 9, letterSpacing: '0.18em',
-                              color: C.amber,
+                              fontSize: 9,
+                              letterSpacing: '0.16em',
+                              color: C.dim,
                             }}>
                               {typeLabel}
                             </span>
                             <span style={{
                               fontFamily: 'var(--font-dm-mono)',
-                              fontSize: 14, color: C.amberLow,
+                              fontSize: 12,
+                              color: C.amberLow,
                             }}>→</span>
                           </div>
                         </div>
@@ -368,23 +384,11 @@ export default async function HistoryPage() {
                   })}
                 </div>
               </section>
-            ))}
-
-            {/* Footer — 90-day window note */}
-            <div style={{
-              marginTop: 32, paddingBottom: 8,
-              display: 'flex', justifyContent: 'center',
-            }}>
-              <span style={{
-                fontFamily: 'var(--font-dm-mono)',
-                fontSize: 9, letterSpacing: '0.18em',
-                color: C.dimmer,
-              }}>
-                SHOWING LAST 90 DAYS · {totalSessions} TOTAL
-              </span>
-            </div>
-          </>
-        )}
+            ))
+          }
+        </>
+        )
+      }
       </div>
     </main>
   );

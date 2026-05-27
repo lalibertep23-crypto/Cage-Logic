@@ -120,5 +120,5 @@ export const images = {
   mentalBreath: '/mental-breath_bright.png',
 
   // Log
-  logSession:  '/log-session_bright.jpg',
-} as const;
+  logSession: '/cage-corner.jpg',
+};

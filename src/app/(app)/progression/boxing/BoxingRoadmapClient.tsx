@@ -180,42 +180,32 @@ const GOLD   = '#C8943A';
 
 export default function BoxingRoadmapClient({ currentTierKey }: { currentTierKey: string }) {
   const currentNum = tierNumFromKey(currentTierKey);
-  const [selectedNum, setSelectedNum] = useState(currentNum);
-  const selected    = TIERS[selectedNum - 1] ?? TIERS[0];
-  const regionColor = REGION_COLORS[selected.region] ?? ACCENT;
+  const [openNum, setOpenNum] = useState(currentNum);
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 96, position: 'relative' }}>
 
-      {/* Background */}
+      {/* Fixed background */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
         <img src="/boxing-background.png" alt=""
           style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(5,3,2,0.88)' }} />
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'radial-gradient(ellipse 80% 40% at 50% 0%, rgba(185,38,38,0.04) 0%, transparent 70%)',
-        }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(5,3,2,0.90)' }} />
       </div>
 
       <div style={{ position: 'relative', zIndex: 1 }}>
 
-        {/* ── Header ── */}
+        {/* ── BrandNav ── */}
         <BrandNav backHref="/progression" />
 
-        {/* ── Tier progress bar ── */}
-        <div style={{ padding: '10px 16px 0', background: 'rgba(5,3,2,0.40)' }}>
+        {/* ── Progress bar ── */}
+        <div style={{ padding: '8px 16px 0', background: 'rgba(5,3,2,0.40)' }}>
           <div style={{ display: 'flex', gap: 4 }}>
-            {TIERS.map((t) => {
-              const isDone    = t.num < currentNum;
-              const isCurrent = t.num === currentNum;
-              return (
-                <div key={t.levelKey} style={{
-                  flex: 1, height: 3,
-                  background: isDone ? ACCENT : isCurrent ? GOLD : 'rgba(242,239,232,0.08)',
-                }} />
-              );
-            })}
+            {TIERS.map((t) => (
+              <div key={t.levelKey} style={{
+                flex: 1, height: 3,
+                background: t.num < currentNum ? ACCENT : t.num === currentNum ? GOLD : 'rgba(242,239,232,0.08)',
+              }} />
+            ))}
           </div>
           <div style={{
             fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.20em',
@@ -225,221 +215,261 @@ export default function BoxingRoadmapClient({ currentTierKey }: { currentTierKey
           </div>
         </div>
 
-        {/* ── Regional glove strip ── */}
+        {/* ── Page title ── */}
         <div style={{
-          padding: '16px 14px 14px',
-          borderBottom: '1px solid rgba(138,155,174,0.08)',
-          background: 'rgba(5,3,2,0.30)',
+          padding: '6px 20px 14px',
+          borderBottom: '1px solid rgba(185,38,38,0.12)',
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            {TIERS.map((t) => {
-              const isDone     = t.num < currentNum;
-              const isCurrent  = t.num === currentNum;
-              const isSelected = t.num === selectedNum;
-              const isLocked   = t.num > currentNum;
-              const regCol     = REGION_COLORS[t.region] ?? ACCENT;
+          <div style={{
+            fontFamily: fonts.header, fontSize: 30, letterSpacing: '0.10em',
+            color: '#fff', lineHeight: 1,
+          }}>BOXING</div>
+          <div style={{
+            fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.22em',
+            color: 'rgba(138,155,174,0.55)', marginTop: 4,
+          }}>IRON ARMY · TOMS RIVER, NJ</div>
+        </div>
 
-              const ringColor = isSelected
-                ? (isCurrent ? GOLD : regCol)
-                : isDone
-                  ? 'rgba(138,155,174,0.35)'
-                  : 'rgba(242,239,232,0.08)';
+        {/* ── Tier Accordion ── */}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {TIERS.map((t) => {
+            const isEarned  = t.num < currentNum;
+            const isCurrent = t.num === currentNum;
+            const isLocked  = t.num > currentNum;
+            const isOpen    = openNum === t.num;
+            const regCol    = REGION_COLORS[t.region] ?? ACCENT;
 
-              return (
+            const rowAccent = isCurrent
+              ? GOLD
+              : isEarned
+                ? regCol
+                : 'rgba(242,239,232,0.08)';
+
+            return (
+              <div key={t.levelKey} style={{
+                borderBottom: '1px solid rgba(242,239,232,0.06)',
+                borderLeft: `3px solid ${rowAccent}`,
+              }}>
+
+                {/* Row header */}
                 <button
-                  key={t.levelKey}
-                  onClick={() => setSelectedNum(t.num)}
+                  onClick={() => setOpenNum(isOpen ? 0 : t.num)}
                   style={{
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
-                    padding: 0, border: 'none', background: 'transparent', cursor: 'pointer',
-                    flex: 1,
+                    width: '100%', padding: 0, border: 'none',
+                    background: isOpen && isCurrent ? 'rgba(200,148,58,0.04)' : 'transparent',
+                    cursor: 'pointer', display: 'block', textAlign: 'left',
                   }}
                 >
-                  {/* Glove circle */}
-                  <div style={{
-                    width: 48, height: 48,
-                    borderRadius: '50%',
-                    border: '2px solid ' + ringColor,
-                    background: isSelected ? 'rgba(5,3,2,0.60)' : 'rgba(5,3,2,0.30)',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    flexShrink: 0,
-                    boxShadow: isSelected && isCurrent
-                      ? '0 0 12px rgba(200,148,58,0.35)'
-                      : isSelected
-                        ? ('0 0 10px ' + regCol + '40')
-                        : 'none',
-                  }}>
+                  <div style={{ position: 'relative', height: 80, overflow: 'hidden' }}>
+                    {/* C1-C6 hero image — right-anchored */}
                     <Image
-                      src={t.badge}
+                      src={t.hero}
                       alt={t.label}
                       fill
-                      sizes="48px"
-                      style={{ objectFit: 'cover', opacity: isDone ? 0.72 : 1.0 }}
+                      sizes="100vw"
+                      style={{
+                        objectFit: 'cover',
+                        objectPosition: 'right center',
+                        opacity: isLocked ? 0.12 : isEarned ? 0.35 : 0.55,
+                        filter: isLocked ? 'grayscale(0.80)' : 'none',
+                      }}
                     />
-                    {/* Lock icon — art stays visible, just flagged */}
-                    {isLocked && (
-                      <div style={{
-                        position: 'absolute', bottom: 3, right: 3,
-                        background: 'rgba(5,3,2,0.75)',
-                        borderRadius: '50%',
-                        width: 14, height: 14,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      }}>
-                        <svg width="8" height="8" viewBox="0 0 10 10" fill="none"
-                             stroke="rgba(242,239,232,0.55)" strokeWidth="1.3" strokeLinecap="round">
-                          <rect x="2" y="5" width="6" height="4" rx="0.8"/>
-                          <path d="M3.5 5V3.5a1.5 1.5 0 013 0V5"/>
+                    {/* Scrim */}
+                    <div style={{
+                      position: 'absolute', inset: 0,
+                      background: 'linear-gradient(to right, rgba(5,3,2,0.97) 0%, rgba(5,3,2,0.82) 38%, rgba(5,3,2,0.20) 65%, rgba(5,3,2,0.0) 100%)',
+                    }} />
+                    {/* Content */}
+                    <div style={{
+                      position: 'absolute', inset: 0,
+                      display: 'flex', alignItems: 'center',
+                      padding: '0 16px', gap: 12,
+                    }}>
+                      {/* Status */}
+                      <div style={{ width: 22, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {isEarned ? (
+                          <svg width="17" height="17" viewBox="0 0 16 16" fill="none">
+                            <circle cx="8" cy="8" r="7" stroke={regCol} strokeWidth="1.2" opacity="0.65"/>
+                            <path d="M4.5 8l2.5 2.5 4.5-4.5" stroke={regCol} strokeWidth="1.5"
+                              strokeLinecap="round" strokeLinejoin="round" opacity="0.85"/>
+                          </svg>
+                        ) : isLocked ? (
+                          <svg width="12" height="14" viewBox="0 0 12 14" fill="none"
+                               stroke="rgba(242,239,232,0.18)" strokeWidth="1.3" strokeLinecap="round">
+                            <rect x="1" y="6" width="10" height="7" rx="1"/>
+                            <path d="M3.5 6V4a2.5 2.5 0 015 0v2"/>
+                          </svg>
+                        ) : (
+                          <div style={{
+                            width: 8, height: 8, borderRadius: '50%',
+                            background: GOLD, boxShadow: '0 0 8px rgba(200,148,58,0.65)',
+                          }} />
+                        )}
+                      </div>
+
+                      {/* Tier name + region */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{
+                          fontFamily: fonts.header,
+                          fontSize: isCurrent ? 20 : 17,
+                          letterSpacing: '0.08em',
+                          color: isCurrent ? GOLD : isEarned ? regCol : 'rgba(242,239,232,0.25)',
+                          lineHeight: 1,
+                        }}>{t.label}</div>
+                        <div style={{
+                          fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.18em',
+                          color: isCurrent ? 'rgba(200,148,58,0.55)' : 'rgba(242,239,232,0.28)',
+                          marginTop: 3,
+                        }}>{t.regionFull}</div>
+                      </div>
+
+                      {/* Chevron */}
+                      <div style={{ width: 20, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                          <path
+                            d={isOpen ? 'M2 6.5l3-3 3 3' : 'M2 3.5l3 3 3-3'}
+                            stroke={isCurrent ? GOLD : 'rgba(242,239,232,0.28)'}
+                            strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                          />
                         </svg>
                       </div>
-                    )}
-                  </div>
-                  {/* Region label */}
-                  <div style={{
-                    fontFamily: fonts.label,
-                    fontSize: 7,
-                    letterSpacing: '0.12em',
-                    color: isSelected
-                      ? regCol
-                      : isLocked
-                        ? 'rgba(242,239,232,0.14)'
-                        : 'rgba(242,239,232,0.32)',
-                    whiteSpace: 'nowrap',
-                    lineHeight: 1,
-                  }}>{t.region}</div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ── Detail panel ── */}
-        <div>
-
-          {/* Cinematic hero — full width, C1-C6 art */}
-          <div style={{
-            position: 'relative', height: 220, overflow: 'hidden',
-            borderBottom: '1px solid rgba(138,155,174,0.10)',
-            background: 'rgba(5,3,2,0.60)',
-          }}>
-            <Image
-              src={selected.hero}
-              alt={selected.label}
-              fill
-              sizes="100vw"
-              priority
-              style={{ objectFit: 'cover', objectPosition: 'right center', opacity: 0.92 }}
-            />
-            {/* Bottom fade */}
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(to top, rgba(5,3,2,1) 0%, rgba(5,3,2,0.50) 45%, transparent 100%)',
-            }} />
-            {/* Region watermark top-right */}
-            <div style={{
-              position: 'absolute', top: 12, right: 14,
-              fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.28em',
-              color: regionColor,
-            }}>{selected.regionFull}</div>
-            {/* Tier identity bottom */}
-            <div style={{ position: 'absolute', bottom: 16, left: 16, right: 16 }}>
-              <div style={{
-                fontFamily: fonts.header, fontSize: 24, letterSpacing: '0.10em',
-                color: '#fff', lineHeight: 1.0,
-              }}>{selected.label}</div>
-              <div style={{
-                fontFamily: fonts.body, fontSize: 12, letterSpacing: '0.04em',
-                color: regionColor, marginTop: 5, fontStyle: 'italic',
-              }}>{selected.identity}</div>
-            </div>
-          </div>
-
-          {/* Focus areas */}
-          <div style={{ padding: '16px 16px 0' }}>
-            <div style={{
-              fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.24em',
-              color: 'rgba(138,155,174,0.55)', marginBottom: 10,
-            }}>FOCUS AREAS</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
-              {selected.skills.map((s) => (
-                <div key={s} style={{
-                  padding: '6px 11px',
-                  background: 'rgba(138,155,174,0.07)',
-                  border: '1px solid rgba(138,155,174,0.16)',
-                  fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.10em',
-                  color: 'rgba(242,239,232,0.68)',
-                }}>{s}</div>
-              ))}
-            </div>
-          </div>
-
-          {/* Checklist */}
-          <div style={{ padding: '18px 16px 0' }}>
-            <div style={{
-              fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.24em',
-              color: 'rgba(138,155,174,0.55)', marginBottom: 12,
-            }}>REQUIREMENTS — {selected.sessions}</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {selected.checklist.map((item, i) => {
-                const completed = selected.num < currentNum;
-                return (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 11 }}>
-                    <div style={{
-                      width: 17, height: 17, flexShrink: 0, marginTop: 1,
-                      border: '1px solid ' + (completed ? 'rgba(138,155,174,0.40)' : 'rgba(242,239,232,0.18)'),
-                      borderRadius: 2,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: completed ? 'rgba(138,155,174,0.10)' : 'transparent',
-                    }}>
-                      {completed && (
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                          <path d="M2 5l2.5 2.5 4-4" stroke={ACCENT} strokeWidth="1.5"
-                            strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      )}
                     </div>
-                    <div style={{
-                      fontFamily: fonts.body, fontSize: 12, letterSpacing: '0.03em', lineHeight: 1.45,
-                      color: completed ? 'rgba(242,239,232,0.32)' : 'rgba(242,239,232,0.78)',
-                    }}>{item}</div>
                   </div>
-                );
-              })}
-            </div>
-          </div>
+                </button>
 
-          {/* Elite note — Tier 6 only */}
-          {selected.num === 6 && (
-            <div style={{
-              margin: '12px 16px 0',
-              padding: '11px 13px',
-              background: 'rgba(200,148,58,0.05)',
-              border: '1px solid rgba(200,148,58,0.14)',
-              borderLeft: '3px solid rgba(200,148,58,0.40)',
-            }}>
-              <div style={{
-                fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.16em',
-                color: 'rgba(200,148,58,0.60)',
-              }}>ELITE TIER — COACH CONVERSATION, NOT A CHECKLIST. THE COACH MUST SAY IT.</div>
-            </div>
-          )}
+                {/* Expanded content */}
+                {isOpen && (
+                  <div style={{
+                    background: isCurrent ? 'rgba(200,148,58,0.03)' : 'rgba(5,3,2,0.55)',
+                    borderTop: `1px solid ${isCurrent ? 'rgba(200,148,58,0.10)' : 'rgba(242,239,232,0.05)'}`,
+                  }}>
 
-          {/* Gym note */}
-          <div style={{
-            margin: '12px 16px 0',
-            padding: '10px 13px',
-            background: 'rgba(138,155,174,0.04)',
-            border: '1px solid rgba(138,155,174,0.09)',
-          }}>
-            <div style={{
-              fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.16em',
-              color: 'rgba(138,155,174,0.40)',
-            }}>
-              IRON ARMY · TOMS RIVER, NJ — ALL CRITERIA SUBJECT TO COACH VERIFICATION
-            </div>
-          </div>
+                    {/* Hero image — large */}
+                    <div style={{ position: 'relative', height: 180, overflow: 'hidden' }}>
+                      <Image
+                        src={t.hero}
+                        alt={t.label}
+                        fill sizes="100vw" priority
+                        style={{ objectFit: 'cover', objectPosition: 'right center', opacity: isLocked ? 0.22 : 0.88 }}
+                      />
+                      <div style={{
+                        position: 'absolute', inset: 0,
+                        background: 'linear-gradient(to top, rgba(5,3,2,1) 0%, rgba(5,3,2,0.35) 55%, transparent 100%), linear-gradient(to right, rgba(5,3,2,0.70) 0%, rgba(5,3,2,0) 50%)',
+                      }} />
+                      <div style={{ position: 'absolute', top: 12, right: 14 }}>
+                        <div style={{
+                          fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.28em',
+                          color: regCol, textShadow: '0 1px 6px rgba(0,0,0,0.90)',
+                        }}>{t.regionFull}</div>
+                      </div>
+                      <div style={{ position: 'absolute', bottom: 14, left: 16, right: 16 }}>
+                        <div style={{
+                          fontFamily: fonts.body, fontSize: 11, letterSpacing: '0.04em',
+                          color: regCol, fontStyle: 'italic', lineHeight: 1.4,
+                          opacity: isLocked ? 0.45 : 0.90,
+                          textShadow: '0 1px 8px rgba(0,0,0,0.95)',
+                        }}>"{t.identity}"</div>
+                      </div>
+                    </div>
 
+                    <div style={{ padding: '14px 16px 20px' }}>
+
+                      {/* Focus areas */}
+                      <div style={{ marginBottom: 14 }}>
+                        <div style={{
+                          fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.24em',
+                          color: 'rgba(138,155,174,0.55)', marginBottom: 8,
+                        }}>FOCUS AREAS</div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                          {t.skills.map((s) => (
+                            <div key={s} style={{
+                              padding: '5px 10px',
+                              background: 'rgba(138,155,174,0.06)',
+                              border: `1px solid ${isLocked ? 'rgba(138,155,174,0.08)' : 'rgba(138,155,174,0.16)'}`,
+                              fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.10em',
+                              color: isLocked ? 'rgba(242,239,232,0.28)' : 'rgba(242,239,232,0.62)',
+                            }}>{s}</div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Checklist */}
+                      <div>
+                        <div style={{
+                          fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.24em',
+                          color: 'rgba(138,155,174,0.55)', marginBottom: 10,
+                        }}>REQUIREMENTS — {t.sessions}</div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                          {t.checklist.map((item, i) => {
+                            const done = isEarned;
+                            return (
+                              <div key={i} style={{
+                              display: 'flex', alignItems: 'flex-start', gap: 10,
+                            }}>
+                              <div style={{
+                                width: 17, height: 17, flexShrink: 0, marginTop: 1,
+                                border: '1px solid ' + (done ? 'rgba(138,155,174,0.40)' : 'rgba(242,239,232,0.18)'),
+                                borderRadius: 2,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                background: done ? 'rgba(138,155,174,0.10)' : 'transparent',
+                              }}>
+                                {done && (
+                                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                    <path d="M2 5l2.5 2.5 4-4" stroke={ACCENT} strokeWidth="1.5"
+                                      strokeLinecap="round" strokeLinejoin="round" />
+                                  </svg>
+                                )}
+                              </div>
+                              <div style={{
+                                fontFamily: fonts.body, fontSize: 12, letterSpacing: '0.03em', lineHeight: 1.45,
+                                color: done ? 'rgba(242,239,232,0.32)' : 'rgba(242,239,232,0.78)',
+                              }}>{item}</div>
+                            </div>
+                          );
+                        })}
+                        </div>
+                      </div>
+
+                      {/* Elite note — Tier 6 only */}
+                      {t.num === 6 && (
+                        <div style={{
+                          marginTop: 12,
+                          padding: '11px 13px',
+                          background: 'rgba(200,148,58,0.05)',
+                          border: '1px solid rgba(200,148,58,0.14)',
+                          borderLeft: '3px solid rgba(200,148,58,0.40)',
+                        }}>
+                          <div style={{
+                            fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.16em',
+                            color: 'rgba(200,148,58,0.60)',
+                          }}>ELITE TIER — COACH CONVERSATION, NOT A CHECKLIST. THE COACH MUST SAY IT.</div>
+                        </div>
+                      )}
+
+                      {/* Gym note */}
+                      <div style={{
+                        marginTop: 12,
+                        padding: '10px 13px',
+                        background: 'rgba(138,155,174,0.04)',
+                        border: '1px solid rgba(138,155,174,0.09)',
+                      }}>
+                        <div style={{
+                          fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.16em',
+                          color: 'rgba(138,155,174,0.40)',
+                        }}>
+                          IRON ARMY · TOMS RIVER, NJ — ALL CRITERIA SUBJECT TO COACH VERIFICATION
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            );
+          })}
         </div>
+
       </div>
     </main>
   );

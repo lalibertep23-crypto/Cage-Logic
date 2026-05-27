@@ -116,7 +116,7 @@ const DISCIPLINES: DisciplineConfig[] = [
   {
     key: 'bjj', label: 'BRAZILIAN JIU-JITSU',
     badge: '/bjj-navigation-badge.png', accentColor: '#C8943A',
-    getHref: (rc, s) => '/progression/criteria?from=' + rc + '_' + s,
+    getHref: () => '/progression/bjj',
     getRank: bjjRank,
   },
   {
@@ -427,19 +427,8 @@ export default async function ProgressionPage() {
             </div>
           </Link>
         </div>
-
-        {/* Footer */}
-        <div style={{ padding: '28px 24px 12px', textAlign: 'center' }}>
-          <div style={{
-            fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.10em',
-            color: 'rgba(242,239,232,0.28)', lineHeight: 2.0,
-          }}>
-            The rank is just a reflection of the journey.<br/>
-            The real reward is who you become along the way.
-          </div>
-        </div>
-
       </div>
+
     </main>
   );
 }

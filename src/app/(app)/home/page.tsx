@@ -3,6 +3,7 @@
 // All content preserved: score, domains, today, week, nudge, stripe track, mental CTA, quote.
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { differenceInCalendarDays, format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
@@ -124,95 +125,22 @@ function IconSelfStudy({ color }: { color: string }) {
   );
 }
 
-// ── Octagon Score Frame ───────────────────────────────────────────────────────
-function ScoreOctagon({
-  value,
-  topLabel,
-  bottomLabel,
-  color,
-  isRamping,
-  currentDay,
-}: {
-  value: string | number;
-  topLabel: string;
-  bottomLabel: string;
-  color: string;
-  isRamping?: boolean;
-  currentDay?: number;
-}) {
-  const pts      = '54,4 126,4 176,54 176,146 126,196 54,196 4,146 4,54';
-  const innerPts = '60,12 120,12 168,60 168,140 120,188 60,188 12,140 12,60';
-  const strVal   = String(value).padStart(2, '0');
+// ── Wrap image — changes as athlete progresses through 30-day ramp ────────────
+function getWrapImage(day: number, isRamping: boolean): string {
+  if (!isRamping) return '/ready-for-war.png';
+  if (day <= 4)  return '/initial-wrap.png';
+  if (day <= 9)  return '/focused-tension-building.png';
+  if (day <= 14) return '/hands-tightening-committment.png';
+  if (day <= 19) return '/aggressive-prep-intensity.png';
+  if (day <= 24) return '/lock-in-mindset.png';
+  return '/ready-for-war.png';
+}
 
-  return (
-    <svg viewBox="-20 -20 220 240" width="100%" style={{ maxWidth: 178, display: 'block' }}>
-      <defs>
-        <filter id="octGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="9" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-        <filter id="octGlowStrong" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="4" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
-      {/* ── Outer metal structural ring ──────────────────────────── */}
-      <polygon points={pts} fill="none" stroke="#050403" strokeWidth="40"/>
-      <polygon points={pts} fill="none" stroke="#111009" strokeWidth="32"/>
-      <polygon points={pts} fill="none" stroke="#1B1813" strokeWidth="24"/>
-      <polygon points={pts} fill="none" stroke="#25211B" strokeWidth="16"/>
-      <polygon points={pts} fill="none" stroke="#2E2923" strokeWidth="10"/>
-      {/* ── Amber glow halos ────────────────────────────────────── */}
-      <polygon points={pts} fill="none" stroke={color} strokeWidth="24" opacity="0.12" filter="url(#octGlow)"/>
-      <polygon points={pts} fill="none" stroke={color} strokeWidth="10" opacity="0.28" filter="url(#octGlow)"/>
-      {/* ── Main amber frame ────────────────────────────────────── */}
-      <polygon points={pts} fill="rgba(5,5,5,0.91)" stroke={color} strokeWidth="3.5" filter="url(#octGlowStrong)"/>
-      {/* ── Inner hairline ──────────────────────────────────────── */}
-      <polygon points={innerPts} fill="none" stroke={color} strokeWidth="1" opacity="0.35"/>
-      {/* ── Content ─────────────────────────────────────────────── */}
-      {isRamping ? (
-        <>
-          {/* FORMING label — where SCORE would appear */}
-          <text x="90" y="94" textAnchor="middle"
-            fontFamily="'Bebas Neue', sans-serif" fontSize="21" letterSpacing="6"
-            fill={color} opacity="0.6">
-            FORMING
-          </text>
-          {/* Redaction bars — stand-in for the hidden score */}
-          <rect x="46" y="106" width="88" height="12" rx="1" fill={color} opacity="0.10"/>
-          <rect x="60" y="125" width="60" height="8" rx="1" fill={color} opacity="0.07"/>
-          {/* Compact day marker at bottom — not redundant, uses · separator */}
-          <text x="90" y="172" textAnchor="middle"
-            fontFamily="'Anton', sans-serif" fontSize="34" letterSpacing="0"
-            fill={color} opacity="0.72">
-            {`${String(currentDay ?? 1).padStart(2, '0')} · 30`}
-          </text>
-        </>
-      ) : (
-        <>
-          <text x="90" y="64" textAnchor="middle"
-            fontFamily="'Bebas Neue', sans-serif" fontSize="16" letterSpacing="7" fill={color}>
-            {topLabel}
-          </text>
-          <text x="90" y="150" textAnchor="middle"
-            fontFamily="'Anton', sans-serif" fontSize="90" letterSpacing="-3" fill={color}>
-            {strVal}
-          </text>
-          <text x="90" y="178" textAnchor="middle"
-            fontFamily="'DM Mono', monospace" fontSize="13" fill="rgba(242,239,232,0.4)" letterSpacing="3">
-            {bottomLabel}
-          </text>
-        </>
-      )}
-    </svg>
-  );
+function getRampDescriptor(day: number): string {
+  if (day <= 9)  return 'FORMING';
+  if (day <= 19) return 'BUILDING';
+  if (day <= 26) return 'LOCKING IN';
+  return 'READY';
 }
 
 // ── Segmented Bar (10 blocks) ─────────────────────────────────────────────────
@@ -280,10 +208,12 @@ export default async function HomePage() {
   const todayQuote  = getTodayQuote();
   const dateStr     = format(new Date(), 'EEE · dd MMM').toUpperCase();
   const currentDay  = Math.min(daysSinceSignup + 1, RAMPING_DAYS);
-  const roundedScore = Math.round(score.score ?? 0);
-  const scoreColor  = getScoreColor(weekly.sessions);
-  const streakColor = getStreakColor(streaks.training);
-  const rampPct     = Math.min(100, (currentDay / RAMPING_DAYS) * 100);
+  const roundedScore    = Math.round(score.score ?? 0);
+  const scoreColor      = getScoreColor(weekly.sessions);
+  const streakColor     = getStreakColor(streaks.training);
+  const rampPct         = Math.min(100, (currentDay / RAMPING_DAYS) * 100);
+  const wrapImage       = getWrapImage(currentDay, score.isRamping);
+  const rampDescriptor  = getRampDescriptor(currentDay);
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
@@ -291,20 +221,48 @@ export default async function HomePage() {
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 22px 14px',
+        padding: '10px 18px 10px',
         borderBottom: `1px solid ${C.line}`,
+        background: 'rgba(5,4,3,0.92)',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 3, height: 26, background: C.amber }}/>
+        <Link href="/home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* Brain — the brand anchor */}
+          <div style={{ width: 58, height: 58, position: 'relative', flexShrink: 0 }}>
+            <Image
+              src="/cage-logic-back-button.png"
+              alt="Cage Logic"
+              fill
+              sizes="58px"
+              style={{
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 8px rgba(200,148,58,0.55)) drop-shadow(0 0 18px rgba(200,148,58,0.22)) drop-shadow(0 1px 3px rgba(0,0,0,0.95))',
+              }}
+            />
+          </div>
+          {/* Wordmark */}
           <div>
-            <div style={{ fontFamily: 'var(--font-anton)', fontSize: 26, letterSpacing: '0.06em', lineHeight: 1 }}>
+            <div style={{
+              fontFamily: 'var(--font-bebas)',
+              fontSize: 20,
+              letterSpacing: '0.15em',
+              color: C.amber,
+              lineHeight: 1,
+              textShadow: '0 1px 6px rgba(0,0,0,0.80)',
+            }}>
               CAGE LOGIC
             </div>
-            <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.dim, marginTop: 3 }}>
+            <div style={{
+              fontFamily: 'var(--font-dm-mono)',
+              fontSize: 8,
+              letterSpacing: '0.18em',
+              color: 'rgba(242,239,232,0.45)',
+              lineHeight: 1,
+              marginTop: 3,
+            }}>
               {dateStr}
             </div>
           </div>
-        </div>
+        </Link>
         <div style={{ textAlign: 'right' }}>
           <Link href="/profile" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
             <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 13, letterSpacing: '0.1em', color: C.amber, fontWeight: 600 }}>
@@ -343,64 +301,119 @@ export default async function HomePage() {
       )}
 
       {/* ── Investment Score Hero ─────────────────────────────────────────── */}
-      <div style={{ position: 'relative', overflow: 'hidden', borderBottom: `1px solid ${C.line}` }}>
-        {/* Cage background image */}
+      <div style={{
+        position: 'relative', overflow: 'hidden',
+        borderBottom: `1px solid ${C.line}`,
+        height: '42vmax', minHeight: 260, maxHeight: 380,
+      }}>
+        {/* Fighter wrap image — state determined by day threshold */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/home-score_bright.png)',
-          backgroundSize: 'cover', backgroundPosition: 'center',
-          opacity: 0.55, filter: 'brightness(1.05)',
+          backgroundImage: `url(${wrapImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 20%',
         }}/>
-        <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', padding: '22px 22px 20px' }}>
+        {/* Gradient — preserve readability at bottom, reveal fighter above */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to bottom, rgba(5,4,3,0.18) 0%, rgba(5,4,3,0.08) 30%, rgba(5,4,3,0.72) 68%, rgba(5,4,3,0.97) 100%)',
+        }}/>
+        {/* Right-side vignette — keeps fighter face lit */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to right, rgba(5,4,3,0.60) 0%, rgba(5,4,3,0) 40%)',
+        }}/>
 
-          {/* Left: labels + progress */}
-          <div style={{ flex: 1, paddingRight: 10 }}>
-            <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.22em', color: C.amber, marginBottom: 14 }}>
-              INVESTMENT SCORE
-            </div>
-            {score.isRamping ? (
-              <>
-                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 13, letterSpacing: '0.1em', fontWeight: 700, color: C.text, marginBottom: 3 }}>
-                  DAY {currentDay} OF {RAMPING_DAYS}
-                </div>
-                <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.16em', color: C.dim, marginBottom: 18 }}>
-                  BASELINE FORMING
-                </div>
-              </>
-            ) : (
-              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em', color: C.dim, marginBottom: 18 }}>
-                30-DAY WINDOW · ACTIVE
+        {/* Content — bottom anchor */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 1, padding: '0 22px 20px' }}>
+
+          {/* Label */}
+          <div style={{
+            fontFamily: 'var(--font-bebas)',
+            fontSize: 13, letterSpacing: '0.26em',
+            color: C.amber, marginBottom: 4,
+          }}>
+            INVESTMENT SCORE
+          </div>
+
+          {score.isRamping ? (
+            <>
+              {/* Day counter */}
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4 }}>
+                <span style={{
+                  fontFamily: 'var(--font-anton)',
+                  fontSize: 48, letterSpacing: '0.02em', lineHeight: 1,
+                  color: C.text,
+                }}>
+                  DAY {currentDay}
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-anton)',
+                  fontSize: 28, letterSpacing: '0.04em', lineHeight: 1,
+                  color: C.amber, opacity: 0.75,
+                }}>
+                  OF {RAMPING_DAYS}
+                </span>
               </div>
-            )}
-            {/* Progress bar with tick marks */}
-            <div style={{ position: 'relative', height: 3, background: 'rgba(242,239,232,0.08)', marginBottom: 10 }}>
-              {[25, 50, 75].map(p => (
-                <div key={p} style={{ position: 'absolute', top: -3, left: `${p}%`, width: 1, height: 9, background: 'rgba(242,239,232,0.22)' }}/>
-              ))}
+              {/* State descriptor */}
               <div style={{
-                position: 'absolute', inset: 0,
-                width: `${score.isRamping ? rampPct : 100}%`,
-                background: score.isRamping ? C.amber : scoreColor,
-              }}/>
-            </div>
-            {!score.isRamping && (
-              <Link href="/score" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.1em', textDecoration: 'none' }}>
+                fontFamily: 'var(--font-dm-mono)',
+                fontSize: 9, letterSpacing: '0.22em',
+                color: 'rgba(242,239,232,0.42)',
+                marginBottom: 14,
+              }}>
+                {rampDescriptor}
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Revealed score */}
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
+                <span style={{
+                  fontFamily: 'var(--font-anton)',
+                  fontSize: 60, letterSpacing: '-0.01em', lineHeight: 1,
+                  color: scoreColor,
+                }}>
+                  {String(roundedScore).padStart(2, '0')}
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-dm-mono)',
+                  fontSize: 11, color: 'rgba(242,239,232,0.35)',
+                  letterSpacing: '0.06em',
+                }}>
+                  / 100
+                </span>
+              </div>
+              <Link href="/score" style={{
+                fontFamily: 'var(--font-dm-mono)',
+                fontSize: 9, letterSpacing: '0.16em',
+                color: 'rgba(242,239,232,0.38)',
+                textDecoration: 'none',
+                display: 'block', marginBottom: 14,
+              }}>
                 SEE BREAKDOWN →
               </Link>
-            )}
-          </div>
+            </>
+          )}
 
-          {/* Right: octagon score frame */}
-          <div style={{ width: 160, flexShrink: 0 }}>
-            <ScoreOctagon
-              value={score.isRamping ? currentDay : roundedScore}
-              topLabel="SCORE"
-              bottomLabel="/ 100"
-              color={score.isRamping ? C.amberBright : scoreColor}
-              isRamping={score.isRamping}
-              currentDay={currentDay}
-            />
+          {/* Progress bar */}
+          <div style={{ position: 'relative', height: 2, background: 'rgba(242,239,232,0.10)' }}>
+            {/* Day 15 tick */}
+            <div style={{ position: 'absolute', top: -4, left: '50%', width: 1, height: 10, background: 'rgba(242,239,232,0.28)' }}/>
+            <div style={{
+              position: 'absolute', top: 0, left: 0, bottom: 0,
+              width: `${score.isRamping ? rampPct : 100}%`,
+              background: score.isRamping ? C.amber : scoreColor,
+            }}/>
           </div>
+          {/* Day markers */}
+          {score.isRamping && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.10em', color: 'rgba(242,239,232,0.28)' }}>0</span>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.10em', color: 'rgba(242,239,232,0.28)' }}>15</span>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.10em', color: 'rgba(242,239,232,0.28)' }}>30</span>
+            </div>
+          )}
         </div>
       </div>
 

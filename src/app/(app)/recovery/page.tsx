@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { parseISO, format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
-import { BrandNav } from '@/components/ui/brand-nav';
+import { BrainWatermark } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -140,10 +140,8 @@ export default async function RecoveryPage() {
           position: 'absolute', inset: 0,
           background: 'linear-gradient(to bottom, rgba(5,5,5,0.0) 0%, rgba(5,5,5,0.15) 40%, rgba(5,5,5,0.82) 75%, rgba(5,5,5,1) 100%), linear-gradient(to right, rgba(5,5,5,0.75) 0%, rgba(5,5,5,0) 55%)',
         }} />
-        {/* BrandNav — absolute over hero */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
-          <BrandNav backHref="/home" glass={false} />
-        </div>
+        {/* Brain watermark */}
+        <BrainWatermark />
         {/* Title — bottom-left anchor */}
         <div style={{ position: 'absolute', bottom: 18, left: 22, right: 22 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -243,27 +241,12 @@ export default async function RecoveryPage() {
         {/* ── Today's soreness ──────────────────────────────────────── */}
         <div style={{
           position: 'relative', overflow: 'hidden',
+          background: C.surface,
           borderLeft: `3px solid ${todayLog ? sorenessColor(todayLog.overall) : C.amber}`,
           borderBottom: `1px solid ${C.border}`,
           minHeight: 150,
         }}>
-          {/* Background */}
           <div style={{
-            position: 'absolute', inset: 0,
-            backgroundImage: 'url(/recovery.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'right center',
-            filter: 'saturate(1.4) contrast(1.1)',
-            opacity: 0.85,
-          }} />
-          {/* Overlay — solid left, fades right */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(90deg, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.95) 35%, rgba(5,5,5,0.5) 60%, rgba(5,5,5,0.0) 100%)',
-          }} />
-
-          <div style={{
-            position: 'relative', zIndex: 1,
             padding: '18px 18px 18px 16px',
             display: 'flex', flexDirection: 'column', gap: 10,
           }}>
@@ -382,6 +365,79 @@ export default async function RecoveryPage() {
               </div>
             </div>
             <p style={{
+              fontFamily: 'var(--font-dm-mono)',
+              fontSize: 13, letterSpacing: '0.04em', lineHeight: 1.6, color: C.dim, margin: 0,
+            }}>
+              Something more than sore. Log it now.
+            </p>
+            <Link href="/recovery/injury/new" style={{ textDecoration: 'none', display: 'inline-block' }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '8px 16px 6px',
+                border: `1px solid ${C.brick}`, color: C.brick,
+                fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.14em',
+              }}>
+                LOG IT →
+              </div>
+            </Link>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── Last 7 days ───────────────────────────────────────────────── */}
+      {recent.length > 0 && (
+        <div style={{ marginTop: 28, padding: '0 22px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <span style={{
+              fontFamily: 'var(--font-dm-mono)',
+              fontSize: 9, letterSpacing: '0.22em', color: C.dimmer,
+            }}>
+              LAST 7 DAYS
+            </span>
+            <div style={{ flex: 1, height: 1, background: C.border }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {recent.map((r, i) => (
+              <div
+                key={r.id}
+                style={{
+                  display: 'flex', alignItems: 'center',
+                  borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
+                  borderBottom: `1px solid ${C.border}`,
+                  padding: '12px 0', gap: 12,
+                }}
+              >
+                <div style={{ width: 8, height: 8, background: sorenessColor(r.overall), flexShrink: 0 }} />
+                <span style={{
+                  fontFamily: 'var(--font-bebas)',
+                  fontSize: 14, letterSpacing: '0.08em', color: C.text, flex: 1,
+                }}>
+                  {format(parseISO(r.log_date), 'EEE, MMM d').toUpperCase()}
+                </span>
+                {r.regions.length > 0 && (
+                  <span style={{
+                    fontFamily: 'var(--font-dm-mono)',
+                    fontSize: 8, letterSpacing: '0.12em', color: C.dimmer,
+                  }}>
+                    {r.regions.map(formatRegion).join(' · ')}
+                  </span>
+                )}
+                <span style={{
+                  fontFamily: 'var(--font-anton)',
+                  fontSize: 18, color: sorenessColor(r.overall), minWidth: 28, textAlign: 'right',
+                }}>
+                  {r.overall != null ? `${r.overall}` : '—'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+    </main>
+  );
+}
               fontFamily: 'var(--font-dm-mono)',
               fontSize: 13, letterSpacing: '0.04em', lineHeight: 1.6, color: C.dim, margin: 0,
             }}>
