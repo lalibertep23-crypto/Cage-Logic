@@ -180,13 +180,6 @@ const DISCIPLINES: DisciplineConfig[] = [
     getHref: () => '/progression/sambo',
     getRank: (rc) => samboRank(rc),
   },
-  {
-    key: 'karate', label: 'KARATE',
-    badge: '/bjj-navigation-badge.png', // temp — karate nav badge pending
-    accentColor: '#C8943A',
-    getHref: () => '/progression/karate',
-    getRank: (rc) => karateRank(rc),
-  },
 ];
 
 // ─── Card ───────────────────────────────────────────────────────────────────
@@ -411,7 +404,7 @@ export default async function ProgressionPage() {
             <div style={{
               fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.22em',
               color: 'rgba(200,148,58,0.60)',
-            }}>{activeCount} OF 7 ACTIVE</div>
+            }}>{activeCount} OF 6 ACTIVE</div>
           </div>
         </div>
 

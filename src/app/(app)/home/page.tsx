@@ -396,24 +396,27 @@ export default async function HomePage() {
             </>
           )}
 
-          {/* Progress bar */}
-          <div style={{ position: 'relative', height: 2, background: 'rgba(242,239,232,0.10)' }}>
-            {/* Day 15 tick */}
-            <div style={{ position: 'absolute', top: -4, left: '50%', width: 1, height: 10, background: 'rgba(242,239,232,0.28)' }}/>
-            <div style={{
-              position: 'absolute', top: 0, left: 0, bottom: 0,
-              width: `${score.isRamping ? rampPct : 100}%`,
-              background: score.isRamping ? C.amber : scoreColor,
-            }}/>
+          {/* Progress bar — 6 blocks of 5 days (tally count) */}
+          <div style={{ display: 'flex', gap: 3 }}>
+            {Array.from({ length: 6 }, (_, i) => {
+              const threshold = (i + 1) * 5;
+              const isFull    = !score.isRamping || currentDay >= threshold;
+              const isActive  = score.isRamping && currentDay >= threshold - 4 && currentDay < threshold;
+              const blockColor = !score.isRamping
+                ? scoreColor
+                : isFull
+                  ? C.amber
+                  : isActive
+                    ? 'rgba(200,148,58,0.30)'
+                    : 'rgba(242,239,232,0.07)';
+              return (
+                <div key={i} style={{
+                  flex: 1, height: 10,
+                  background: blockColor,
+                }}/>
+              );
+            })}
           </div>
-          {/* Day markers */}
-          {score.isRamping && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.10em', color: 'rgba(242,239,232,0.28)' }}>0</span>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.10em', color: 'rgba(242,239,232,0.28)' }}>15</span>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.10em', color: 'rgba(242,239,232,0.28)' }}>30</span>
-            </div>
-          )}
         </div>
       </div>
 
