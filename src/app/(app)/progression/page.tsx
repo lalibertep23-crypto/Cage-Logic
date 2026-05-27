@@ -76,6 +76,21 @@ function levelRank(rankColor: string, images: Record<string, string>): RankDispl
   };
 }
 
+function karateRank(rankColor: string): RankDisplay {
+  const BELTS: Record<string, string> = {
+    white:  'WHITE / MUKYU',
+    orange: 'ORANGE / 8–7 KYU',
+    green:  'GREEN / 5–4 KYU',
+    blue:   'BLUE / 3 KYU',
+    brown:  'BROWN / 1–2 KYU',
+    black:  'SHODAN',
+  };
+  return {
+    rankLine:   BELTS[rankColor] ?? 'WHITE / MUKYU',
+    rightImage: '', // no right-image asset yet
+  };
+}
+
 function samboRank(rankColor: string): RankDisplay {
   const TIERS: Record<string, string> = {
     level_1: 'НОВИЧОК',
@@ -164,6 +179,13 @@ const DISCIPLINES: DisciplineConfig[] = [
     accentColor: '#B83A30',
     getHref: () => '/progression/sambo',
     getRank: (rc) => samboRank(rc),
+  },
+  {
+    key: 'karate', label: 'KARATE',
+    badge: '/bjj-navigation-badge.png', // temp — karate nav badge pending
+    accentColor: '#C8943A',
+    getHref: () => '/progression/karate',
+    getRank: (rc) => karateRank(rc),
   },
 ];
 
@@ -389,7 +411,7 @@ export default async function ProgressionPage() {
             <div style={{
               fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.22em',
               color: 'rgba(200,148,58,0.60)',
-            }}>{activeCount} OF 6 ACTIVE</div>
+            }}>{activeCount} OF 7 ACTIVE</div>
           </div>
         </div>
 
