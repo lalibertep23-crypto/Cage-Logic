@@ -128,7 +128,7 @@ type RollRow = { id: number; partner: string };
 // ── Main form ────────────────────────────────────────────────────────────────
 type ActiveInjury = { id: string; body_region: string; side: string | null };
 
-export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; activeInjuries?: ActiveInjury[] }) {
+export function LogForm({ tags, activeInjuries = [], savedCustom = [] }: { tags: TagOption[]; activeInjuries?: ActiveInjury[]; savedCustom?: string[] }) {
   type ChainStep = { id: number; position: string; technique: string; result: string };
   type CustomEntry = { localId: number; name: string };
 
@@ -455,6 +455,38 @@ export function LogForm({ tags, activeInjuries = [] }: { tags: TagOption[]; acti
               />
             </div>
             <div style={{ maxHeight: 260, overflowY: 'auto', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {/* ── Saved custom techniques ── */}
+              {savedCustom.filter((name) => !customEntries.some((c) => c.name.toLowerCase() === name.toLowerCase())).length > 0 && (
+                <div>
+                  <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 11, letterSpacing: '0.28em', color: C.midLow, marginBottom: 8 }}>
+                    YOUR CUSTOMS
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {savedCustom
+                      .filter((name) => !customEntries.some((c) => c.name.toLowerCase() === name.toLowerCase()))
+                      .map((name) => (
+                        <button
+                          key={name}
+                          type="button"
+                          onClick={() => setCustomEntries((prev) => [...prev, { localId: Date.now(), name }])}
+                          style={{
+                            background: C.bgRaised,
+                            border: `1px solid ${C.amberLow}`,
+                            borderRadius: 0,
+                            color: C.mid,
+                            padding: '6px 10px',
+                            fontFamily: 'var(--font-bebas)',
+                            fontSize: 12,
+                            letterSpacing: '0.06em',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <span style={{ color: C.amber, marginRight: 4 }}>+</span>{name.toUpperCase()}
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              )}
               {orderedKeys.length === 0 && !query.trim() && (
                 <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.midLow }}>Type to search.</span>
               )}

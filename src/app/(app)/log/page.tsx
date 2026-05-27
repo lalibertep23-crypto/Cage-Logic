@@ -47,6 +47,23 @@ export default async function LogPage() {
     side: (r.side as string | null) ?? null,
   }));
 
+  // Athlete's previously submitted custom techniques — deduplicated, most recent first
+  const { data: customRows } = await supabase
+    .from('custom_technique_submissions')
+    .select('name')
+    .eq('athlete_id', user.id)
+    .order('created_at', { ascending: false });
+
+  const seen = new Set<string>();
+  const savedCustom: string[] = [];
+  for (const row of (customRows ?? [])) {
+    const key = (row.name as string).toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      savedCustom.push(row.name as string);
+    }
+  }
+
   return (
     <main style={{ background: '#050505', minHeight: '100vh', color: '#F2EFE8' }}>
       {/* ── Hero — image + title merged ───────────────────────────── */}
@@ -114,7 +131,7 @@ export default async function LogPage() {
         </div>
       )}
 
-      <LogForm tags={tags} activeInjuries={activeInjuries} />
+      <LogForm tags={tags} activeInjuries={activeInjuries} savedCustom={savedCustom} />
     </main>
   );
 }
