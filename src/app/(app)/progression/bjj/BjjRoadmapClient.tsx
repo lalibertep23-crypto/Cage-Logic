@@ -186,19 +186,63 @@ export default function BjjRoadmapClient({
       {/* ── BrandNav ── */}
       <BrandNav backHref="/progression" />
 
-      {/* ── Page title ── */}
-      <div style={{
-        padding: '6px 20px 16px',
-        borderBottom: '1px solid rgba(200,148,58,0.10)',
-      }}>
+      {/* ── Cinematic Hero ── */}
+      <div style={{ position: 'relative', height: 190, overflow: 'hidden' }}>
+        {/* Mat background */}
         <div style={{
-          fontFamily: fonts.header, fontSize: 30, letterSpacing: '0.10em',
-          color: '#fff', lineHeight: 1,
-        }}>BRAZILIAN JIU-JITSU</div>
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(/iron-army-mat.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 40%',
+          filter: 'saturate(0.60) contrast(1.15) brightness(0.50)',
+        }} />
+        {/* Gradient overlays */}
         <div style={{
-          fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.22em',
-          color: 'rgba(200,148,58,0.55)', marginTop: 4,
-        }}>IRON ARMY · TOMS RIVER, NJ</div>
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to bottom, rgba(5,4,3,0.18) 0%, rgba(5,4,3,0.10) 30%, rgba(5,4,3,0.80) 70%, rgba(5,4,3,1.0) 100%), linear-gradient(to right, rgba(5,4,3,0.92) 0%, rgba(5,4,3,0.08) 65%)',
+        }} />
+        {/* Belt image — right-anchored atmospheric */}
+        <div style={{
+          position: 'absolute', right: 0, top: 0, bottom: 0, width: '55%',
+          backgroundImage: `url(${BELTS.find(b => b.key === currentBeltKey)?.image ?? '/white-belt.png'})`,
+          backgroundSize: 'auto 75%',
+          backgroundPosition: 'right center',
+          backgroundRepeat: 'no-repeat',
+          opacity: 0.18,
+          filter: 'grayscale(0.30)',
+        }} />
+        {/* Current belt stripe indicator */}
+        <div style={{
+          position: 'absolute', top: 16, right: 16,
+          display: 'flex', gap: 5, alignItems: 'center',
+        }}>
+          {[1, 2, 3, 4].map((s) => (
+            <div key={s} style={{
+              width: 10, height: 10, borderRadius: '50%',
+              background: s <= currentStripes ? GOLD : 'rgba(242,239,232,0.12)',
+              border: s <= currentStripes ? 'none' : '1px solid rgba(242,239,232,0.20)',
+            }} />
+          ))}
+        </div>
+        {/* Title — bottom-left */}
+        <div style={{ position: 'absolute', bottom: 18, left: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 3, height: 32, background: GOLD, flexShrink: 0 }} />
+            <div>
+              <div style={{
+                fontFamily: fonts.header, fontSize: 26, letterSpacing: '0.10em',
+                lineHeight: 1, color: '#F2EFE8',
+              }}>BRAZILIAN JIU-JITSU</div>
+              <div style={{
+                fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.22em',
+                color: 'rgba(200,148,58,0.65)', marginTop: 5,
+              }}>
+                {String(currentBeltKey).toUpperCase()} BELT
+                {currentStripes > 0 ? ` · ${currentStripes} STRIPE${currentStripes > 1 ? 'S' : ''}` : ''} · IRON ARMY
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Belt Accordion ── */}

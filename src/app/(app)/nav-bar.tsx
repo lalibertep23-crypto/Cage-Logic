@@ -132,9 +132,9 @@ export function NavBar() {
                   <img
                     src={IMG_TABS[t.id]}
                     alt={t.label}
-                    width={24}
-                    height={24}
-                    style={{ opacity: active ? 1 : 0.45, filter: active ? 'none' : 'grayscale(0.4)' }}
+                    width={30}
+                    height={30}
+                    style={{ opacity: active ? 1 : 0.50, filter: active ? 'drop-shadow(0 0 4px rgba(200,148,58,0.55))' : 'grayscale(0.3) brightness(0.85)' }}
                   />
                 ) : (
                   ICONS[t.id](active)

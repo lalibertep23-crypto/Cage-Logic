@@ -1,154 +1,212 @@
 'use client';
 
-// Breathwork Phase 1 animated guide.
-// Protocol: nose inhale 4s → pause 1s → exhale through mouth/guard 6s.
-// Octagon visualizer: cage from above. Pulsing octagon shape on each breath phase.
-// Research: Laborde 2024, Schulze 2019, Fincham 2023.
+// Performance Breathing — Phase 1 — Darkroom Mode
+// Brain focal point. Edge-to-center amber pulse. Radiating lines.
+// V1.5 TODO: voiceover layer (audio cues per phase — not built in V1)
 
 import { useReducer, useEffect, useRef, useTransition } from 'react';
 import { logBreathworkSession } from './breathwork-actions';
 
-// ── Palette ──────────────────────────────────────────────────────────────────
+// ── Palette ──────────────────────────────────────────────────────────────
 const C = {
   bg:      '#050505',
-  surface: '#111111',
-  bgSunk:  '#0A0A0A',
-  border:  'rgba(242,239,232,0.10)',
+  surface: '#0D0D0D',
   text:    '#F2EFE8',
   dim:     'rgba(242,239,232,0.45)',
-  dimmer:  'rgba(242,239,232,0.28)',
+  dimmer:  'rgba(242,239,232,0.22)',
   amber:   '#C8943A',
-  amberLow:'rgba(200,148,58,0.25)',
-  amberDim:'rgba(200,148,58,0.10)',
   green:   '#3D8B55',
-  greenLow:'rgba(42,92,63,0.35)',
-  mid:     '#C8C4BC',
-  midLow:  '#8E8577',
+  border:  'rgba(242,239,232,0.08)',
 };
 
-// ── Octagon geometry (SVG 220×220, center 110,110) ───────────────────────────
-// Regular octagon, flat-top orientation (22.5° offset from x-axis)
-const CX = 110;
-const CY = 110;
-const OUTER_R = 90;  // cage frame
-const INNER_R = 68;  // breathing octagon base size
+// ── Phase visual config ───────────────────────────────────────────────────
+// Each phase drives: edge glow intensity, inward fill opacity,
+// brain glow strength, radiating line opacity, and CSS transition timing.
+const VIS = {
+  idle: {
+    edgeShadow:   'inset 0 0 45px rgba(200,148,58,0.10), inset 0 0 90px rgba(200,148,58,0.04)',
+    fillOpacity:  0,
+    brainGlow:    0.13,
+    lineOpacity:  0.06,
+    transition:   '1.5s ease',
+  },
+  IN: {
+    edgeShadow:   'inset 0 0 110px rgba(200,148,58,0.50), inset 0 0 220px rgba(200,148,58,0.24)',
+    fillOpacity:  0.88,
+    brainGlow:    1.0,
+    lineOpacity:  0.42,
+    transition:   '4s ease-in',
+  },
+  PAUSE: {
+    edgeShadow:   'inset 0 0 110px rgba(200,148,58,0.50), inset 0 0 220px rgba(200,148,58,0.24)',
+    fillOpacity:  0.88,
+    brainGlow:    1.0,
+    lineOpacity:  0.42,
+    transition:   '0.15s ease',
+  },
+  OUT: {
+    edgeShadow:   'inset 0 0 45px rgba(200,148,58,0.10), inset 0 0 90px rgba(200,148,58,0.04)',
+    fillOpacity:  0,
+    brainGlow:    0.15,
+    lineOpacity:  0.06,
+    transition:   '6s ease-out',
+  },
+} as const;
 
-const ANGLES_DEG = [22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5];
-const ANGLES_RAD = ANGLES_DEG.map((d) => (d * Math.PI) / 180);
+// ── Breath protocol ───────────────────────────────────────────────────────
+const STEPS = [
+  { phase: 'IN'    as const, seconds: 4, label: 'IN',   sub: 'NOSE' },
+  { phase: 'PAUSE' as const, seconds: 1, label: 'HOLD', sub: '' },
+  { phase: 'OUT'   as const, seconds: 6, label: 'OUT',  sub: 'MOUTH / GUARD' },
+];
 
-function octPoints(cx: number, cy: number, r: number): string {
-  return ANGLES_RAD.map((a) => `${(cx + r * Math.cos(a)).toFixed(2)},${(cy + r * Math.sin(a)).toFixed(2)}`).join(' ');
-}
-
-const OUTER_POINTS = octPoints(CX, CY, OUTER_R);
-const INNER_POINTS = octPoints(CX, CY, INNER_R);
-
-// Vertices as [x, y] pairs for drawing radial lines
-const OUTER_VERTS = ANGLES_RAD.map((a) => ({
-  x: CX + OUTER_R * Math.cos(a),
-  y: CY + OUTER_R * Math.sin(a),
-}));
-
-// ── Types ────────────────────────────────────────────────────────────────────
-interface PhaseStep {
-  label: string;
-  sublabel: string;
-  seconds: number;
-  big: boolean;
-  color: string;
-  fillColor: string;
-}
-
+// ── Timer state ───────────────────────────────────────────────────────────
 interface TimerState {
-  running: boolean;
-  phaseIndex: number;
-  secondsLeft: number;
-  secondsTotal: number;
+  running:        boolean;
+  phase:          'IN' | 'PAUSE' | 'OUT';
+  secondsLeft:    number;
+  secondsTotal:   number;
   elapsedSeconds: number;
-  roundsComplete: number;
-  done: boolean;
+  breathsComplete: number;
+  done:           boolean;
 }
 
-type TimerAction =
-  | { type: 'START'; firstSeconds: number }
-  | { type: 'TICK'; steps: PhaseStep[]; totalSeconds: number; stepsPerRound: number }
+type Action =
+  | { type: 'START' }
+  | { type: 'TICK'; totalSec: number }
   | { type: 'STOP' }
   | { type: 'RESET' };
 
-// ── Phase 1 Protocol ─────────────────────────────────────────────────────────
-const PHASE_1_STEPS: PhaseStep[] = [
-  { label: 'IN',    sublabel: 'NOSE',          seconds: 4, big: true,  color: C.amber,  fillColor: C.amberDim },
-  { label: 'PAUSE', sublabel: '',              seconds: 1, big: true,  color: C.dimmer, fillColor: 'rgba(245,240,232,0.04)' },
-  { label: 'OUT',   sublabel: 'MOUTH / GUARD', seconds: 6, big: false, color: C.green,  fillColor: 'rgba(42,92,63,0.12)' },
-];
-
-const DURATIONS = [5, 10];
-
-// ── Reducer ──────────────────────────────────────────────────────────────────
-function timerReducer(state: TimerState, action: TimerAction): TimerState {
-  switch (action.type) {
-    case 'START':
-      return {
-        running: true, phaseIndex: 0,
-        secondsLeft: action.firstSeconds, secondsTotal: action.firstSeconds,
-        elapsedSeconds: 0, roundsComplete: 0, done: false,
-      };
-    case 'TICK': {
-      if (!state.running) return state;
-      const nextElapsed = state.elapsedSeconds + 1;
-      if (nextElapsed >= action.totalSeconds) {
-        return { ...state, running: false, done: true, elapsedSeconds: nextElapsed };
-      }
-      if (state.secondsLeft <= 1) {
-        const nextIndex = (state.phaseIndex + 1) % action.steps.length;
-        const nextStep = action.steps[nextIndex];
-        const completedRound = nextIndex === 0 ? state.roundsComplete + 1 : state.roundsComplete;
-        return {
-          ...state, phaseIndex: nextIndex,
-          secondsLeft: nextStep.seconds, secondsTotal: nextStep.seconds,
-          elapsedSeconds: nextElapsed, roundsComplete: completedRound,
-        };
-      }
-      return { ...state, secondsLeft: state.secondsLeft - 1, elapsedSeconds: nextElapsed };
-    }
-    case 'STOP':
-      return { ...state, running: false };
-    case 'RESET':
-      return { running: false, phaseIndex: 0, secondsLeft: 0, secondsTotal: 0, elapsedSeconds: 0, roundsComplete: 0, done: false };
-    default:
-      return state;
-  }
-}
-
-const INITIAL_STATE: TimerState = {
-  running: false, phaseIndex: 0, secondsLeft: 0, secondsTotal: 0,
-  elapsedSeconds: 0, roundsComplete: 0, done: false,
+const INIT: TimerState = {
+  running: false, phase: 'IN', secondsLeft: 4, secondsTotal: 4,
+  elapsedSeconds: 0, breathsComplete: 0, done: false,
 };
 
-// ── Component ────────────────────────────────────────────────────────────────
+function reduce(s: TimerState, a: Action): TimerState {
+  if (a.type === 'START') return { ...INIT, running: true };
+  if (a.type === 'STOP')  return { ...s, running: false };
+  if (a.type === 'RESET') return INIT;
+  if (a.type === 'TICK') {
+    if (!s.running) return s;
+    const elapsed = s.elapsedSeconds + 1;
+    if (elapsed >= a.totalSec) return { ...s, running: false, done: true, elapsedSeconds: elapsed };
+    if (s.secondsLeft <= 1) {
+      const idx  = STEPS.findIndex(p => p.phase === s.phase);
+      const next = STEPS[(idx + 1) % STEPS.length];
+      const breaths = next.phase === 'IN' ? s.breathsComplete + 1 : s.breathsComplete;
+      return { ...s, phase: next.phase, secondsLeft: next.seconds, secondsTotal: next.seconds, elapsedSeconds: elapsed, breathsComplete: breaths };
+    }
+    return { ...s, secondsLeft: s.secondsLeft - 1, elapsedSeconds: elapsed };
+  }
+  return s;
+}
+
+// ── Brain SVG ─────────────────────────────────────────────────────────────
+// Same paths as nav icon. Glow driven by 0→1 intensity value.
+function Brain({ size, glow }: { size: number; glow: number }) {
+  const blur1 = (glow * 14).toFixed(1);
+  const blur2 = (glow * 28).toFixed(1);
+  const a1    = (glow * 0.9).toFixed(2);
+  const a2    = (glow * 0.45).toFixed(2);
+  const glowFilter = glow > 0.05
+    ? `drop-shadow(0 0 ${blur1}px rgba(200,148,58,${a1})) drop-shadow(0 0 ${blur2}px rgba(200,148,58,${a2}))`
+    : undefined;
+  return (
+    <svg
+      width={size} height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={C.amber}
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ opacity: 0.28 + glow * 0.72, filter: glowFilter }}
+    >
+      {/* Cerebrum dome */}
+      <path d="M5,18 L5,13 C5,8 8,4 13,4 C18,4 21,7 21,12 C21,16 19,18 17,18"/>
+      {/* Cerebellum */}
+      <path d="M17,18 C19,18 21,19 20,21 C19,22 17,22 16,21 L16,18"/>
+      {/* Brain stem */}
+      <path d="M5,18 L5,21 L16,21"/>
+      {/* Sulci */}
+      <path d="M9,7 C11,9 9,12 11,15"/>
+      <path d="M14,5 C16,8 14,11 16,14"/>
+    </svg>
+  );
+}
+
+// ── Radiating lines ───────────────────────────────────────────────────────
+// 8 lines from brain center (12,12 in 24×24 viewBox) to well past edges.
+// preserveAspectRatio="xMidYMid slice" scales to fill the full-screen container.
+// Cardinal directions at full weight, diagonals at half weight.
+const LINE_DEFS = [
+  { x2: 12,  y2: -32, op: 1.0 },   // up
+  { x2: 36,  y2: -22, op: 0.5 },   // up-right
+  { x2: 36,  y2: 12,  op: 1.0 },   // right
+  { x2: 36,  y2: 36,  op: 0.5 },   // down-right
+  { x2: 12,  y2: 44,  op: 1.0 },   // down
+  { x2: -12, y2: 36,  op: 0.5 },   // down-left
+  { x2: -12, y2: 12,  op: 1.0 },   // left
+  { x2: -12, y2: -22, op: 0.5 },   // up-left
+];
+
+function RadiateLines() {
+  return (
+    <svg
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+      viewBox="0 0 24 24"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      {LINE_DEFS.map((l, i) => (
+        <line
+          key={i}
+          x1={12} y1={12}
+          x2={l.x2} y2={l.y2}
+          stroke={C.amber}
+          strokeWidth="0.055"
+          strokeOpacity={l.op * 0.65}
+        />
+      ))}
+    </svg>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────
 export function BreathworkGuide({ onComplete }: { onComplete?: () => void }) {
   const [durationMin, setDurationMin] = useReducer((_: number, n: number) => n, 5);
-  const [timer, dispatch] = useReducer(timerReducer, INITIAL_STATE);
-  const [, startTransition] = useTransition();
+  const [timer, dispatch]             = useReducer(reduce, INIT);
+  const [, startTransition]           = useTransition();
   const [comfortRating, setComfortRating] = useReducer((_: number | null, n: number | null) => n, null);
-  const [logged, setLogged] = useReducer((_: boolean, v: boolean) => v, false);
+  const [logged, setLogged]           = useReducer((_: boolean, v: boolean) => v, false);
+  const loggedRef                     = useRef(false);
 
-  const steps = PHASE_1_STEPS;
-  const totalSeconds = durationMin * 60;
-  const currentStep = steps[timer.phaseIndex] ?? steps[0];
+  const totalSec    = durationMin * 60;
+  const isActive    = timer.running || timer.done;
+  const currentStep = STEPS.find(s => s.phase === timer.phase) ?? STEPS[0];
+  const sessionPct  = totalSec > 0 ? Math.min(100, (timer.elapsedSeconds / totalSec) * 100) : 0;
 
-  // Tick
+  // Which visual config to use
+  const vis = timer.running
+    ? VIS[timer.phase]
+    : timer.done
+      ? VIS.IN
+      : VIS.idle;
+
   useEffect(() => {
     if (!timer.running) return;
-    const id = setInterval(() => {
-      dispatch({ type: 'TICK', steps, totalSeconds, stepsPerRound: steps.length });
-    }, 1000);
+    const id = setInterval(() => dispatch({ type: 'TICK', totalSec }), 1000);
     return () => clearInterval(id);
-  }, [timer.running, totalSeconds]);
+  }, [timer.running, totalSec]);
 
-  // Log only after comfort rating is submitted
-  const loggedRef = useRef(false);
-  function submitWithRating(rating: number) {
+  useEffect(() => {
+    if (!timer.done) {
+      loggedRef.current = false;
+      setLogged(false);
+      setComfortRating(null);
+    }
+  }, [timer.done]);
+
+  function submitRating(rating: number) {
     if (loggedRef.current) return;
     loggedRef.current = true;
     setLogged(true);
@@ -158,332 +216,325 @@ export function BreathworkGuide({ onComplete }: { onComplete?: () => void }) {
     });
   }
 
-  // Reset logged ref when timer resets
-  useEffect(() => {
-    if (!timer.done) { loggedRef.current = false; setLogged(false); setComfortRating(null); }
-  }, [timer.done]);
+  // ── PRE-SESSION ───────────────────────────────────────────────────────
+  if (!isActive) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-  // ── Octagon scale logic ───────────────────────────────────────────────────
-  // Idle: 0.55. IN: expand to 1.0. PAUSE: hold 1.0. OUT: contract to 0.55.
-  const isActive = timer.running || timer.done;
+        {/* Duration — minimal text selector, no big button */}
+        <div style={{ display: 'flex', gap: 28, marginBottom: 36 }}>
+          {[5, 10].map(d => (
+            <button
+              key={d}
+              onClick={() => setDurationMin(d)}
+              style={{
+                background:   'transparent',
+                border:       'none',
+                borderBottom: durationMin === d ? `1px solid ${C.amber}` : '1px solid transparent',
+                padding:      '6px 0',
+                fontFamily:   'var(--font-dm-mono)',
+                fontSize:     13,
+                letterSpacing:'0.22em',
+                color:        durationMin === d ? C.amber : C.dimmer,
+                cursor:       'pointer',
+                transition:   'all 0.2s',
+              }}
+            >
+              {d} MIN
+            </button>
+          ))}
+        </div>
 
-  let innerScale = 0.55;
-  let innerTransition = 'transform 0.4s ease';
-  if (isActive && !timer.done) {
-    if (currentStep.label === 'IN') {
-      innerScale = 1.0;
-      innerTransition = `transform ${currentStep.seconds}s ease-in`;
-    } else if (currentStep.label === 'PAUSE') {
-      innerScale = 1.0;
-      innerTransition = 'transform 0.2s';
-    } else if (currentStep.label === 'OUT') {
-      innerScale = 0.55;
-      innerTransition = `transform ${currentStep.seconds}s ease-out`;
-    }
-  } else if (timer.done) {
-    innerScale = 1.0;
-    innerTransition = 'transform 0.6s ease-in';
+        {/* Brain tap target — this IS the start button */}
+        <button
+          onClick={() => dispatch({ type: 'START' })}
+          aria-label="Begin breathing session"
+          style={{
+            background:    'transparent',
+            border:        'none',
+            cursor:        'pointer',
+            display:       'flex',
+            flexDirection: 'column',
+            alignItems:    'center',
+            gap:           18,
+            padding:       '16px 48px',
+          }}
+        >
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* Ambient halo behind brain */}
+            <div style={{
+              position:   'absolute',
+              inset:      -24,
+              background: 'radial-gradient(ellipse at center, rgba(200,148,58,0.10) 0%, transparent 72%)',
+              borderRadius: '50%',
+            }} />
+            <Brain size={80} glow={0.22} />
+          </div>
+          <span style={{
+            fontFamily:    'var(--font-dm-mono)',
+            fontSize:      10,
+            letterSpacing: '0.32em',
+            color:         C.dimmer,
+          }}>
+            TAP TO BEGIN
+          </span>
+        </button>
+
+        {/* Protocol reminder */}
+        <div style={{
+          marginTop:  28,
+          borderLeft: `2px solid rgba(200,148,58,0.18)`,
+          padding:    '12px 14px',
+          background: C.surface,
+          width:      '100%',
+          boxSizing:  'border-box',
+        }}>
+          <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dimmer, margin: 0 }}>
+            Lie on your back. Mouthguard in. One hand on chest, one on belly. Belly rises. Chest stays still.
+          </p>
+        </div>
+
+      </div>
+    );
   }
 
-  // Glow color for current phase
-  const glowColor = timer.done
-    ? C.amber
-    : !isActive
-      ? 'rgba(201,130,42,0.0)'
-      : currentStep.color;
-
-  // Session progress bar
-  const sessionPct = totalSeconds > 0 ? (timer.elapsedSeconds / totalSeconds) * 100 : 0;
-  const minsLeft = Math.max(0, Math.ceil((totalSeconds - timer.elapsedSeconds) / 60));
-
+  // ── ACTIVE / DONE — full-screen darkroom ──────────────────────────────
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div
+      style={{
+        position:       'fixed',
+        inset:          0,
+        zIndex:         200,
+        background:     C.bg,
+        boxShadow:      vis.edgeShadow,
+        display:        'flex',
+        flexDirection:  'column',
+        alignItems:     'center',
+        justifyContent: 'center',
+        overflow:       'hidden',
+        transition:     vis.transition,
+      }}
+    >
 
-      {/* ── Pre-session ─────────────────────────────────────────────────── */}
-      {!isActive && (
-        <>
-          <div>
-            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.22em', color: C.midLow, display: 'block', marginBottom: 8 }}>
-              DURATION
-            </span>
-            <div style={{ display: 'flex', background: C.bgSunk, gap: 1 }}>
-              {DURATIONS.map((d) => (
+      {/* ── Radial fill — amber builds inward from edges toward brain ── */}
+      <div
+        style={{
+          position:   'absolute',
+          inset:      0,
+          background: 'radial-gradient(ellipse at center, rgba(200,148,58,0.07) 0%, rgba(200,148,58,0.30) 100%)',
+          opacity:    vis.fillOpacity,
+          transition: vis.transition,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* ── Radiating lines — behind everything, brighten on inhale ── */}
+      <div
+        style={{
+          position:   'absolute',
+          inset:      0,
+          opacity:    vis.lineOpacity,
+          transition: vis.transition,
+          pointerEvents: 'none',
+        }}
+      >
+        <RadiateLines />
+      </div>
+
+      {/* ── Center content ─────────────────────────────────────────── */}
+      <div
+        style={{
+          position:      'relative',
+          zIndex:        1,
+          display:       'flex',
+          flexDirection: 'column',
+          alignItems:    'center',
+        }}
+      >
+
+        {!timer.done ? (
+          <>
+            {/* Phase label */}
+            <div style={{
+              fontFamily:    'var(--font-dm-mono)',
+              fontSize:      10,
+              letterSpacing: '0.30em',
+              color:         C.dimmer,
+              marginBottom:  32,
+            }}>
+              {currentStep.label}{currentStep.sub ? ` · ${currentStep.sub}` : ''}
+            </div>
+
+            {/* Brain — glow driven by phase */}
+            <div style={{ transition: vis.transition }}>
+              <Brain size={92} glow={vis.brainGlow} />
+            </div>
+
+            {/* Countdown */}
+            <div style={{
+              fontFamily:    'var(--font-anton)',
+              fontSize:      80,
+              letterSpacing: '0.02em',
+              color:         C.text,
+              lineHeight:    1,
+              marginTop:     14,
+            }}>
+              {timer.secondsLeft}
+            </div>
+
+            {/* Breath count */}
+            <div style={{
+              fontFamily:    'var(--font-dm-mono)',
+              fontSize:      9,
+              letterSpacing: '0.22em',
+              color:         C.dimmer,
+              marginTop:     14,
+            }}>
+              {timer.breathsComplete} {timer.breathsComplete === 1 ? 'BREATH' : 'BREATHS'} COMPLETE
+            </div>
+          </>
+        ) : (
+          /* ── Done state ─────────────────────────────────────────── */
+          <div style={{
+            display:       'flex',
+            flexDirection: 'column',
+            alignItems:    'center',
+            gap:           18,
+            width:         '100%',
+            padding:       '0 36px',
+            boxSizing:     'border-box',
+          }}>
+            <Brain size={64} glow={0.75} />
+
+            <p style={{
+              fontFamily:    'var(--font-bebas)',
+              fontSize:      18,
+              letterSpacing: '0.18em',
+              color:         C.amber,
+              margin:        0,
+            }}>
+              {durationMin} MIN · {timer.breathsComplete} BREATHS
+            </p>
+
+            {!logged ? (
+              <>
+                <span style={{
+                  fontFamily:    'var(--font-dm-mono)',
+                  fontSize:      10,
+                  letterSpacing: '0.24em',
+                  color:         C.dimmer,
+                }}>
+                  COMFORT RATING
+                </span>
+
+                <div style={{ display: 'flex', gap: 2, width: '100%' }}>
+                  {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                    <button
+                      key={n}
+                      onClick={() => setComfortRating(n)}
+                      style={{
+                        flex:        1,
+                        padding:     '12px 0',
+                        background:  comfortRating != null && n <= comfortRating
+                          ? 'rgba(200,148,58,0.30)'
+                          : 'rgba(255,255,255,0.04)',
+                        border:      comfortRating === n
+                          ? `1px solid ${C.amber}`
+                          : '1px solid transparent',
+                        color:       comfortRating != null && n <= comfortRating ? C.amber : C.dimmer,
+                        fontFamily:  'var(--font-dm-mono)',
+                        fontSize:    10,
+                        cursor:      'pointer',
+                        transition:  'background 80ms',
+                      }}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+
                 <button
-                  key={d}
-                  onClick={() => setDurationMin(d)}
+                  onClick={() => comfortRating != null && submitRating(comfortRating)}
                   style={{
-                    flex: 1, padding: '12px 2px',
-                    background: durationMin === d ? C.amber : 'transparent',
-                    color: durationMin === d ? C.bg : C.midLow,
-                    fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.14em',
-                    border: 'none', cursor: 'pointer',
+                    width:         '100%',
+                    background:    comfortRating != null ? C.amber : 'rgba(255,255,255,0.05)',
+                    color:         comfortRating != null ? C.bg : C.dimmer,
+                    border:        'none',
+                    padding:       '16px 24px',
+                    fontFamily:    'var(--font-anton)',
+                    fontSize:      18,
+                    letterSpacing: '0.08em',
+                    cursor:        comfortRating != null ? 'pointer' : 'default',
+                    transition:    'background 120ms',
                   }}
                 >
-                  {d} MIN
+                  LOG SESSION →
                 </button>
-              ))}
-            </div>
+              </>
+            ) : (
+              <>
+                <p style={{
+                  fontFamily:    'var(--font-dm-mono)',
+                  fontSize:      11,
+                  letterSpacing: '0.08em',
+                  color:         C.green,
+                  margin:        0,
+                }}>
+                  Logged. Counts toward Phase 1 completion.
+                </p>
+                <button
+                  onClick={() => dispatch({ type: 'RESET' })}
+                  style={{
+                    background:    'transparent',
+                    border:        `1px solid ${C.border}`,
+                    color:         C.dimmer,
+                    padding:       '12px 32px',
+                    fontFamily:    'var(--font-bebas)',
+                    fontSize:      14,
+                    letterSpacing: '0.14em',
+                    cursor:        'pointer',
+                  }}
+                >
+                  GO AGAIN →
+                </button>
+              </>
+            )}
           </div>
+        )}
 
-          <div style={{ borderLeft: `2px solid ${C.amberLow}`, padding: '12px 14px', background: C.surface }}>
-            <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.22em', color: C.amber, marginBottom: 6 }}>
-              BEFORE YOU START
-            </div>
-            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dim, margin: 0 }}>
-              Lie on your back. Mouthguard in. One hand on chest, one on belly. Goal: belly rises, chest stays still.
-            </p>
+      </div>
+
+      {/* ── Progress bar + stop ───────────────────────────────────── */}
+      {timer.running && (
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <div style={{ height: 2, background: 'rgba(242,239,232,0.05)' }}>
+            <div style={{
+              height:     '100%',
+              width:      `${sessionPct}%`,
+              background: C.amber,
+              transition: 'width 1s linear',
+            }} />
           </div>
-
           <button
-            onClick={() => dispatch({ type: 'START', firstSeconds: steps[0].seconds })}
+            onClick={() => dispatch({ type: 'STOP' })}
             style={{
-              width: '100%', background: C.amber, color: C.bg, border: 'none',
-              padding: '18px 24px', fontFamily: 'var(--font-anton)', fontSize: 20,
-              letterSpacing: '0.08em', cursor: 'pointer',
+              display:       'block',
+              margin:        '0 auto',
+              padding:       '18px 40px',
+              background:    'transparent',
+              border:        'none',
+              color:         C.dimmer,
+              fontFamily:    'var(--font-dm-mono)',
+              fontSize:      10,
+              letterSpacing: '0.26em',
+              cursor:        'pointer',
             }}
           >
-            START SESSION
+            STOP
           </button>
-        </>
+        </div>
       )}
 
-      {/* ── Active guide — octagon ───────────────────────────────────────── */}
-      {isActive && (
-        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, padding: '16px 0' }}>
-          {/* Atmospheric background — low-opacity image behind the octagon */}
-          <div style={{
-            position: 'absolute', inset: 0, zIndex: 0,
-            backgroundImage: 'url(/breathwork-active_bright.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: 0.14,
-            filter: 'saturate(0.5)',
-          }} />
-          <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%' }}>
-
-          {/* Octagon visual */}
-          <div style={{ position: 'relative', width: 220, height: 220 }}>
-            <svg
-              width={220} height={220}
-              viewBox="0 0 220 220"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ display: 'block' }}
-            >
-              <defs>
-                <filter id="cage-glow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="6" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
-              {/* Radial cage lines — center to outer vertices */}
-              {OUTER_VERTS.map((v, i) => (
-                <line
-                  key={i}
-                  x1={CX} y1={CY} x2={v.x} y2={v.y}
-                  stroke="rgba(245,240,232,0.04)"
-                  strokeWidth="1"
-                />
-              ))}
-
-              {/* Mid-ring octagon */}
-              <polygon
-                points={octPoints(CX, CY, OUTER_R * 0.58)}
-                fill="none"
-                stroke="rgba(245,240,232,0.05)"
-                strokeWidth="1"
-              />
-
-              {/* Outer cage octagon */}
-              <polygon
-                points={OUTER_POINTS}
-                fill="none"
-                stroke={timer.done ? C.amber : 'rgba(201,130,42,0.22)'}
-                strokeWidth="1.5"
-              />
-
-              {/* Corner accent marks — small ticks at each outer vertex */}
-              {OUTER_VERTS.map((v, i) => {
-                const inward = { x: CX + (OUTER_R - 6) * Math.cos(ANGLES_RAD[i]), y: CY + (OUTER_R - 6) * Math.sin(ANGLES_RAD[i]) };
-                return (
-                  <line
-                    key={`tick-${i}`}
-                    x1={v.x} y1={v.y} x2={inward.x} y2={inward.y}
-                    stroke="rgba(201,130,42,0.35)"
-                    strokeWidth="1.5"
-                  />
-                );
-              })}
-
-              {/* Inner breathing octagon */}
-              <polygon
-                points={INNER_POINTS}
-                fill={timer.done ? 'rgba(201,130,42,0.18)' : currentStep.fillColor}
-                stroke={timer.done ? C.amber : currentStep.color}
-                strokeWidth={timer.done ? 2 : 1.5}
-                filter={isActive && !timer.done && currentStep.label === 'IN' ? 'url(#cage-glow)' : undefined}
-                style={{
-                  transform: `scale(${innerScale})`,
-                  transformOrigin: `${CX}px ${CY}px`,
-                  transition: innerTransition,
-                }}
-              />
-
-              {/* Center — phase label + countdown */}
-              {!timer.done ? (
-                <>
-                  <text
-                    x={CX} y={CY - 10}
-                    textAnchor="middle"
-                    fontFamily="var(--font-bebas)"
-                    fontSize="13"
-                    letterSpacing="0.22em"
-                    fill={currentStep.color}
-                  >
-                    {currentStep.label}
-                  </text>
-                  <text
-                    x={CX} y={CY + 20}
-                    textAnchor="middle"
-                    fontFamily="var(--font-anton)"
-                    fontSize="36"
-                    fill={C.text}
-                  >
-                    {timer.secondsLeft}
-                  </text>
-                  {currentStep.sublabel ? (
-                    <text
-                      x={CX} y={CY + 34}
-                      textAnchor="middle"
-                      fontFamily="var(--font-dm-mono)"
-                      fontSize="7"
-                      letterSpacing="0.14em"
-                      fill={C.dimmer}
-                    >
-                      {currentStep.sublabel}
-                    </text>
-                  ) : null}
-                </>
-              ) : (
-                <text
-                  x={CX} y={CY + 6}
-                  textAnchor="middle"
-                  fontFamily="var(--font-bebas)"
-                  fontSize="18"
-                  letterSpacing="0.22em"
-                  fill={C.amber}
-                >
-                  DONE
-                </text>
-              )}
-            </svg>
-          </div>
-
-          {/* Breath counter */}
-          {!timer.done && (
-            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.18em', color: C.dimmer }}>
-              {timer.roundsComplete} {timer.roundsComplete === 1 ? 'BREATH' : 'BREATHS'} COMPLETE
-            </span>
-          )}
-
-          {/* Done state */}
-          {timer.done ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%', maxWidth: 300 }}>
-              <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 16, letterSpacing: '0.18em', color: C.amber, margin: 0 }}>
-                {durationMin} MIN. {timer.roundsComplete} BREATHS.
-              </p>
-
-              {!logged ? (
-                <>
-                  <div style={{ width: '100%' }}>
-                    <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.22em', color: C.midLow, display: 'block', marginBottom: 8, textAlign: 'center' }}>
-                      COMFORT RATING
-                    </span>
-                    <div style={{ display: 'flex', gap: 2 }}>
-                      {[1,2,3,4,5,6,7,8,9,10].map((n) => (
-                        <button
-                          key={n}
-                          onClick={() => setComfortRating(n)}
-                          style={{
-                            flex: 1, padding: '10px 0',
-                            background: comfortRating === n ? C.amber : comfortRating != null && n <= comfortRating ? C.amberLow : C.bgSunk,
-                            color: comfortRating === n ? C.bg : C.midLow,
-                            fontFamily: 'var(--font-dm-mono)', fontSize: 10,
-                            border: 'none', cursor: 'pointer',
-                            transition: 'background 80ms',
-                          }}
-                        >
-                          {n}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => comfortRating != null && submitWithRating(comfortRating)}
-                    style={{
-                      width: '100%',
-                      background: comfortRating != null ? C.amber : C.bgSunk,
-                      color: comfortRating != null ? C.bg : C.dimmer,
-                      border: 'none', padding: '16px 24px',
-                      fontFamily: 'var(--font-anton)', fontSize: 18, letterSpacing: '0.08em',
-                      cursor: comfortRating != null ? 'pointer' : 'default',
-                      transition: 'background 120ms',
-                    }}
-                  >
-                    LOG SESSION →
-                  </button>
-                </>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-                  <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.08em', color: C.green, margin: 0 }}>
-                    Logged. Counts toward Phase 1 completion.
-                  </p>
-                  <button
-                    onClick={() => dispatch({ type: 'RESET' })}
-                    style={{
-                      background: 'transparent', border: `1px solid ${C.border}`,
-                      color: C.dimmer, padding: '12px 24px',
-                      fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.14em',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    GO AGAIN →
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, width: '100%' }}>
-              <div style={{ width: '100%', height: 3, background: C.bgSunk }}>
-                <div style={{
-                  height: '100%', width: `${sessionPct}%`,
-                  background: C.amber, transition: 'width 1s linear',
-                }} />
-              </div>
-              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.14em', color: C.dimmer }}>
-                {minsLeft} MIN LEFT
-              </span>
-              <button
-                onClick={() => dispatch({ type: 'STOP' })}
-                style={{
-                  background: 'transparent', border: `1px solid ${C.border}`,
-                  color: C.dimmer, padding: '10px 24px',
-                  fontFamily: 'var(--font-bebas)', fontSize: 12, letterSpacing: '0.16em',
-                  cursor: 'pointer',
-                }}
-              >
-                STOP
-              </button>
-            </div>
-          )}
-
-          </div>
-        </div>
-    )}
-
-  </div>
+    </div>
   );
 }

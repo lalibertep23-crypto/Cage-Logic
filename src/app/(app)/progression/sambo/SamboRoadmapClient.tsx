@@ -16,6 +16,7 @@ type Tier = {
   label:    string;    // Cyrillic primary classification name
   sublabel: string;    // English / transliteration
   rank:     string;    // Short display: НОВ / 3Р / 2Р / 1Р / КМС / МС
+  image:    string;    // Tier atmospheric image
   kurtka:   string;    // Color system key
   identity: string;
   skills:   string[];
@@ -40,6 +41,7 @@ const TIERS: Tier[] = [
   {
     levelKey: 'level_1', num: 1,
     label: 'Новичок', sublabel: 'NOVICE', rank: 'НОВ',
+    image: '/sambo-foundation.png',
     kurtka: 'GREY',
     identity: 'You fall safely. You grip with intent.',
     skills: ['Falling — Укеми', 'Kurtka Grip', 'Sambist Stance', 'Single Leg Entry', 'Hold-Down Control'],
@@ -58,6 +60,7 @@ const TIERS: Tier[] = [
   {
     levelKey: 'level_2', num: 2,
     label: 'Третий разряд', sublabel: 'THIRD CATEGORY', rank: '3Р',
+    image: '/sambo-control.png',
     kurtka: 'GREEN',
     identity: 'Your throws have landing logic. First leg locks.',
     skills: ['Back-Landing Throws', 'Heel Hook Entry', 'Kneebar & Ankle Lock', 'Throw Combinations', 'Match Scoring'],
@@ -75,6 +78,7 @@ const TIERS: Tier[] = [
   {
     levelKey: 'level_3', num: 3,
     label: 'Второй разряд', sublabel: 'SECOND CATEGORY', rank: '2Р',
+    image: '/sambo-pressure.png',
     kurtka: 'RED',
     identity: 'You have a suplex. You are dangerous.',
     skills: ['Back Arch Suplex', 'Inside Heel Hook', 'Throw-to-Leg Chain', 'Pattern Recognition', 'Round Management'],
@@ -92,6 +96,7 @@ const TIERS: Tier[] = [
   {
     levelKey: 'level_4', num: 4,
     label: 'Первый разряд', sublabel: 'FIRST CATEGORY', rank: '1Р',
+    image: '/sambo-dominance.png',
     kurtka: 'BADGE',
     identity: 'You are a sambo player. Not a visitor.',
     skills: ['8-Throw Portfolio', 'Full Leg Lock Portfolio', 'Competition Results', 'Coaching Competency', 'Technical Lineage'],
@@ -109,6 +114,7 @@ const TIERS: Tier[] = [
   {
     levelKey: 'level_5', num: 5,
     label: 'КМС', sublabel: 'КАНДИДАТ В МАСТЕРА СПОРТА', rank: 'КМС',
+    image: '/sambo-composure.png',
     kurtka: 'MEDAL',
     identity: 'Sambo is how you think.',
     skills: ['Tiers 1–4 Mastered', 'Competition Record', 'Teaching Output', 'Coach Nomination Required'],
@@ -125,6 +131,7 @@ const TIERS: Tier[] = [
   {
     levelKey: 'level_6', num: 6,
     label: 'МС', sublabel: 'МАСТЕР СПОРТА', rank: 'МС',
+    image: '/sambo-mastery.png',
     kurtka: 'GOLD',
     identity: 'The complete practitioner.',
     skills: ['Full System Mastery', 'Competition Dominance', 'Coach Reciprocity', 'Master-Level Teaching'],
@@ -168,20 +175,53 @@ export default function SamboRoadmapClient({ currentTierKey }: { currentTierKey:
         {/* ── BrandNav ── */}
         <BrandNav backHref="/progression" glass={false} />
 
-        {/* ── Page title ── */}
-        <div style={{
-          padding: '0 20px 14px',
-          borderBottom: '1px solid rgba(184,58,48,0.14)',
-        }}>
+        {/* ── Cinematic Hero ── */}
+        <div style={{ position: 'relative', height: 200, overflow: 'hidden' }}>
           <div style={{
-            fontFamily: fonts.header, fontSize: 30, letterSpacing: '0.10em',
-            color: '#fff', lineHeight: 1,
-            textShadow: '0 2px 16px rgba(0,0,0,0.90)',
-          }}>SAMBO</div>
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(/sambo-gym-hero.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center 35%',
+            filter: 'saturate(0.55) contrast(1.20) brightness(0.48)',
+          }} />
+          {/* Red-tinted gradient overlay */}
           <div style={{
-            fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.24em',
-            color: 'rgba(184,58,48,0.65)', marginTop: 4,
-          }}>THROW. FINISH. SURVIVE.</div>
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(to bottom, rgba(6,4,2,0.20) 0%, rgba(6,4,2,0.10) 30%, rgba(6,4,2,0.85) 72%, rgba(6,4,2,1.0) 100%), linear-gradient(to right, rgba(6,4,2,0.92) 0%, rgba(6,4,2,0.08) 65%)',
+          }} />
+          {/* Soviet red vignette */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'radial-gradient(ellipse at 70% 0%, rgba(184,58,48,0.18) 0%, transparent 60%)',
+          }} />
+          {/* Title — bottom-left */}
+          <div style={{ position: 'absolute', bottom: 18, left: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ width: 3, height: 38, background: RED, flexShrink: 0 }} />
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+                  <div style={{ fontFamily: fonts.header, fontSize: 30, letterSpacing: '0.10em', lineHeight: 1, color: '#F2EFE8' }}>САМБО</div>
+                  <div style={{ fontFamily: fonts.header, fontSize: 18, letterSpacing: '0.14em', lineHeight: 1, color: 'rgba(242,239,232,0.45)' }}>SAMBO</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 5 }}>
+                  <div style={{ fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.18em', color: 'rgba(184,58,48,0.80)' }}>САМООБОРОНА БЕЗ ОРУЖИЯ</div>
+                  <div style={{ width: 1, height: 10, background: 'rgba(184,58,48,0.35)' }} />
+                  <div style={{ fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.14em', color: 'rgba(242,239,232,0.35)' }}>SELF-DEFENSE WITHOUT WEAPONS</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Current tier badge — top right */}
+          <div style={{
+            position: 'absolute', top: 14, right: 14,
+            padding: '4px 10px',
+            background: 'rgba(184,58,48,0.18)',
+            border: '1px solid rgba(184,58,48,0.40)',
+          }}>
+            <div style={{ fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.20em', color: 'rgba(184,58,48,0.80)' }}>
+              РАЗРЯД {currentNum} / 6
+            </div>
+          </div>
         </div>
 
         {/* ── Tier progress bar ── */}
@@ -296,45 +336,61 @@ export default function SamboRoadmapClient({ currentTierKey }: { currentTierKey:
         {/* ── Detail panel ── */}
         <div>
 
-          {/* Hero — kurtka color block + classification name */}
+          {/* Hero — tier image + kurtka color overlay + classification name */}
           <div style={{
             position: 'relative',
-            padding: '28px 20px 24px',
-            borderBottom: '1px solid rgba(184,58,48,0.10)',
+            height: 140,
+            borderBottom: '1px solid rgba(184,58,48,0.12)',
             overflow: 'hidden',
           }}>
-            {/* Left bar — kurtka color */}
+            {/* Tier atmospheric image */}
             <div style={{
-              position: 'absolute', left: 0, top: 0, bottom: 0, width: 5,
-              background: kurtka.border,
+              position: 'absolute', inset: 0,
+              backgroundImage: `url(${selected.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'saturate(0.60) contrast(1.10) brightness(0.45)',
             }}/>
-            {/* Kurtka color fill — background wash */}
+            {/* Kurtka color wash */}
             <div style={{
               position: 'absolute', inset: 0,
               background: kurtka.bg,
+              opacity: 0.55,
             }}/>
-            {/* Content */}
-            <div style={{ position: 'relative' }}>
-              {/* Kurtka color label — top right */}
+            {/* Dark gradient for text legibility */}
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to bottom, rgba(6,4,2,0.10) 0%, rgba(6,4,2,0.75) 80%)',
+            }}/>
+            {/* Left bar — kurtka color */}
+            <div style={{
+              position: 'absolute', left: 0, top: 0, bottom: 0, width: 4,
+              background: kurtka.border,
+            }}/>
+            {/* Kurtka label — top right */}
+            <div style={{
+              position: 'absolute', top: 10, right: 14,
+              fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.18em',
+              color: kurtka.text,
+              textShadow: '0 1px 6px rgba(0,0,0,0.80)',
+            }}>{kurtka.label}</div>
+            {/* Classification name — bottom left */}
+            <div style={{ position: 'absolute', bottom: 12, left: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                <div style={{
+                  fontFamily: fonts.header, fontSize: 24, letterSpacing: '0.08em',
+                  color: '#fff', lineHeight: 1.0,
+                  textShadow: '0 2px 12px rgba(0,0,0,0.90)',
+                }}>{selected.label}</div>
+                <div style={{
+                  fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.18em',
+                  color: 'rgba(242,239,232,0.45)',
+                }}>{selected.sublabel}</div>
+              </div>
               <div style={{
-                position: 'absolute', top: 0, right: 0,
-                fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.18em',
-                color: kurtka.text,
-              }}>{kurtka.label}</div>
-              {/* Cyrillic classification name */}
-              <div style={{
-                fontFamily: fonts.header, fontSize: 28, letterSpacing: '0.08em',
-                color: '#fff', lineHeight: 1.0,
-              }}>{selected.label}</div>
-              {/* English sublabel */}
-              <div style={{
-                fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.22em',
-                color: kurtka.text, marginTop: 6,
-              }}>{selected.sublabel}</div>
-              {/* Identity line */}
-              <div style={{
-                fontFamily: fonts.body, fontSize: 12, letterSpacing: '0.04em',
-                color: 'rgba(242,239,232,0.65)', marginTop: 12, fontStyle: 'italic',
+                fontFamily: fonts.body, fontSize: 11, letterSpacing: '0.04em',
+                color: 'rgba(242,239,232,0.70)', marginTop: 4, fontStyle: 'italic',
+                textShadow: '0 1px 8px rgba(0,0,0,0.90)',
               }}>{selected.identity}</div>
             </div>
           </div>
@@ -409,19 +465,26 @@ export default function SamboRoadmapClient({ currentTierKey }: { currentTierKey:
             </div>
           )}
 
-          {/* Gym note */}
+          {/* Russian footer — cultural attribution */}
           <div style={{
             margin: '12px 16px 0',
-            padding: '10px 13px',
-            background: 'rgba(184,58,48,0.04)',
-            border: '1px solid rgba(184,58,48,0.09)',
+            padding: '12px 14px',
+            background: 'rgba(184,58,48,0.05)',
+            border: '1px solid rgba(184,58,48,0.12)',
+            borderLeft: '3px solid rgba(184,58,48,0.35)',
           }}>
             <div style={{
-              fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.16em',
-              color: 'rgba(184,58,48,0.40)',
-            }}>
-              IRON ARMY · TOMS RIVER, NJ — ALL CRITERIA SUBJECT TO COACH VERIFICATION
-            </div>
+              fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.14em',
+              color: 'rgba(184,58,48,0.75)',
+            }}>САМБО — САМООБОРОНА БЕЗ ОРУЖИЯ</div>
+            <div style={{
+              fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.16em',
+              color: 'rgba(242,239,232,0.28)', marginTop: 4,
+            }}>РАЗРАБОТАНО В СССР · 1938 · ХАРЛАМПИЕВ / DEVELOPED IN USSR · 1938 · KHARLAMPIEV</div>
+            <div style={{
+              fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.12em',
+              color: 'rgba(184,58,48,0.30)', marginTop: 8,
+            }}>IRON ARMY · TOMS RIVER, NJ — ВСЕ КРИТЕРИИ ПОДТВЕРЖДАЮТСЯ ТРЕНЕРОМ</div>
           </div>
 
         </div>

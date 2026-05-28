@@ -369,7 +369,7 @@ export default async function HomePage() {
       <div style={{
         position: 'relative', overflow: 'hidden',
         borderBottom: `1px solid ${C.line}`,
-        height: '42vmax', minHeight: 260, maxHeight: 380,
+        height: '52vmax', minHeight: 300, maxHeight: 520,
       }}>
         {/* Fighter wrap image — state determined by day threshold */}
         <div style={{
@@ -377,7 +377,7 @@ export default async function HomePage() {
           backgroundImage: `url(${wrapImage})`,
           backgroundSize: '100% auto',
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center 20%',
+          backgroundPosition: 'center 45%',
         }}/>
         {/* Gradient — preserve readability at bottom, reveal fighter above */}
         <div style={{
@@ -694,7 +694,9 @@ export default async function HomePage() {
           borderBottom: `1px solid ${C.line}`,
           borderLeft: `3px solid ${stripeTimeReady && scoreReady ? C.amber : C.amberLow}`,
           background: C.surface,
+          cursor: 'pointer',
         }}>
+          <Link href={`/progression/${(primaryDiscipline.discipline as string ?? 'bjj').replace('_','-')}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
           <div style={{ padding: '16px 22px' }}>
             {/* Header row */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
@@ -753,6 +755,7 @@ export default async function HomePage() {
                 : 'Coach watches both gates. Keep building.'}
             </p>
           </div>
+          </Link>
         </div>
       )}
 

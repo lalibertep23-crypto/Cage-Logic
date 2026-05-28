@@ -1,4 +1,4 @@
-// Breathwork — Performance Pillar, Phase 1.
+// Performance Breathing — Phase 1.
 // Protocol: nose inhale 4s → pause 1s → exhale through mouth/guard 6s.
 // Trains breath economy under mouthguard restriction + lays foundation for CAP timing.
 // Research: Laborde 2024, Schulze 2019, Fincham 2023, Harbour 2022, Buscà 2016.
@@ -111,10 +111,10 @@ export default async function BreathworkPage() {
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <div style={{ position: 'relative', height: 210, overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 240, overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/breathwork-bright.png)',
+          backgroundImage: 'url(/breathwork-performance.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center 40%',
           filter: 'saturate(1.2) contrast(1.1)',
@@ -130,8 +130,9 @@ export default async function BreathworkPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 3, height: 28, background: C.amber, flexShrink: 0 }} />
             <div>
-              <div style={{ fontFamily: 'var(--font-anton)', fontSize: 28, letterSpacing: '0.08em', lineHeight: 1 }}>BREATHWORK</div>
-              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.18em', color: C.dimmer, marginTop: 3 }}>PERFORMANCE PILLAR — PHASE 1</div>
+              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.22em', color: C.amber, marginBottom: 4 }}>PERFORMANCE</div>
+              <div style={{ fontFamily: 'var(--font-anton)', fontSize: 30, letterSpacing: '0.06em', lineHeight: 1 }}>BREATHING</div>
+              <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.18em', color: C.dimmer, marginTop: 4 }}>PHASE 1  ·  FOUNDATION</div>
             </div>
           </div>
           <Link href="/mental" style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.12em', color: C.dimmer, textDecoration: 'none', paddingBottom: 2 }}>
@@ -456,6 +457,18 @@ export default async function BreathworkPage() {
                   </div>
                   <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.12em', color: C.dimmer }}>
                     {format(parseISO(s.completedAt), 'MMM d').toUpperCase()}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
+    </main>
+  );
+}
+
                   </span>
                 </div>
               ))}
