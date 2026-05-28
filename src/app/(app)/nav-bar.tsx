@@ -7,7 +7,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-// Combat-themed icons — cage, stopwatch, film, brain, pulse cross
+// Tab icons — G1-G4 are custom image assets; recovery/progression use inline SVGs
+const IMG_TABS: Partial<Record<string, string>> = {
+  home:    '/G1-home-tab.png',
+  log:     '/G2-log-tab.png',
+  history: '/G3-history-tab.png',
+  mental:  '/G4-mental-tab.png',
+};
+
 const ICONS = {
   // Octagon outline — the cage
   home: (active: boolean) => (
@@ -121,7 +128,17 @@ export function NavBar() {
                 aria-current={active ? 'page' : undefined}
                 style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, paddingTop: 12, paddingBottom: 12, textDecoration: 'none', color: active ? '#D4922E' : '#B8B2A8' }}
               >
-                {ICONS[t.id](active)}
+                {IMG_TABS[t.id] ? (
+                  <img
+                    src={IMG_TABS[t.id]}
+                    alt={t.label}
+                    width={24}
+                    height={24}
+                    style={{ opacity: active ? 1 : 0.45, filter: active ? 'none' : 'grayscale(0.4)' }}
+                  />
+                ) : (
+                  ICONS[t.id](active)
+                )}
                 <span
                   style={{
                     fontFamily: 'var(--font-dm-mono), "DM Mono", monospace',

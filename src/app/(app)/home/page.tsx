@@ -125,6 +125,65 @@ function IconSelfStudy({ color }: { color: string }) {
   );
 }
 
+// ── Discipline card helpers ─────────────────────────────────────────────────
+function getDisciplineImage(discipline: string, rankColor: string | null): string {
+  const d = discipline.toLowerCase();
+  if (d === 'bjj') {
+    const map: Record<string, string> = {
+      white: '/white-belt.png', blue: '/blue-belt.png',
+      purple: '/purple-belt.png', brown: '/brown-belt.png',
+    };
+    return map[rankColor ?? 'white'] ?? '/bjj-navigation-badge.png';
+  }
+  if (d === 'muay_thai') {
+    const map: Record<string, string> = {
+      level_1: '/prajied-level1.png', level_2: '/prajied-level2.png',
+      level_3: '/prajied-level3.png', level_4: '/prajied-level4.png',
+      level_5: '/prajied-level5.png',
+    };
+    return map[rankColor ?? 'level_1'] ?? '/muay-thai-navigation-badge.png';
+  }
+  if (d === 'boxing')    return '/boxing-navigation-badge.png';
+  if (d === 'wrestling') return '/wrestling-navigation-badge.png';
+  if (d === 'mma')       return '/mma-navigation-badge.png';
+  if (d === 'sambo')     return '/sambo-pressure-kurtka.png';
+  return '/bjj-navigation-badge.png';
+}
+
+function getDisciplineRankLabel(discipline: string, rankColor: string | null): string {
+  const d = discipline.toLowerCase();
+  const r = (rankColor ?? '').toLowerCase();
+  if (d === 'bjj') {
+    const map: Record<string, string> = {
+      white: 'WHITE', blue: 'BLUE', purple: 'PURPLE', brown: 'BROWN', black: 'BLACK',
+    };
+    return map[r] ?? 'WHITE';
+  }
+  if (d === 'muay_thai') {
+    const map: Record<string, string> = {
+      level_1: 'PRAJIED I', level_2: 'PRAJIED II', level_3: 'PRAJIED III',
+      level_4: 'PRAJIED IV', level_5: 'PRAJIED V',
+    };
+    return map[r] ?? 'PRAJIED I';
+  }
+  if (d === 'boxing') return (rankColor ?? 'LEVEL 1').toString().replace('_', ' ').toUpperCase();
+  if (d === 'wrestling') {
+    const map: Record<string, string> = {
+      level_1: 'TIER 1', level_2: 'TIER 2', level_3: 'TIER 3',
+      level_4: 'TIER 4', level_5: 'TIER 5', level_6: 'ELITE',
+    };
+    return map[r] ?? 'TIER 1';
+  }
+  if (d === 'sambo') {
+    const map: Record<string, string> = {
+      level_1: 'НОВИЧОК', level_2: '3-й РАЗ', level_3: '2-й РАЗ',
+      level_4: '1-й РАЗ', level_5: 'КМС', level_6: 'МС',
+    };
+    return map[r] ?? 'НОВИЧОК';
+  }
+  return (rankColor ?? '').toString().replace('_', ' ').toUpperCase();
+}
+
 // ── Wrap image — changes as athlete progresses through 30-day ramp ────────────
 function getWrapImage(day: number, isRamping: boolean): string {
   if (!isRamping) return '/ready-for-war.png';
@@ -193,6 +252,12 @@ export default async function HomePage() {
   const { data: primaryDiscipline } = await supabase
     .from('athlete_disciplines').select('rank_color, stripes, discipline')
     .eq('athlete_id', data.athleteId).eq('is_primary', true).maybeSingle();
+  // All enrolled disciplines for the ranks section
+  const { data: allDisciplineRows } = await supabase
+    .from('athlete_disciplines').select('rank_color, stripes, discipline')
+    .eq('athlete_id', data.athleteId)
+    .order('is_primary', { ascending: false });
+  const allDisciplines = allDisciplineRows ?? [];
   const { data: lastStripeEvent } = await supabase
     .from('progression_events').select('awarded_at')
     .eq('athlete_id', data.athleteId).eq('event_type', 'stripe')
@@ -310,8 +375,9 @@ export default async function HomePage() {
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: `url(${wrapImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 42%',
+          backgroundSize: '100% auto',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center 20%',
         }}/>
         {/* Gradient — preserve readability at bottom, reveal fighter above */}
         <div style={{
@@ -533,6 +599,7 @@ export default async function HomePage() {
               paddingLeft: i === 0 ? 0 : 16,
               paddingRight: i === 2 ? 0 : 16,
               borderRight: i < 2 ? `1px solid ${C.line}` : 'none',
+              textAlign: 'center',
             }}>
               <div style={{
                 fontFamily: 'var(--font-anton)', fontSize: 58, lineHeight: 0.9,
@@ -572,6 +639,54 @@ export default async function HomePage() {
           {nudge}
         </span>
       </div>
+
+      {/* ── Active Ranks ─────────────────────────────────────────────────── */}
+      {allDisciplines.length > 0 && (
+        <div style={{ borderBottom: `1px solid ${C.line}` }}>
+          <div style={{ padding: '14px 22px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.26em', color: C.mid }}>ACTIVE RANKS</span>
+            <Link href='/progression' style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.amber, letterSpacing: '0.12em', textDecoration: 'none' }}>VIEW ALL →</Link>
+          </div>
+          <div style={{ display: 'flex', gap: 2, overflowX: 'auto', padding: '0 22px 16px', scrollbarWidth: 'none' as const }}>
+            {allDisciplines.map((d, i) => {
+              const img = getDisciplineImage(d.discipline as string, d.rank_color as string | null);
+              const rankLabel = getDisciplineRankLabel(d.discipline as string, d.rank_color as string | null);
+              const stripes = (d.stripes as number) ?? 0;
+              const dispName = (d.discipline as string).replace('_', ' ').toUpperCase();
+              return (
+                <Link key={i} href={`/progression/${(d.discipline as string).replace('_', '-')}`} style={{ textDecoration: 'none', flexShrink: 0 }}>
+                  <div style={{ width: 108, position: 'relative', borderLeft: i === 0 ? 'none' : `1px solid ${C.lineHard}` }}>
+                    {/* Card image */}
+                    <div style={{
+                      width: 108, height: 128,
+                      backgroundImage: `url(${img})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      filter: 'brightness(0.80) saturate(0.85)',
+                    }} />
+                    {/* Overlay gradient */}
+                    <div style={{
+                      position: 'absolute', bottom: 0, left: 0, right: 0, top: '40%',
+                      background: 'linear-gradient(to top, rgba(5,4,3,0.97) 0%, rgba(5,4,3,0.70) 50%, rgba(5,4,3,0) 100%)',
+                      padding: '0 8px 8px',
+                      display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+                    }}>
+                      <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 9, letterSpacing: '0.26em', color: C.amber, lineHeight: 1 }}>{dispName}</div>
+                      <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, color: C.text, letterSpacing: '0.06em', marginTop: 2, lineHeight: 1 }}>{rankLabel}</div>
+                      {/* Stripe bars */}
+                      <div style={{ display: 'flex', gap: 2, marginTop: 5 }}>
+                        {Array.from({ length: 4 }, (_, si) => (
+                          <div key={si} style={{ flex: 1, height: 2, background: si < stripes ? C.amber : 'rgba(242,239,232,0.15)' }} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* ── Stripe Track ─────────────────────────────────────────────────── */}
       {primaryDiscipline && (
@@ -642,42 +757,6 @@ export default async function HomePage() {
       )}
 
 
-      {/* ── Mental Check-in CTA ── */}
-      {!didCheckInToday && (
-        <Link href="/mental" style={{ textDecoration: 'none', display: 'block' }}>
-          <div style={{
-            borderBottom: `1px solid ${C.line}`,
-            borderLeft: `3px solid ${C.amber}`,
-            background: C.surface,
-          }}>
-            <div style={{ padding: '16px 22px' }}>
-              {/* Header row */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.text }}>
-                  MENTAL CHECK-IN
-                </span>
-                <span style={{
-                  fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.14em',
-                  color: C.brick, border: `1px solid ${C.brick}`, padding: '2px 6px',
-                }}>
-                  NOT DONE
-                </span>
-              </div>
-              {/* Description */}
-              <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.dim, letterSpacing: '0.06em', margin: '0 0 14px', lineHeight: 1.65 }}>
-                Daily prompt active. 2 min. Scores toward Mental domain.
-              </p>
-              {/* CTA row */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.2em', color: C.amber }}>
-                  OPEN CHECK-IN
-                </span>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 18, color: C.amber }}>→</span>
-              </div>
-            </div>
-          </div>
-        </Link>
-      )}
 
       {/* ── Daily Quote ── */}
       <div style={{ padding: '18px 22px 80px' }}>
