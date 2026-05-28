@@ -2,6 +2,7 @@
 // Belt image header, stripe progress, phase, objective, requirements checklist, coach tip.
 // DEMO_PHASES keyed by fromRank (e.g. "white_2") for per-stripe content.
 // Source: CAGE_LOGIC_METHOD_PROGRESSIONS.md + CAGE_LOGIC_DISCIPLINE_PROGRESSIONS.md
+// Touched 2026-05-28 — deploy nudge.
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
