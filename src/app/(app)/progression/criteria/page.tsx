@@ -68,10 +68,10 @@ const DEMO_PHASES: Record<string, PhaseData> = {
   },
 
   'white_2': {
-    phase: 'FOUNDATION SURVIVAL',
-    phaseDesc: 'Building the fundamental skills and survival instincts that every great grappler is built on.',
-    objective: 'Escape Side Control',
-    objectiveNote: 'Do it once during live rounds.',
+    phase: 'BUILDING A TOP GAME',
+    phaseDesc: 'You have learned to survive on bottom. Now you learn what it feels like to apply pressure from the top.',
+    objective: 'Land a Guard Pass in Live Rolling',
+    objectiveNote: 'Any pass. Any opponent. Even once counts.',
     requirements: [
       'Knee Cut Pass — Drive-Through to Side Control',
       'Torreando Pass (Basic) — Both Directions',
@@ -79,7 +79,7 @@ const DEMO_PHASES: Record<string, PhaseData> = {
       'Back Take from Turtle — Insert Hooks and Seatbelt',
       'Single Leg Takedown — Attempt in Live Rolling',
     ],
-    coachTip: 'Focus on defense first. Escapes and retention build the base for everything else.',
+    coachTip: 'Top game starts before the pass — it starts with getting there. Pass before you pin. Pin before you finish.',
   },
 
   'white_3': {
