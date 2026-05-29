@@ -101,8 +101,7 @@ function reduce(s: TimerState, a: Action): TimerState {
   return s;
 }
 
-// ── Brain SVG ─────────────────────────────────────────────────────────────
-// Same paths as nav icon. Glow driven by 0→1 intensity value.
+// ── Brain image — real brand asset, glow driven by 0→1 intensity value ───
 function Brain({ size, glow }: { size: number; glow: number }) {
   const blur1 = (glow * 14).toFixed(1);
   const blur2 = (glow * 28).toFixed(1);
@@ -112,26 +111,14 @@ function Brain({ size, glow }: { size: number; glow: number }) {
     ? `drop-shadow(0 0 ${blur1}px rgba(200,148,58,${a1})) drop-shadow(0 0 ${blur2}px rgba(200,148,58,${a2}))`
     : undefined;
   return (
-    <svg
-      width={size} height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={C.amber}
-      strokeWidth="1.3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ opacity: 0.28 + glow * 0.72, filter: glowFilter }}
-    >
-      {/* Cerebrum dome */}
-      <path d="M5,18 L5,13 C5,8 8,4 13,4 C18,4 21,7 21,12 C21,16 19,18 17,18"/>
-      {/* Cerebellum */}
-      <path d="M17,18 C19,18 21,19 20,21 C19,22 17,22 16,21 L16,18"/>
-      {/* Brain stem */}
-      <path d="M5,18 L5,21 L16,21"/>
-      {/* Sulci */}
-      <path d="M9,7 C11,9 9,12 11,15"/>
-      <path d="M14,5 C16,8 14,11 16,14"/>
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/cage-logic-back-button.png"
+      alt=""
+      width={size}
+      height={size}
+      style={{ objectFit: 'contain', opacity: 0.28 + glow * 0.72, filter: glowFilter }}
+    />
   );
 }
 
@@ -303,7 +290,12 @@ export function BreathworkGuide({ onComplete }: { onComplete?: () => void }) {
     <div
       style={{
         position:       'fixed',
-        inset:          0,
+        top:            0,
+        bottom:         0,
+        left:           '50%',
+        transform:      'translateX(-50%)',
+        width:          '100%',
+        maxWidth:       480,
         zIndex:         200,
         background:     C.bg,
         boxShadow:      vis.edgeShadow,

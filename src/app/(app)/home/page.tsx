@@ -281,14 +281,16 @@ export default async function HomePage() {
   const rampDescriptor  = getRampDescriptor(currentDay);
 
   return (
-    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80, position: 'relative' }}>
 
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '10px 18px 10px',
-        borderBottom: `1px solid ${C.line}`,
-        background: 'rgba(5,4,3,0.92)',
+        position: 'absolute',
+        top: 0, left: 0, right: 0,
+        zIndex: 10,
+        background: 'transparent',
       }}>
         <Link href="/home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
           {/* Brain — the brand anchor */}
