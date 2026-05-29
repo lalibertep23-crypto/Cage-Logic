@@ -18,14 +18,24 @@ const DISCIPLINE_LABELS: Record<string, string> = {
   wrestling: 'WRESTLING', judo: 'JUDO', kickboxing: 'KICKBOXING',
 };
 
+// rank_color in DB is stored as combined "belt_stripe" e.g. "blue_2", "white_0"
+// Parse it so we display "BLUE BELT · 2S" not "BLUE_2"
+function parseBjjRankColor(rankColor: string): { belt: string; parsedStripes: number } {
+  const match = rankColor.match(/^([a-z]+)_(\d+)$/);
+  if (match) return { belt: match[1], parsedStripes: parseInt(match[2]) };
+  return { belt: rankColor, parsedStripes: 0 };
+}
+
 function getDisciplineRank(discipline: string, rankColor: string, stripes: number): string {
   if (discipline === 'bjj') {
     const labels: Record<string, string> = {
       white: 'WHITE BELT', blue: 'BLUE BELT', purple: 'PURPLE BELT',
       brown: 'BROWN BELT', black: 'BLACK BELT',
     };
-    const base = labels[rankColor] ?? rankColor.toUpperCase();
-    return stripes > 0 ? `${base} · ${stripes}S` : base;
+    const { belt, parsedStripes } = parseBjjRankColor(rankColor);
+    const base = labels[belt] ?? belt.toUpperCase();
+    const actualStripes = stripes > 0 ? stripes : parsedStripes;
+    return actualStripes > 0 ? `${base} · ${actualStripes}S` : base;
   }
   if (discipline === 'muay_thai') {
     return rankColor.replace(/_/g, ' ').toUpperCase();
@@ -212,19 +222,6 @@ export default async function ProfilePage() {
           bottom: 18,
           right: 16,
         }}>
-          {/* Gym eyebrow */}
-          {gymName && (
-            <div style={{
-              fontFamily: fonts.label,
-              fontSize: 9,
-              letterSpacing: '0.22em',
-              color: 'rgba(242,239,232,0.45)',
-              marginBottom: 6,
-            }}>
-              {(gymName as string).toUpperCase()}
-            </div>
-          )}
-
           {/* Name */}
           <div style={{
             fontFamily: fonts.header,

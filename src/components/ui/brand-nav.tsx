@@ -1,6 +1,6 @@
 // BrandNav — standard top nav for all screens.
-// Brain icon (64px) + CAGE LOGIC wordmark + optional right slot.
-// Clicking anywhere on the left block navigates back.
+// Brain icon left (64px, tappable back) · CAGE LOGIC wordmark right.
+// Consistent across all sub-pages. Matches home screen header split.
 //
 // BrainWatermark — for tab-level pages that don't need back navigation.
 // Small amber brain in the top-left corner of a hero. Brand presence only.
@@ -23,57 +23,55 @@ export function BrandNav({
       display:         'flex',
       alignItems:      'center',
       justifyContent:  'space-between',
-      padding:         '12px 16px 10px',
+      padding:         '10px 16px 8px',
       background:      glass ? 'rgba(5,4,3,0.60)' : 'transparent',
       backdropFilter:  glass ? 'blur(10px)'        : 'none',
+      minHeight:       64,
     }}>
 
-      {/* Left — brain + wordmark */}
-      <Link href={backHref} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
-        {/* Brain icon */}
-        <div style={{ width: 64, height: 64, position: 'relative', flexShrink: 0 }}>
+      {/* Left — brain icon only (taps back) */}
+      <Link href={backHref} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: 56, height: 56, position: 'relative', flexShrink: 0 }}>
           <Image
             src="/cage-logic-back-button.png"
             alt="Back"
             fill
-            sizes="64px"
+            sizes="56px"
             style={{
               objectFit: 'contain',
-              opacity: 1.0,
               filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.95)) drop-shadow(0 0 12px rgba(0,0,0,0.80))',
             }}
           />
         </div>
-
-        {/* Wordmark */}
-        <div>
-          <div style={{
-            fontFamily:    'var(--font-bebas)',
-            fontSize:      17,
-            letterSpacing: '0.14em',
-            color:         '#C8943A',
-            lineHeight:    1,
-            textShadow:    '0 1px 8px rgba(0,0,0,0.95), 0 0 20px rgba(0,0,0,0.80)',
-          }}>
-            CAGE LOGIC
-          </div>
-          <div style={{
-            fontFamily:    'var(--font-dm-mono)',
-            fontSize:      7,
-            letterSpacing: '0.18em',
-            color:         'rgba(242,239,232,0.55)',
-            lineHeight:    1,
-            marginTop:     2,
-            textShadow:    '0 1px 6px rgba(0,0,0,0.90)',
-          }}>
-            COMBAT TRAINING OS
-          </div>
-        </div>
       </Link>
 
-      {/* Right — page-specific actions */}
-      <div style={{ flexShrink: 0 }}>
-        {rightSlot ?? <div style={{ width: 44 }} />}
+      {/* Right — wordmark or page-specific actions */}
+      <div style={{ flexShrink: 0, textAlign: 'right' }}>
+        {rightSlot ?? (
+          <div>
+            <div style={{
+              fontFamily:    'var(--font-bebas)',
+              fontSize:      17,
+              letterSpacing: '0.14em',
+              color:         '#C8943A',
+              lineHeight:    1,
+              textShadow:    '0 1px 8px rgba(0,0,0,0.95), 0 0 20px rgba(0,0,0,0.80)',
+            }}>
+              CAGE LOGIC
+            </div>
+            <div style={{
+              fontFamily:    'var(--font-dm-mono)',
+              fontSize:      7,
+              letterSpacing: '0.18em',
+              color:         'rgba(242,239,232,0.45)',
+              lineHeight:    1,
+              marginTop:     2,
+              textShadow:    '0 1px 6px rgba(0,0,0,0.90)',
+            }}>
+              COMBAT TRAINING OS
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
