@@ -18,14 +18,14 @@ const IMG_TABS: Partial<Record<string, string>> = {
 const ICONS = {
   // Octagon outline — the cage
   home: (active: boolean) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none"
+    <svg width={30} height={30} viewBox="0 0 24 24" fill="none"
          stroke="currentColor" strokeWidth="1.6" strokeLinejoin="miter" strokeLinecap="square">
       <polygon points="8,2 16,2 22,8 22,16 16,22 8,22 2,16 2,8"/>
     </svg>
   ),
   // Stopwatch — log a session / clock in
   log: (active: boolean) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none"
+    <svg width={30} height={30} viewBox="0 0 24 24" fill="none"
          stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" strokeLinejoin="miter">
       <circle cx="12" cy="14" r="8"/>
       <path d="M9,3 L15,3"/>
@@ -35,7 +35,7 @@ const ICONS = {
   ),
   // Film strip — fight tape / session history
   history: (active: boolean) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none"
+    <svg width={30} height={30} viewBox="0 0 24 24" fill="none"
          stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" strokeLinejoin="miter">
       <rect x="2" y="4" width="20" height="16"/>
       <rect x="2" y="4" width="4" height="4"/>
@@ -48,7 +48,7 @@ const ICONS = {
   ),
   // Brain — sideways profile, facing left. Cerebrum dome + rear cerebellum bump + sulci.
   mental: (active: boolean) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none"
+    <svg width={30} height={30} viewBox="0 0 24 24" fill="none"
          stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       {/* Cerebrum — large main dome */}
       <path d="M5,18 L5,13 C5,8 8,4 13,4 C18,4 21,7 21,12 C21,16 19,18 17,18"/>
@@ -63,7 +63,7 @@ const ICONS = {
   ),
   // Medical cross where the horizontal arm IS the heartbeat spike
   recovery: (active: boolean) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none"
+    <svg width={30} height={30} viewBox="0 0 24 24" fill="none"
          stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" strokeLinejoin="miter">
       {/* Vertical bar */}
       <path d="M12,2 L12,22"/>
@@ -73,7 +73,7 @@ const ICONS = {
   ),
   // Rising bars — rank/belt progression
   progression: (active: boolean) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none"
+    <svg width={30} height={30} viewBox="0 0 24 24" fill="none"
          stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" strokeLinejoin="miter">
       {/* Three rising bars — left short, center mid, right tall */}
       <rect x="2"  y="16" width="5" height="6"/>

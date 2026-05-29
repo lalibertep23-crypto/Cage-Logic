@@ -539,14 +539,32 @@ export default async function HomePage() {
             }}/>
             {/* Right panel: amber / muted */}
             <div style={{
-              flex: 1,
+              flex: 1, position: 'relative', overflow: 'hidden',
               background: today.loggedToday ? C.surface : C.amber,
-              backgroundImage: today.loggedToday ? 'none' : 'repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0,0,0,0.07) 8px, rgba(0,0,0,0.07) 10px)',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '0 20px',
               border: `1px solid ${today.loggedToday ? C.lineHard : 'transparent'}`,
               borderLeft: 'none',
             }}>
+              {/* Tally marks — combat count, bottom-right corner */}
+              {!today.loggedToday && (
+                <svg width={54} height={36} viewBox="0 0 54 36" fill="none"
+                  style={{ position: 'absolute', right: 48, bottom: 8, opacity: 0.18 }}
+                  stroke="rgba(5,5,5,0.9)" strokeWidth="1.8" strokeLinecap="round">
+                  {/* Group 1: 4 verticals + diagonal */}
+                  <line x1="2"  y1="4" x2="2"  y2="28"/>
+                  <line x1="8"  y1="4" x2="8"  y2="28"/>
+                  <line x1="14" y1="4" x2="14" y2="28"/>
+                  <line x1="20" y1="4" x2="20" y2="28"/>
+                  <line x1="0"  y1="28" x2="22" y2="4"/>
+                  {/* Group 2: 4 verticals + diagonal */}
+                  <line x1="30" y1="4" x2="30" y2="28"/>
+                  <line x1="36" y1="4" x2="36" y2="28"/>
+                  <line x1="42" y1="4" x2="42" y2="28"/>
+                  <line x1="48" y1="4" x2="48" y2="28"/>
+                  <line x1="28" y1="28" x2="50" y2="4"/>
+                </svg>
+              )}
               <div>
                 <div style={{
                   fontFamily: 'var(--font-anton)', fontSize: 30, letterSpacing: '0.06em', lineHeight: 1,
