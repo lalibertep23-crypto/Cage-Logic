@@ -11,16 +11,16 @@ export const dynamic = 'force-dynamic';
 
 // ── Palette ─────────────────────────────────────────────────────────────────
 const C = {
-  bg:       '#1A1713',
-  surface:  '#252118',
-  border:   'rgba(245,240,232,0.13)',
-  borderMid:'rgba(245,240,232,0.14)',
-  text:     '#F5F0E8',
-  dim:      'rgba(245,240,232,0.55)',
-  dimmer:   'rgba(245,240,232,0.35)',
-  amber:    '#D4922E',
+  bg:       '#050505',
+  surface:  '#111111',
+  border:   'rgba(242,239,232,0.13)',
+  borderMid:'rgba(242,239,232,0.14)',
+  text:     '#F2EFE8',
+  dim:      'rgba(242,239,232,0.55)',
+  dimmer:   'rgba(242,239,232,0.35)',
+  amber:    '#C8943A',
   amberLow: 'rgba(201,130,42,0.35)',
-  green:    '#3D8B55',
+  green:    '#5C8A3C',
   brick:    '#8B3A1E',
 };
 
@@ -330,11 +330,11 @@ export default async function SessionDetailPage({
 // ── ReflectionField ──────────────────────────────────────────────────────────
 function ReflectionField({ label, value, accent }: { label: string; value: string; accent?: string }) {
   const C = {
-    surface: '#252118',
-    border:  'rgba(245,240,232,0.13)',
-    text:    '#F5F0E8',
-    dim:     'rgba(245,240,232,0.55)',
-    dimmer:  'rgba(245,240,232,0.35)',
+    surface: '#111111',
+    border:  'rgba(242,239,232,0.13)',
+    text:    '#F2EFE8',
+    dim:     'rgba(242,239,232,0.55)',
+    dimmer:  'rgba(242,239,232,0.35)',
   };
   return (
     <div style={{ background: C.surface, padding: '12px 14px', borderLeft: `2px solid ${accent ?? C.border}` }}>

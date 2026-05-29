@@ -12,17 +12,17 @@ import { markInjuryResolvedAction } from './actions';
 export const dynamic = 'force-dynamic';
 
 const C = {
-  bg:      '#1A1713',
-  surface: '#252118',
-  border:  'rgba(245,240,232,0.13)',
-  text:    '#F5F0E8',
-  dim:     'rgba(245,240,232,0.55)',
-  dimmer:  'rgba(245,240,232,0.35)',
-  amber:   '#D4922E',
+  bg:      '#050505',
+  surface: '#111111',
+  border:  'rgba(242,239,232,0.13)',
+  text:    '#F2EFE8',
+  dim:     'rgba(242,239,232,0.55)',
+  dimmer:  'rgba(242,239,232,0.35)',
+  amber:   '#C8943A',
   amberLow:'rgba(201,130,42,0.35)',
   brick:   '#8B3A1E',
   brickLow:'rgba(139,58,30,0.35)',
-  green:   '#3D8B55',
+  green:   '#5C8A3C',
 };
 
 const REGION_LABELS: Record<string, string> = {

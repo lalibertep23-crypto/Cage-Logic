@@ -6,8 +6,8 @@ import { deleteSessionAction } from './actions';
 const C = {
   brick:   '#8B3A1E',
   brickLow:'rgba(139,58,30,0.25)',
-  dimmer:  'rgba(245,240,232,0.35)',
-  bg:      '#1A1713',
+  dimmer:  'rgba(242,239,232,0.35)',
+  bg:      '#050505',
 };
 
 export function DeleteButton({ id }: { id: string }) {

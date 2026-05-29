@@ -17,9 +17,9 @@ import {
 import { format, parseISO } from 'date-fns';
 
 const C = {
-  bg: '#1A1713', surface: '#252118', border:  'rgba(245,240,232,0.13)',
-  text: '#F5F0E8', dim: 'rgba(245,240,232,0.55)', dimmer: 'rgba(245,240,232,0.35)',
-  amber: '#D4922E', green: '#3D8B55',
+  bg: '#050505', surface: '#111111', border:  'rgba(242,239,232,0.13)',
+  text: '#F2EFE8', dim: 'rgba(242,239,232,0.55)', dimmer: 'rgba(242,239,232,0.35)',
+  amber: '#C8943A', green: '#5C8A3C',
 };
 
 type Log = { logged_date: string; weight_lbs: number };
@@ -96,13 +96,13 @@ export function CutCounterChart({
             <BarChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <XAxis
                 dataKey="date"
-                tick={{ fontSize: 9, fill: 'rgba(245,240,232,0.55)', fontFamily: 'var(--font-dm-mono)' }}
+                tick={{ fontSize: 9, fill: 'rgba(242,239,232,0.55)', fontFamily: 'var(--font-dm-mono)' }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
                 domain={[minY, maxY]}
-                tick={{ fontSize: 9, fill: 'rgba(245,240,232,0.55)', fontFamily: 'var(--font-dm-mono)' }}
+                tick={{ fontSize: 9, fill: 'rgba(242,239,232,0.55)', fontFamily: 'var(--font-dm-mono)' }}
                 axisLine={false}
                 tickLine={false}
                 width={40}

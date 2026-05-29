@@ -48,11 +48,11 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ── Cage Logic — Warm Concrete Theme ───────────────────────────────────────
-   Rio fight club. Weathered locker room. Not Silicon Valley.
-   Palette: burnt amber (#C9822A), warm near-black (#0F0D0B), jungle green (#2A5C3F)
-   Fonts: Anton (display/score), Barlow Condensed (labels), DM Mono (data)
-   Radius: 0px everywhere — sharp corners, no pill, no rounding.
+/* ── Cage Logic — Locked Palette ────────────────────────────────────────────
+   Void black. Burnt brass. Cage concrete.
+   Palette: brass #C8943A, amber #FFB627, void #050505
+   Fonts: Anton (headers) / Bebas Neue (labels) / DM Mono (data)
+   Radius: 0px everywhere — sharp corners only.
    ───────────────────────────────────────────────────────────────────────── */
 
 :root {
@@ -63,7 +63,7 @@
   --card-foreground: oklch(0.10 0 0);
   --popover: oklch(0.98 0 0);
   --popover-foreground: oklch(0.10 0 0);
-  --primary: #C9822A;
+  --primary: #C8943A;
   --primary-foreground: #0F0D0B;
   --secondary: oklch(0.94 0 0);
   --secondary-foreground: oklch(0.10 0 0);
@@ -74,67 +74,67 @@
   --destructive: #8B2525;
   --border: oklch(0.88 0 0);
   --input: oklch(0.88 0 0);
-  --ring: #C9822A;
-  --chart-1: #C9822A;
-  --chart-2: #2A5C3F;
+  --ring: #C8943A;
+  --chart-1: #C8943A;
+  --chart-2: #5C8A3C;
   --chart-3: #8B2525;
   --chart-4: #8A8070;
   --chart-5: #544C40;
   --radius: 0px;
   --sidebar: oklch(0.96 0 0);
   --sidebar-foreground: oklch(0.10 0 0);
-  --sidebar-primary: #C9822A;
+  --sidebar-primary: #C8943A;
   --sidebar-primary-foreground: #0F0D0B;
   --sidebar-accent: oklch(0.94 0 0);
   --sidebar-accent-foreground: oklch(0.10 0 0);
   --sidebar-border: oklch(0.88 0 0);
-  --sidebar-ring: #C9822A;
+  --sidebar-ring: #C8943A;
 }
 
 .dark {
   /* ── Surface layers ─────────────────────────────── */
-  --background:        #1A1713;   /* lifted concrete — readable in bright gym */
-  --foreground:        #F5F0E8;   /* warm off-white */
-  --card:              #252118;   /* clearly raised surface, visible hierarchy */
-  --card-foreground:   #F5F0E8;
-  --popover:           #252118;
-  --popover-foreground:#F5F0E8;
+  --background:        #050505;   /* void black */
+  --foreground:        #F2EFE8;   /* off-white */
+  --card:              #111111;   /* main panel */
+  --card-foreground:   #F2EFE8;
+  --popover:           #111111;
+  --popover-foreground:#F2EFE8;
 
   /* ── Brand palette ──────────────────────────────── */
-  --primary:           #D4922E;   /* amber — slightly brighter, punches in gym light */
-  --primary-foreground:#1A1713;
-  --secondary:         #2E2922;   /* lifted secondary surface */
-  --secondary-foreground:#F5F0E8;
-  --muted:             #13110E;   /* sunken / pressed state */
-  --muted-foreground:  #AA9A88;   /* warm gray — readable in harsh lighting */
-  --accent:            #3D8B55;   /* jungle green brighter — confirmations, streaks */
-  --accent-foreground: #F5F0E8;
-  --destructive:       #A83030;   /* brick red — slightly lifted for visibility */
+  --primary:           #C8943A;   /* brass — primary accent */
+  --primary-foreground:#050505;
+  --secondary:         #1E1E1E;   /* raised surface */
+  --secondary-foreground:#F2EFE8;
+  --muted:             #050505;   /* sunken / pressed state */
+  --muted-foreground:  #8E8577;   /* warm gray secondary */
+  --accent:            #5C8A3C;   /* green — confirmations, streaks */
+  --accent-foreground: #F2EFE8;
+  --destructive:       #A43A2F;   /* rust red */
 
   /* ── Structural ─────────────────────────────────── */
-  --border:   rgba(245, 240, 232, 0.14);   /* more visible edges, readable in gym */
-  --input:    rgba(245, 240, 232, 0.16);   /* clearly visible form fields */
-  --ring:     #D4922E;                      /* amber focus ring */
+  --border:   rgba(242, 239, 232, 0.10);
+  --input:    rgba(242, 239, 232, 0.16);
+  --ring:     #C8943A;
 
   /* ── Charts ─────────────────────────────────────── */
-  --chart-1: #D4922E;
-  --chart-2: #3D8B55;
-  --chart-3: #A83030;
-  --chart-4: #AA9A88;
-  --chart-5: #6A6055;
+  --chart-1: #C8943A;
+  --chart-2: #5C8A3C;
+  --chart-3: #A43A2F;
+  --chart-4: #8E8577;
+  --chart-5: #FFB627;
 
   /* ── Radius: 0 — no rounding anywhere ───────────── */
   --radius: 0px;
 
   /* ── Sidebar ─────────────────────────────────────── */
-  --sidebar:                #13110E;
-  --sidebar-foreground:     #F5F0E8;
-  --sidebar-primary:        #D4922E;
-  --sidebar-primary-foreground: #1A1713;
-  --sidebar-accent:         #2E2922;
-  --sidebar-accent-foreground: #F5F0E8;
-  --sidebar-border:         rgba(245, 240, 232, 0.14);
-  --sidebar-ring:           #D4922E;
+  --sidebar:                #050505;
+  --sidebar-foreground:     #F2EFE8;
+  --sidebar-primary:        #C8943A;
+  --sidebar-primary-foreground: #050505;
+  --sidebar-accent:         #1E1E1E;
+  --sidebar-accent-foreground: #F2EFE8;
+  --sidebar-border:         rgba(242, 239, 232, 0.10);
+  --sidebar-ring:           #C8943A;
 }
 
 /* ── Typography ─────────────────────────────────────────────────────────────
@@ -172,14 +172,14 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    #C9822A 10%,
+    #C8943A 10%,
     #7A4F1A 22%,
     transparent 28%,
-    #C9822A 40%,
+    #C8943A 40%,
     transparent 50%,
-    #2A5C3F 70%,
+    #5C8A3C 70%,
     transparent 78%,
-    #C9822A 92%,
+    #C8943A 92%,
     transparent 100%
   );
   opacity: 0.55;
@@ -220,8 +220,8 @@
    Usage: <div class="nudge-strip">content</div>
    ──────────────────────────────────────────────────────────────────────── */
 .nudge-strip {
-  border-left: 2px solid #A83030;
-  background: #252118;
+  border-left: 2px solid #A43A2F;
+  background: #111111;
   padding: 10px 14px;
   display: flex;
   align-items: center;
@@ -229,8 +229,8 @@
 }
 
 .nudge-strip-amber {
-  border-left: 2px solid #D4922E;
-  background: #252118;
+  border-left: 2px solid #C8943A;
+  background: #111111;
   padding: 10px 14px;
 }
 
@@ -241,7 +241,7 @@
 .score-axis {
   position: relative;
   height: 14px;
-  border-top: 1px solid rgba(245,240,232,0.16);
+  border-top: 1px solid rgba(242,239,232,0.16);
 }
 
 /* ── Hairline rule ─────────────────────────────────────────────────────────
@@ -249,11 +249,11 @@
    ──────────────────────────────────────────────────────────────────────── */
 .cl-rule {
   height: 1px;
-  background: rgba(245,240,232,0.08);
+  background: rgba(242,239,232,0.08);
 }
 .cl-rule-hard {
   height: 1px;
-  background: rgba(245,240,232,0.16);
+  background: rgba(242,239,232,0.16);
 }
 
 /* ── Label caps — spaced uppercase label style ─────────────────────────────
@@ -265,7 +265,7 @@
   font-weight: 700;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: #AA9A88;
+  color: #8E8577;
 }
 
 /* ── Data mono — small metadata readouts ───────────────────────────────────
@@ -284,7 +284,7 @@
 .punch-glow:hover {
   box-shadow:
     inset 0 0 0 1px rgba(0,0,0,0.2),
-    0 0 0 1px #C9822A,
+    0 0 0 1px #C8943A,
     0 8px 24px rgba(201,130,42,0.18);
 }
 

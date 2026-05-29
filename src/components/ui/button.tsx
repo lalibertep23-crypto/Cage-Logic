@@ -15,16 +15,16 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground tracking-widest uppercase text-sm font-bold hover:bg-[#b8721f] active:bg-[#7A4F1A] punch-glow",
         // Hairline border — secondary actions
         outline:
-          "border border-border bg-transparent text-foreground hover:bg-muted tracking-wider uppercase text-sm dark:border-[rgba(245,240,232,0.16)] dark:hover:bg-[#2E2922]",
+          "border border-border bg-transparent text-foreground hover:bg-muted tracking-wider uppercase text-sm dark:border-[rgba(242,239,232,0.16)] dark:hover:bg-[#1E1E1E]",
         // Raised surface — tertiary / nav-style
         secondary:
-          "bg-[#2E2922] text-foreground hover:bg-[#22201C] tracking-wider uppercase text-sm",
+          "bg-[#1E1E1E] text-foreground hover:bg-[#22201C] tracking-wider uppercase text-sm",
         // No background — inline text actions
         ghost:
-          "text-muted-foreground hover:text-foreground hover:bg-[#2E2922] tracking-wider uppercase text-sm",
+          "text-muted-foreground hover:text-foreground hover:bg-[#1E1E1E] tracking-wider uppercase text-sm",
         // Brick red — destructive / warning
         destructive:
-          "bg-[#A83030]/15 text-[#A83030] border border-[#A83030]/30 hover:bg-[#A83030]/25 tracking-wider uppercase text-sm",
+          "bg-[#A43A2F]/15 text-[#A43A2F] border border-[#A43A2F]/30 hover:bg-[#A43A2F]/25 tracking-wider uppercase text-sm",
         // Text link — underline only
         link: "text-primary underline-offset-4 hover:underline tracking-wider",
       },

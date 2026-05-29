@@ -102,7 +102,7 @@ export function NavBar() {
   return (
     <nav
       aria-label="Primary"
-      style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, borderBottom: '1px solid rgba(245,240,232,0.13)', background: '#13110E' }}
+      style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, borderBottom: '1px solid rgba(242,239,232,0.13)', background: '#050505' }}
     >
       <ul style={{ margin: '0 auto', display: 'flex', width: '100%', maxWidth: 430, listStyle: 'none', padding: 0, paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {TABS.map((t) => {
@@ -119,14 +119,14 @@ export function NavBar() {
                     left: '20%',
                     right: '20%',
                     height: '2px',
-                    background: '#D4922E',
+                    background: '#C8943A',
                   }}
                 />
               )}
               <Link
                 href={t.href}
                 aria-current={active ? 'page' : undefined}
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, paddingTop: 12, paddingBottom: 12, textDecoration: 'none', color: active ? '#D4922E' : '#B8B2A8' }}
+                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, paddingTop: 12, paddingBottom: 12, textDecoration: 'none', color: active ? '#C8943A' : '#B8B2A8' }}
               >
                 {IMG_TABS[t.id] ? (
                   <img

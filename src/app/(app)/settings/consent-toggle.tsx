@@ -8,12 +8,12 @@ import { useState, useTransition } from 'react';
 import { updateConsentAction } from './actions';
 
 const C = {
-  surface: '#252118',
-  border:  'rgba(245,240,232,0.13)',
-  text:    '#F5F0E8',
-  dim:     'rgba(245,240,232,0.55)',
-  dimmer:  'rgba(245,240,232,0.35)',
-  amber:   '#D4922E',
+  surface: '#111111',
+  border:  'rgba(242,239,232,0.13)',
+  text:    '#F2EFE8',
+  dim:     'rgba(242,239,232,0.55)',
+  dimmer:  'rgba(242,239,232,0.35)',
+  amber:   '#C8943A',
 };
 
 export function ConsentToggle({ initialConsent }: { initialConsent: boolean }) {
@@ -46,7 +46,7 @@ export function ConsentToggle({ initialConsent }: { initialConsent: boolean }) {
             height: 24,
             borderRadius: 12,
             border: 'none',
-            background: consented ? C.amber : 'rgba(245,240,232,0.15)',
+            background: consented ? C.amber : 'rgba(242,239,232,0.15)',
             cursor: isPending ? 'not-allowed' : 'pointer',
             position: 'relative',
             transition: 'background 0.2s',
@@ -61,7 +61,7 @@ export function ConsentToggle({ initialConsent }: { initialConsent: boolean }) {
             width: 18,
             height: 18,
             borderRadius: '50%',
-            background: '#F5F0E8',
+            background: '#F2EFE8',
             transition: 'left 0.2s',
           }} />
         </button>

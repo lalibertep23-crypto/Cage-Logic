@@ -15,7 +15,7 @@ const C = {
   dim:     'rgba(242,239,232,0.45)',
   dimmer:  'rgba(242,239,232,0.22)',
   amber:   '#C8943A',
-  green:   '#3D8B55',
+  green:   '#5C8A3C',
   border:  'rgba(242,239,232,0.08)',
 };
 

@@ -4,15 +4,15 @@ import { useActionState, useState } from 'react';
 import { addMatchAction, type MatchState } from './actions';
 
 const C = {
-  bg:      '#1A1713',
-  surface: '#252118',
-  border:  'rgba(245,240,232,0.13)',
-  text:    '#F5F0E8',
-  dim:     'rgba(245,240,232,0.55)',
-  dimmer:  'rgba(245,240,232,0.35)',
-  amber:   '#D4922E',
+  bg:      '#050505',
+  surface: '#111111',
+  border:  'rgba(242,239,232,0.13)',
+  text:    '#F2EFE8',
+  dim:     'rgba(242,239,232,0.55)',
+  dimmer:  'rgba(242,239,232,0.35)',
+  amber:   '#C8943A',
   amberLow:'rgba(201,130,42,0.35)',
-  green:   '#3D8B55',
+  green:   '#5C8A3C',
   brick:   '#8B3A1E',
 };
 
@@ -40,9 +40,9 @@ const initialState: MatchState = {};
 
 const flatInput: React.CSSProperties = {
   width: '100%', boxSizing: 'border-box',
-  background: '#1A1713',
-  border: `1px solid rgba(245,240,232,0.14)`,
-  color: '#F5F0E8',
+  background: '#050505',
+  border: `1px solid rgba(242,239,232,0.14)`,
+  color: '#F2EFE8',
   fontFamily: 'var(--font-dm-mono)', fontSize: 12, letterSpacing: '0.04em',
   padding: '10px 12px',
   outline: 'none',

@@ -17,7 +17,7 @@ const C = {
   amber:    '#C8943A',
   amberLow: 'rgba(200,148,58,0.38)',
   amberRing:'rgba(200,148,58,0.75)',
-  green:    '#3D8B55',
+  green:    '#5C8A3C',
   brick:    '#A43A2F',
   midLow:   '#8E8577',
 };

@@ -5,13 +5,13 @@ import { submitCheckInAction, type CheckInState } from './actions';
 
 // ── Palette ──────────────────────────────────────────────────────────────────
 const C = {
-  bg:      '#1A1713',
-  bgSunk:  '#13110E',
-  border:  'rgba(245,240,232,0.5)',
-  text:    '#F5F0E8',
-  dim:     'rgba(245,240,232,0.38)',
-  dimmer:  'rgba(245,240,232,0.22)',
-  amber:   '#D4922E',
+  bg:      '#050505',
+  bgSunk:  '#050505',
+  border:  'rgba(242,239,232,0.5)',
+  text:    '#F2EFE8',
+  dim:     'rgba(242,239,232,0.38)',
+  dimmer:  'rgba(242,239,232,0.22)',
+  amber:   '#C8943A',
   amberLow:'rgba(201,130,42,0.35)',
   brick:   '#8B3A1E',
 };
@@ -102,7 +102,7 @@ export function CheckInForm() {
           style={{
             background: C.bgSunk,
             border: 'none',
-            color: '#F5F0E8',
+            color: '#F2EFE8',
             fontFamily: 'var(--font-dm-mono)',
             fontSize: 11,
             letterSpacing: '0.03em',
@@ -122,8 +122,8 @@ export function CheckInForm() {
         style={{
           width: '100%',
           padding: '15px',
-          background: pending ? 'rgba(201,130,42,0.4)' : '#D4922E',
-          color: '#1A1713',
+          background: pending ? 'rgba(201,130,42,0.4)' : '#C8943A',
+          color: '#050505',
           border: 'none',
           fontFamily: 'var(--font-bebas)',
           fontSize: 16,

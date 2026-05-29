@@ -21,7 +21,7 @@ const C = {
   dimmer:    'rgba(242,239,232,0.28)',
   amber:     '#C8943A',
   amberLow:  'rgba(200,148,58,0.25)',
-  green:     '#3D8B55',
+  green:     '#5C8A3C',
   greenLow:  'rgba(42,92,63,0.35)',
   brick:     '#A43A2F',
   brickLow:  'rgba(164,58,47,0.20)',

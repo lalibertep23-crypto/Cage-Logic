@@ -4,19 +4,19 @@ import { useState } from 'react';
 
 // ── Palette ───────────────────────────────────────────────────────────────────
 const C = {
-  bg:         '#1A1713',
-  surface:    '#252118',
-  border:  'rgba(245,240,232,0.13)',
-  text:       '#F5F0E8',
-  dim:        'rgba(245,240,232,0.55)',
-  dimmer:     'rgba(245,240,232,0.35)',
-  amber:      '#D4922E',
+  bg:         '#050505',
+  surface:    '#111111',
+  border:  'rgba(242,239,232,0.13)',
+  text:       '#F2EFE8',
+  dim:        'rgba(242,239,232,0.55)',
+  dimmer:     'rgba(242,239,232,0.35)',
+  amber:      '#C8943A',
   amberLow:   'rgba(201,130,42,0.35)',
-  green:      '#3D8B55',
+  green:      '#5C8A3C',
   brick:      '#8B3A1E',
   brickLow:   'rgba(139,58,30,0.35)',
-  bodyBase:   'rgba(245,240,232,0.08)',
-  bodyStroke: 'rgba(245,240,232,0.18)',
+  bodyBase:   'rgba(242,239,232,0.08)',
+  bodyStroke: 'rgba(242,239,232,0.18)',
 };
 
 // ── Region definitions ────────────────────────────────────────────────────────
@@ -442,7 +442,7 @@ export function BodyMap({ sorenessFrequency, activeInjuries }: BodyMapProps) {
             fontFamily: 'var(--font-dm-mono)', fontSize: 8,
             letterSpacing: '0.06em', lineHeight: 1.5,
             color: C.dimmer, margin: '10px 0 0',
-            borderTop: `1px solid rgba(245,240,232,0.08)`,
+            borderTop: `1px solid rgba(242,239,232,0.08)`,
             paddingTop: 10,
           }}>
             Informative only. Not a diagnosis or treatment plan. A professional can confirm what applies to you.

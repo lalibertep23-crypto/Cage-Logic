@@ -16,13 +16,13 @@ export default async function PostLossNewPage() {
   if (!user) redirect('/');
 
   const C = {
-    bg:      '#1A1713',
-    surface: '#252118',
-    border:  'rgba(245,240,232,0.13)',
-    text:    '#F5F0E8',
-    dim:     'rgba(245,240,232,0.55)',
-    dimmer:  'rgba(245,240,232,0.35)',
-    amber:   '#D4922E',
+    bg:      '#050505',
+    surface: '#111111',
+    border:  'rgba(242,239,232,0.13)',
+    text:    '#F2EFE8',
+    dim:     'rgba(242,239,232,0.55)',
+    dimmer:  'rgba(242,239,232,0.35)',
+    amber:   '#C8943A',
     brick:   '#8B3A1E',
     brickLow:'rgba(139,58,30,0.35)',
   };

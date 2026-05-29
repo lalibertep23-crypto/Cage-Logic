@@ -826,7 +826,7 @@ export function LogForm({ tags, activeInjuries = [], savedCustom = [], savedPart
           </FlatField>
           <div style={{
             height: 1,
-            background: 'rgba(245,240,232,0.08)',
+            background: 'rgba(242,239,232,0.08)',
             margin: '4px 0',
           }} />
           <FlatField label="WHAT CLICKED">

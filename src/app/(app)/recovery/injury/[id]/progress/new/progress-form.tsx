@@ -5,10 +5,10 @@ import { useActionState } from 'react';
 import { logProgressAction, type ProgressState } from './actions';
 
 const C = {
-  bg: '#1A1713', surface: '#252118', border:  'rgba(245,240,232,0.13)',
-  text: '#F5F0E8', dim: 'rgba(245,240,232,0.55)', dimmer: 'rgba(245,240,232,0.35)',
+  bg: '#050505', surface: '#111111', border:  'rgba(242,239,232,0.13)',
+  text: '#F2EFE8', dim: 'rgba(242,239,232,0.55)', dimmer: 'rgba(242,239,232,0.35)',
   brick: '#8B3A1E', brickLow: 'rgba(139,58,30,0.35)',
-  amber: '#D4922E', green: '#3D8B55',
+  amber: '#C8943A', green: '#5C8A3C',
 };
 
 const initialState: ProgressState = {};
@@ -27,7 +27,7 @@ function fnColor(n: number): string {
 
 const flatTextarea: React.CSSProperties = {
   width: '100%', boxSizing: 'border-box',
-  background: C.bg, border: `1px solid rgba(245,240,232,0.14)`,
+  background: C.bg, border: `1px solid rgba(242,239,232,0.14)`,
   color: C.text, fontFamily: 'var(--font-dm-mono)', fontSize: 12, letterSpacing: '0.04em',
   padding: '10px 12px', outline: 'none', resize: 'none' as const,
 };
