@@ -7,13 +7,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-// Tab icons — G1-G4 are custom image assets; recovery/progression use inline SVGs
-const IMG_TABS: Partial<Record<string, string>> = {
-  home:    '/G1-home-tab.png',
-  log:     '/G2-log-tab.png',
-  history: '/G3-history-tab.png',
-  mental:  '/G4-mental-tab.png',
-};
+// All tabs use inline SVGs — G1-G4 images are 1536×1024 landscape, unusable at 30px
 
 const ICONS = {
   // Octagon outline — the cage
@@ -128,17 +122,7 @@ export function NavBar() {
                 aria-current={active ? 'page' : undefined}
                 style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, paddingTop: 12, paddingBottom: 12, textDecoration: 'none', color: active ? '#C8943A' : '#B8B2A8' }}
               >
-                {IMG_TABS[t.id] ? (
-                  <img
-                    src={IMG_TABS[t.id]}
-                    alt={t.label}
-                    width={30}
-                    height={30}
-                    style={{ opacity: active ? 1 : 0.50, filter: active ? 'drop-shadow(0 0 4px rgba(200,148,58,0.55))' : 'grayscale(0.3) brightness(0.85)' }}
-                  />
-                ) : (
-                  ICONS[t.id](active)
-                )}
+                {ICONS[t.id](active)}
                 <span
                   style={{
                     fontFamily: 'var(--font-dm-mono), "DM Mono", monospace',
