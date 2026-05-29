@@ -292,12 +292,12 @@ export default async function HomePage() {
       }}>
         <Link href="/home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
           {/* Brain — the brand anchor */}
-          <div style={{ width: 58, height: 58, position: 'relative', flexShrink: 0 }}>
+          <div style={{ width: 116, height: 116, position: 'relative', flexShrink: 0 }}>
             <Image
               src="/cage-logic-back-button.png"
               alt="Cage Logic"
               fill
-              sizes="58px"
+              sizes="116px"
               style={{
                 objectFit: 'contain',
                 filter: 'drop-shadow(0 2px 8px rgba(200,148,58,0.55)) drop-shadow(0 0 18px rgba(200,148,58,0.22)) drop-shadow(0 1px 3px rgba(0,0,0,0.95))',
