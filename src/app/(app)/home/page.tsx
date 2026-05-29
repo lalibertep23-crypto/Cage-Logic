@@ -292,7 +292,7 @@ export default async function HomePage() {
         zIndex: 10,
         background: 'transparent',
       }}>
-        <Link href="/home" style={{ textDecoration: 'none' }}>
+        <Link href="/home" style={{ textDecoration: 'none', marginTop: -14 }}>
           {/* Brain — the brand anchor */}
           <div style={{ width: 116, height: 116, position: 'relative', flexShrink: 0 }}>
             <Image
