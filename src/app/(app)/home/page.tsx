@@ -286,7 +286,7 @@ export default async function HomePage() {
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div style={{
         display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-        padding: '4px 8px 4px',
+        padding: '4px 2px 4px',
         position: 'absolute',
         top: 0, left: 0, right: 0,
         zIndex: 10,
