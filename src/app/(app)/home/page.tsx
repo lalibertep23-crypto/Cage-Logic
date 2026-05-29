@@ -286,13 +286,13 @@ export default async function HomePage() {
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div style={{
         display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-        padding: '4px 18px 4px',
+        padding: '8px 18px 4px',
         position: 'absolute',
         top: 0, left: 0, right: 0,
         zIndex: 10,
         background: 'transparent',
       }}>
-        <Link href="/home" style={{ textDecoration: 'none' }}>
+        <Link href="/home" style={{ textDecoration: 'none', paddingTop: 12 }}>
           {/* Brain — the brand anchor */}
           <div style={{ width: 116, height: 116, position: 'relative', flexShrink: 0 }}>
             <Image
@@ -307,7 +307,7 @@ export default async function HomePage() {
             />
           </div>
         </Link>
-        <div style={{ textAlign: 'right', paddingTop: 8 }}>
+        <div style={{ textAlign: 'right', paddingTop: 12 }}>
           <Link href="/profile" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
             <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 13, letterSpacing: '0.1em', color: C.amber, fontWeight: 600 }}>
               {(displayName ?? 'PROFILE').toUpperCase()}
