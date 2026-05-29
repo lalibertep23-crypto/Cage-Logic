@@ -286,7 +286,7 @@ export default async function HomePage() {
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '10px 18px 10px',
+        padding: '4px 18px 4px',
         position: 'absolute',
         top: 0, left: 0, right: 0,
         zIndex: 10,
@@ -306,28 +306,15 @@ export default async function HomePage() {
               }}
             />
           </div>
-          {/* Wordmark */}
-          <div>
-            <div style={{
-              fontFamily: 'var(--font-bebas)',
-              fontSize: 20,
-              letterSpacing: '0.15em',
-              color: C.amber,
-              lineHeight: 1,
-              textShadow: '0 1px 6px rgba(0,0,0,0.80)',
-            }}>
-              CAGE LOGIC
-            </div>
-            <div style={{
-              fontFamily: 'var(--font-dm-mono)',
-              fontSize: 8,
-              letterSpacing: '0.18em',
-              color: 'rgba(242,239,232,0.45)',
-              lineHeight: 1,
-              marginTop: 3,
-            }}>
-              {dateStr}
-            </div>
+          {/* Date — kept, wordmark removed */}
+          <div style={{
+            fontFamily: 'var(--font-dm-mono)',
+            fontSize: 8,
+            letterSpacing: '0.18em',
+            color: 'rgba(242,239,232,0.45)',
+            lineHeight: 1,
+          }}>
+            {dateStr}
           </div>
         </Link>
         <div style={{ textAlign: 'right' }}>
@@ -379,7 +366,7 @@ export default async function HomePage() {
           backgroundImage: `url(${wrapImage})`,
           backgroundSize: '100% auto',
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center 65%',
+          backgroundPosition: 'center 50%',
         }}/>
         {/* Gradient — preserve readability at bottom, reveal fighter above */}
         <div style={{
