@@ -1,7 +1,7 @@
-// Athlete profile — fighter card layout.
-// Cage/concrete fixed background. Shadowed silhouette avatar (no photo yet).
-// No discipline badge images — text + rank only until art is ready.
-// Voice: direct, dry, factual.
+// Athlete profile — baseball card layout.
+// Hero image full-bleed with name overlaid at bottom (mirrors demo prototype).
+// Stats row, physical grid, disciplines, goals, footer links.
+// Voice: direct, dry, factual. No emojis.
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -12,9 +12,6 @@ import { C, fonts } from '@/lib/design-tokens';
 import { signOutAction } from '../settings/actions';
 
 export const dynamic = 'force-dynamic';
-
-const AMBER  = C.amber;
-const SILVER = '#8A9BAE';
 
 const DISCIPLINE_LABELS: Record<string, string> = {
   bjj: 'BJJ', mma: 'MMA', boxing: 'BOXING', muay_thai: 'MUAY THAI',
@@ -28,7 +25,7 @@ function getDisciplineRank(discipline: string, rankColor: string, stripes: numbe
       brown: 'BROWN BELT', black: 'BLACK BELT',
     };
     const base = labels[rankColor] ?? rankColor.toUpperCase();
-    return stripes > 0 ? `${base} · STRIPE ${stripes}` : base;
+    return stripes > 0 ? `${base} · ${stripes}S` : base;
   }
   if (discipline === 'muay_thai') {
     return rankColor.replace(/_/g, ' ').toUpperCase();
@@ -64,53 +61,30 @@ function cmToFeetInches(cm: number | null): string {
 
 function kgToLb(kg: number | null): string {
   if (kg == null) return '—';
-  return `${Math.round(kg * 2.20462)} LB`;
+  return `${Math.round(kg * 2.20462)}`;
 }
 
-// ── Silhouette avatar — SVG fighter shadow, no photo ────────────────────────
-function SilhouetteAvatar({ size = 100 }: { size?: number }) {
+// ── Silhouette SVG — bust, used inside hero when no photo ──────────────────
+function SilhouetteFigure() {
   return (
-    <div style={{
-      width: size, height: size,
-      borderRadius: '50%',
-      background: 'radial-gradient(circle at 50% 35%, rgba(40,36,30,0.90) 0%, rgba(12,10,8,0.98) 70%)',
-      border: `2px solid rgba(200,148,58,0.25)`,
-      boxShadow: '0 0 24px rgba(0,0,0,0.80), 0 0 0 1px rgba(200,148,58,0.08)',
-      overflow: 'hidden',
-      flexShrink: 0,
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'flex-end',
-      justifyContent: 'center',
-    }}>
-      {/* Silhouette SVG — bust of a fighter */}
-      <svg
-        width={size * 0.72}
-        height={size * 0.72}
-        viewBox="0 0 72 72"
-        fill="none"
-        style={{ marginBottom: -4 }}
-      >
-        {/* Head */}
-        <ellipse cx="36" cy="20" rx="11" ry="13" fill="rgba(80,70,55,0.85)" />
-        {/* Neck */}
-        <rect x="31" y="31" width="10" height="6" rx="2" fill="rgba(80,70,55,0.85)" />
-        {/* Shoulders + torso */}
-        <path
-          d="M8 72 C8 52 18 44 36 44 C54 44 64 52 64 72 Z"
-          fill="rgba(80,70,55,0.85)"
-        />
-        {/* Subtle inner glow — edge highlight */}
-        <ellipse cx="36" cy="20" rx="11" ry="13"
-          fill="none" stroke="rgba(200,148,58,0.12)" strokeWidth="1" />
-      </svg>
-      {/* Radial shadow vignette */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)',
-        borderRadius: '50%',
-      }} />
-    </div>
+    <svg
+      viewBox="0 0 120 180"
+      fill="none"
+      style={{ width: '100%', height: '100%' }}
+    >
+      {/* Head */}
+      <ellipse cx="60" cy="48" rx="22" ry="26" fill="rgba(90,78,60,0.70)" />
+      {/* Neck */}
+      <rect x="51" y="71" width="18" height="12" rx="4" fill="rgba(90,78,60,0.70)" />
+      {/* Shoulders + torso */}
+      <path
+        d="M4 180 C4 138 26 118 60 118 C94 118 116 138 116 180 Z"
+        fill="rgba(90,78,60,0.70)"
+      />
+      {/* Edge highlight on head */}
+      <ellipse cx="60" cy="48" rx="22" ry="26"
+        fill="none" stroke="rgba(200,148,58,0.15)" strokeWidth="1.5" />
+    </svg>
   );
 }
 
@@ -123,7 +97,7 @@ export default async function ProfilePage() {
 
   const { data: athlete } = await supabase
     .from('athletes')
-    .select('display_name, gym_id, sex, date_of_birth, height_cm, current_weight_kg, walking_weight_kg, dominant_side, day_job_category, day_job_hours_physical_per_day, start_date, created_at')
+    .select('display_name, gym_id, sex, date_of_birth, height_cm, current_weight_kg, walking_weight_kg, dominant_side, day_job_category, start_date, created_at')
     .eq('id', user.id)
     .maybeSingle();
 
@@ -171,259 +145,360 @@ export default async function ProfilePage() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 96, position: 'relative' }}>
+    <main style={{ minHeight: '100vh', background: C.bg, color: C.text, paddingBottom: 96 }}>
 
-      {/* ── Fixed cage + concrete background ──────────────────────────── */}
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
-        <img
-          src="/cage-corner.jpg"
-          alt=""
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
-        />
-        {/* Heavy overlay — keep it cinematic, not literal */}
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(5,3,2,0.86)' }} />
-        {/* Subtle warm vignette from center */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'radial-gradient(ellipse 70% 50% at 50% 30%, rgba(200,120,40,0.04) 0%, transparent 70%)',
-        }} />
+      {/* ── BrandNav — transparent, floats over hero ── */}
+      <div style={{ position: 'relative', zIndex: 10 }}>
+        <BrandNav backHref="/home" glass={false} />
       </div>
 
-      {/* ── Content ── */}
-      <div style={{ position: 'relative', zIndex: 1 }}>
+      {/* ── HERO — baseball card ── */}
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        aspectRatio: '3 / 4',
+        maxHeight: 480,
+        overflow: 'hidden',
+        background: '#0A0806',
+        marginTop: -56, // pull up under the transparent nav
+      }}>
+        {/* Background: cage scene */}
+        <img
+          src="/profile-scene.png"
+          alt=""
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'top center',
+            filter: 'grayscale(20%) contrast(1.08) brightness(0.75)',
+          }}
+        />
 
-        {/* BrandNav */}
-        <BrandNav backHref="/home" glass={false} />
-
-        {/* ── Fighter identity card ── */}
+        {/* Silhouette figure — centered */}
         <div style={{
-          padding: '24px 20px 28px',
+          position: 'absolute',
+          inset: 0,
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 16,
-          borderBottom: '1px solid rgba(200,148,58,0.10)',
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+          paddingBottom: '18%',
         }}>
-          {/* Avatar */}
-          <SilhouetteAvatar size={104} />
+          <div style={{ width: '52%', opacity: 0.55 }}>
+            <SilhouetteFigure />
+          </div>
+        </div>
 
-          {/* Name + gym + rank */}
-          <div style={{ textAlign: 'center' }}>
+        {/* Gradient overlay — transparent top → void bottom */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(180deg, rgba(5,5,5,0) 30%, rgba(5,5,5,0.50) 62%, #050505 100%)',
+        }} />
+
+        {/* Warm vignette center-top */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,120,40,0.06) 0%, transparent 65%)',
+        }} />
+
+        {/* Name block — bottom-left, overlaid on hero */}
+        <div style={{
+          position: 'absolute',
+          left: 16,
+          bottom: 18,
+          right: 16,
+        }}>
+          {/* Gym eyebrow */}
+          {gymName && (
             <div style={{
-              fontFamily: fonts.header, fontSize: 30, letterSpacing: '0.10em',
-              color: '#fff', lineHeight: 1,
-              textShadow: '0 2px 20px rgba(0,0,0,0.90)',
-            }}>{displayName.toUpperCase()}</div>
+              fontFamily: fonts.label,
+              fontSize: 9,
+              letterSpacing: '0.22em',
+              color: 'rgba(242,239,232,0.45)',
+              marginBottom: 6,
+            }}>
+              {(gymName as string).toUpperCase()}
+            </div>
+          )}
 
-            {primary && (
+          {/* Name */}
+          <div style={{
+            fontFamily: fonts.header,
+            fontSize: 44,
+            lineHeight: 0.90,
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            color: '#FFFFFF',
+            textShadow: '0 2px 32px rgba(0,0,0,0.90)',
+          }}>
+            {displayName.toUpperCase()}
+          </div>
+
+          {/* Primary discipline + rank */}
+          {primary && (
+            <div style={{
+              fontFamily: fonts.label,
+              fontSize: 11,
+              letterSpacing: '0.18em',
+              color: C.amber,
+              marginTop: 8,
+            }}>
+              {DISCIPLINE_LABELS[primary.discipline] ?? primary.discipline.toUpperCase()}
+              {' · '}
+              {getDisciplineRank(primary.discipline, primary.rank_color, primary.stripes)}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── TRAINING NUMBERS ── */}
+      <div style={{
+        display: 'flex',
+        borderBottom: '1px solid rgba(242,239,232,0.07)',
+        borderTop: '1px solid rgba(242,239,232,0.07)',
+      }}>
+        {[
+          { label: 'SESSIONS',  value: String(totalSessions) },
+          { label: 'EVENTS',    value: String(totalComps) },
+          { label: 'BRS',       value: brsScore != null ? brsScore.toFixed(2) : '—' },
+        ].map((s, i) => (
+          <div key={s.label} style={{
+            flex: 1,
+            padding: '18px 0 16px',
+            textAlign: 'center',
+            borderRight: i < 2 ? '1px solid rgba(242,239,232,0.07)' : 'none',
+          }}>
+            <div style={{
+              fontFamily: fonts.header,
+              fontSize: 30,
+              letterSpacing: '0.04em',
+              color: C.amber,
+              lineHeight: 1,
+            }}>{s.value}</div>
+            <div style={{
+              fontFamily: fonts.label,
+              fontSize: 7,
+              letterSpacing: '0.20em',
+              color: 'rgba(242,239,232,0.30)',
+              marginTop: 5,
+            }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── PHYSICAL STATS ── */}
+      <div style={{
+        display: 'flex',
+        borderBottom: '1px solid rgba(242,239,232,0.07)',
+      }}>
+        {[
+          { label: 'HEIGHT', value: cmToFeetInches(heightCm) },
+          { label: 'WEIGHT', value: currentKg ? `${kgToLb(currentKg)} LB` : '—' },
+          { label: 'AGE',    value: age != null ? String(age) : '—' },
+          { label: 'STANCE', value: dominant ? ({ left: 'SOUTH', right: 'ORTHO', ambi: 'AMBI' } as Record<string, string>)[dominant] ?? dominant.toUpperCase().slice(0, 5) : '—' },
+        ].map((s, i) => (
+          <div key={s.label} style={{
+            flex: 1,
+            padding: '14px 0 12px',
+            textAlign: 'center',
+            borderRight: i < 3 ? '1px solid rgba(242,239,232,0.07)' : 'none',
+          }}>
+            <div style={{
+              fontFamily: fonts.header,
+              fontSize: 18,
+              letterSpacing: '0.04em',
+              color: C.text,
+              lineHeight: 1,
+            }}>{s.value}</div>
+            <div style={{
+              fontFamily: fonts.label,
+              fontSize: 7,
+              letterSpacing: '0.18em',
+              color: 'rgba(242,239,232,0.28)',
+              marginTop: 4,
+            }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── DISCIPLINES ── */}
+      {disciplines.length > 0 && (
+        <div style={{ padding: '20px 16px 0' }}>
+          <div style={{
+            fontFamily: fonts.label,
+            fontSize: 8,
+            letterSpacing: '0.26em',
+            color: 'rgba(138,155,174,0.50)',
+            marginBottom: 10,
+          }}>DISCIPLINES</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {[primary, ...others].filter(Boolean).map((d) => {
+              if (!d) return null;
+              return (
+                <div key={d.discipline} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '13px 14px',
+                  background: 'rgba(17,17,17,0.70)',
+                  borderLeft: `3px solid ${d.is_primary ? C.amber : 'rgba(138,155,174,0.20)'}`,
+                  borderBottom: '1px solid rgba(242,239,232,0.05)',
+                }}>
+                  <div>
+                    <div style={{
+                      fontFamily: fonts.label,
+                      fontSize: 7,
+                      letterSpacing: '0.22em',
+                      color: 'rgba(242,239,232,0.32)',
+                      lineHeight: 1,
+                    }}>{DISCIPLINE_LABELS[d.discipline] ?? d.discipline.toUpperCase()}</div>
+                    <div style={{
+                      fontFamily: fonts.header,
+                      fontSize: 17,
+                      letterSpacing: '0.08em',
+                      color: d.is_primary ? C.amber : C.text,
+                      marginTop: 4,
+                      lineHeight: 1,
+                    }}>{getDisciplineRank(d.discipline, d.rank_color, d.stripes)}</div>
+                  </div>
+                  {d.is_primary && (
+                    <div style={{
+                      fontFamily: fonts.label,
+                      fontSize: 7,
+                      letterSpacing: '0.14em',
+                      color: 'rgba(200,148,58,0.50)',
+                      padding: '3px 7px',
+                      border: '1px solid rgba(200,148,58,0.18)',
+                    }}>PRIMARY</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── GOALS ── */}
+      {goals && (goals.comp_status || goals.belt_goal || goals.why_training) && (
+        <div style={{ padding: '20px 16px 0' }}>
+          <div style={{
+            fontFamily: fonts.label,
+            fontSize: 8,
+            letterSpacing: '0.26em',
+            color: 'rgba(138,155,174,0.50)',
+            marginBottom: 10,
+          }}>GOALS</div>
+          <div style={{
+            background: 'rgba(17,17,17,0.70)',
+            borderLeft: '3px solid rgba(200,148,58,0.28)',
+            padding: '14px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 7,
+          }}>
+            {goals.comp_status && (
               <div style={{
-                fontFamily: fonts.label, fontSize: 10, letterSpacing: '0.20em',
-                color: AMBER, marginTop: 8,
+                fontFamily: fonts.label,
+                fontSize: 12,
+                letterSpacing: '0.14em',
+                color: C.text,
               }}>
-                {DISCIPLINE_LABELS[primary.discipline] ?? primary.discipline.toUpperCase()}
-                {' · '}
-                {getDisciplineRank(primary.discipline, primary.rank_color, primary.stripes)}
+                {compLabel[(goals.comp_status as string)] ?? (goals.comp_status as string).toUpperCase()}
               </div>
             )}
-
-            {gymName && (
-              <Link href="/log" style={{
-                fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.18em',
-                color: 'rgba(242,239,232,0.40)', marginTop: 5,
-                textDecoration: 'none', display: 'block',
-              }}>{gymName.toUpperCase()}</Link>
+            {goals.belt_goal && (
+              <div style={{
+                fontFamily: fonts.body,
+                fontSize: 10,
+                letterSpacing: '0.06em',
+                color: 'rgba(242,239,232,0.45)',
+              }}>GOAL: {(goals.belt_goal as string).toUpperCase()}</div>
+            )}
+            {goals.why_training && (
+              <p style={{
+                fontFamily: fonts.body,
+                fontSize: 11,
+                letterSpacing: '0.03em',
+                lineHeight: 1.7,
+                color: 'rgba(242,239,232,0.55)',
+                margin: 0,
+                whiteSpace: 'pre-wrap',
+              }}>{goals.why_training as string}</p>
             )}
           </div>
+        </div>
+      )}
 
-          {/* Accent line */}
+      {/* ── TRAINING SINCE ── */}
+      {startDate && (
+        <div style={{ padding: '18px 16px 0' }}>
           <div style={{
-            width: 48, height: 1,
-            background: 'linear-gradient(to right, transparent, rgba(200,148,58,0.50), transparent)',
-          }} />
+            fontFamily: fonts.label,
+            fontSize: 7,
+            letterSpacing: '0.22em',
+            color: 'rgba(242,239,232,0.22)',
+          }}>TRAINING SINCE</div>
+          <div style={{
+            fontFamily: fonts.body,
+            fontSize: 12,
+            letterSpacing: '0.06em',
+            color: 'rgba(242,239,232,0.40)',
+            marginTop: 4,
+          }}>{format(parseISO(startDate), 'MMM yyyy').toUpperCase()}</div>
         </div>
+      )}
 
-        {/* ── Physical stats ── */}
-        <div style={{
-          display: 'flex',
-          borderBottom: '1px solid rgba(242,239,232,0.06)',
-        }}>
-          {[
-            { label: 'HEIGHT', value: cmToFeetInches(heightCm) },
-            { label: 'WEIGHT', value: currentKg ? kgToLb(currentKg) : '—' },
-            { label: 'AGE',    value: age != null ? String(age) : '—' },
-            { label: 'STANCE', value: dominant ? ({ left: 'SOUTH', right: 'ORTHO', ambi: 'AMBI' } as Record<string, string>)[dominant] ?? dominant.toUpperCase().slice(0, 5) : '—' },
-          ].map((s, i) => (
-            <div key={s.label} style={{
-              flex: 1, padding: '16px 0 14px', textAlign: 'center',
-              borderRight: i < 3 ? '1px solid rgba(242,239,232,0.06)' : 'none',
-            }}>
-              <div style={{
-                fontFamily: fonts.header, fontSize: 20, letterSpacing: '0.04em',
-                color: C.text, lineHeight: 1,
-              }}>{s.value}</div>
-              <div style={{
-                fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.18em',
-                color: 'rgba(242,239,232,0.30)', marginTop: 5,
-              }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
+      {/* ── DIVIDER ── */}
+      <div style={{
+        margin: '28px 16px 0',
+        height: 1,
+        background: 'rgba(242,239,232,0.07)',
+      }} />
 
-        {/* ── Training numbers ── */}
-        <div style={{
-          display: 'flex',
-          borderBottom: '1px solid rgba(242,239,232,0.06)',
-        }}>
-          {[
-            { label: 'SESSIONS',  value: String(totalSessions) },
-            { label: 'EVENTS',    value: String(totalComps) },
-            { label: 'BRS',       value: brsScore != null ? brsScore.toFixed(2) : '—' },
-          ].map((s, i) => (
-            <div key={s.label} style={{
-              flex: 1, padding: '18px 0 16px', textAlign: 'center',
-              borderRight: i < 2 ? '1px solid rgba(242,239,232,0.06)' : 'none',
-            }}>
-              <div style={{
-                fontFamily: fonts.header, fontSize: 26, letterSpacing: '0.04em',
-                color: AMBER, lineHeight: 1,
-              }}>{s.value}</div>
-              <div style={{
-                fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.18em',
-                color: 'rgba(242,239,232,0.30)', marginTop: 5,
-              }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Disciplines — text only, no badges ── */}
-        {disciplines.length > 0 && (
-          <div style={{ padding: '20px 20px 0' }}>
-            <div style={{
-              fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.24em',
-              color: 'rgba(138,155,174,0.50)', marginBottom: 10,
-            }}>DISCIPLINES</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {[primary, ...others].filter(Boolean).map((d) => {
-                if (!d) return null;
-                return (
-                  <div key={d.discipline} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    background: 'rgba(17,17,17,0.60)',
-                    borderLeft: `3px solid ${d.is_primary ? AMBER : 'rgba(138,155,174,0.25)'}`,
-                    borderBottom: '1px solid rgba(242,239,232,0.05)',
-                  }}>
-                    <div>
-                      <div style={{
-                        fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.20em',
-                        color: 'rgba(242,239,232,0.35)', lineHeight: 1,
-                      }}>{DISCIPLINE_LABELS[d.discipline] ?? d.discipline.toUpperCase()}</div>
-                      <div style={{
-                        fontFamily: fonts.header, fontSize: 16, letterSpacing: '0.08em',
-                        color: d.is_primary ? AMBER : C.text, marginTop: 3, lineHeight: 1,
-                      }}>{getDisciplineRank(d.discipline, d.rank_color, d.stripes)}</div>
-                    </div>
-                    {d.is_primary && (
-                      <div style={{
-                        fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.14em',
-                        color: 'rgba(200,148,58,0.50)',
-                        padding: '3px 7px',
-                        border: '1px solid rgba(200,148,58,0.18)',
-                      }}>PRIMARY</div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* ── Goals ── */}
-        {goals && (goals.comp_status || goals.belt_goal || goals.why_training) && (
-          <div style={{ padding: '20px 20px 0' }}>
-            <div style={{
-              fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.24em',
-              color: 'rgba(138,155,174,0.50)', marginBottom: 10,
-            }}>GOALS</div>
-            <div style={{
-              background: 'rgba(17,17,17,0.60)',
-              borderLeft: '3px solid rgba(200,148,58,0.28)',
-              padding: '14px',
-              display: 'flex', flexDirection: 'column', gap: 7,
-            }}>
-              {goals.comp_status && (
-                <div style={{
-                  fontFamily: fonts.label, fontSize: 12, letterSpacing: '0.14em', color: C.text,
-                }}>
-                  {compLabel[(goals.comp_status as string)] ?? (goals.comp_status as string).toUpperCase()}
-                </div>
-              )}
-              {goals.belt_goal && (
-                <div style={{
-                  fontFamily: fonts.body, fontSize: 10, letterSpacing: '0.06em',
-                  color: 'rgba(242,239,232,0.50)',
-                }}>GOAL: {(goals.belt_goal as string).toUpperCase()}</div>
-              )}
-              {goals.why_training && (
-                <p style={{
-                  fontFamily: fonts.body, fontSize: 11, letterSpacing: '0.03em',
-                  lineHeight: 1.7, color: 'rgba(242,239,232,0.58)', margin: 0,
-                  whiteSpace: 'pre-wrap',
-                }}>{goals.why_training as string}</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ── Training since ── */}
-        {startDate && (
-          <div style={{ padding: '18px 20px 0' }}>
-            <div style={{
-              fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.20em',
-              color: 'rgba(242,239,232,0.25)',
-            }}>TRAINING SINCE</div>
-            <div style={{
-              fontFamily: fonts.body, fontSize: 12, letterSpacing: '0.06em',
-              color: 'rgba(242,239,232,0.45)', marginTop: 4,
-            }}>{format(parseISO(startDate), 'MMM yyyy').toUpperCase()}</div>
-          </div>
-        )}
-
-        {/* ── Footer links ── */}
-        <div style={{
-          padding: '24px 20px 0',
-          marginTop: 20,
-          borderTop: '1px solid rgba(242,239,232,0.06)',
-          display: 'flex', gap: 20, flexWrap: 'wrap',
-        }}>
-          {[
-            { label: 'PROGRESSION', href: '/progression' },
-            { label: 'COMPETITIONS', href: '/competitions' },
-            { label: 'SETTINGS', href: '/settings' },
-          ].map((l) => (
-            <Link key={l.href} href={l.href} style={{
-              fontFamily: fonts.label, fontSize: 12, letterSpacing: '0.16em',
-              color: AMBER, textDecoration: 'none',
-            }}>
-              {l.label} →
-            </Link>
-          ))}
-        </div>
-
-        {/* ── Sign out ── */}
-        <div style={{ padding: '20px 20px 0' }}>
-          <form action={signOutAction}>
-            <button type="submit" style={{
-              fontFamily: fonts.label, fontSize: 12, letterSpacing: '0.16em',
-              color: 'rgba(242,239,232,0.30)',
-              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-            }}>
-              SIGN OUT
-            </button>
-          </form>
-        </div>
-
+      {/* ── FOOTER LINKS ── */}
+      <div style={{
+        padding: '20px 16px 0',
+        display: 'flex',
+        gap: 24,
+      }}>
+        {[
+          { label: 'COMPETITIONS', href: '/competitions' },
+          { label: 'SETTINGS',     href: '/settings' },
+        ].map((l) => (
+          <Link key={l.href} href={l.href} style={{
+            fontFamily: fonts.label,
+            fontSize: 12,
+            letterSpacing: '0.16em',
+            color: C.amber,
+            textDecoration: 'none',
+          }}>
+            {l.label} →
+          </Link>
+        ))}
       </div>
+
+      {/* ── SIGN OUT ── */}
+      <div style={{ padding: '16px 16px 0' }}>
+        <form action={signOutAction}>
+          <button type="submit" style={{
+            fontFamily: fonts.label,
+            fontSize: 11,
+            letterSpacing: '0.16em',
+            color: 'rgba(242,239,232,0.28)',
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+          }}>
+            SIGN OUT
+          </button>
+        </form>
+      </div>
+
     </main>
   );
 }
