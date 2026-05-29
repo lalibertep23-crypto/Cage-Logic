@@ -292,7 +292,7 @@ export default async function HomePage() {
         zIndex: 10,
         background: 'transparent',
       }}>
-        <Link href="/home" style={{ textDecoration: 'none', paddingTop: 12 }}>
+        <Link href="/home" style={{ textDecoration: 'none' }}>
           {/* Brain — the brand anchor */}
           <div style={{ width: 116, height: 116, position: 'relative', flexShrink: 0 }}>
             <Image
@@ -302,6 +302,7 @@ export default async function HomePage() {
               sizes="116px"
               style={{
                 objectFit: 'contain',
+                objectPosition: 'top center',
                 filter: 'drop-shadow(0 2px 8px rgba(200,148,58,0.55)) drop-shadow(0 0 18px rgba(200,148,58,0.22)) drop-shadow(0 1px 3px rgba(0,0,0,0.95))',
               }}
             />
