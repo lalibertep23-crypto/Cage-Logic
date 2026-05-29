@@ -468,15 +468,3 @@ export default async function BreathworkPage() {
     </main>
   );
 }
-
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-      </div>
-    </main>
-  );
-}

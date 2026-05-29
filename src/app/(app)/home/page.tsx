@@ -281,54 +281,33 @@ export default async function HomePage() {
   const rampDescriptor  = getRampDescriptor(currentDay);
 
   return (
-    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+    <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80, position: 'relative' }}>
 
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '10px 18px 10px',
-        borderBottom: `1px solid ${C.line}`,
-        background: 'rgba(5,4,3,0.92)',
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+        padding: '8px 18px 4px',
+        position: 'absolute',
+        top: 0, left: 0, right: 0,
+        zIndex: 10,
+        background: 'transparent',
       }}>
-        <Link href="/home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <Link href="/home" style={{ textDecoration: 'none', paddingTop: 12 }}>
           {/* Brain — the brand anchor */}
-          <div style={{ width: 58, height: 58, position: 'relative', flexShrink: 0 }}>
+          <div style={{ width: 116, height: 116, position: 'relative', flexShrink: 0 }}>
             <Image
               src="/cage-logic-back-button.png"
               alt="Cage Logic"
               fill
-              sizes="58px"
+              sizes="116px"
               style={{
                 objectFit: 'contain',
                 filter: 'drop-shadow(0 2px 8px rgba(200,148,58,0.55)) drop-shadow(0 0 18px rgba(200,148,58,0.22)) drop-shadow(0 1px 3px rgba(0,0,0,0.95))',
               }}
             />
           </div>
-          {/* Wordmark */}
-          <div>
-            <div style={{
-              fontFamily: 'var(--font-bebas)',
-              fontSize: 20,
-              letterSpacing: '0.15em',
-              color: C.amber,
-              lineHeight: 1,
-              textShadow: '0 1px 6px rgba(0,0,0,0.80)',
-            }}>
-              CAGE LOGIC
-            </div>
-            <div style={{
-              fontFamily: 'var(--font-dm-mono)',
-              fontSize: 8,
-              letterSpacing: '0.18em',
-              color: 'rgba(242,239,232,0.45)',
-              lineHeight: 1,
-              marginTop: 3,
-            }}>
-              {dateStr}
-            </div>
-          </div>
         </Link>
-        <div style={{ textAlign: 'right' }}>
+        <div style={{ textAlign: 'right', paddingTop: 12 }}>
           <Link href="/profile" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
             <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 13, letterSpacing: '0.1em', color: C.amber, fontWeight: 600 }}>
               {(displayName ?? 'PROFILE').toUpperCase()}
@@ -346,6 +325,11 @@ export default async function HomePage() {
             {/* Colored square — earned state indicator */}
             <div style={{ width: 8, height: 8, background: streakColor, flexShrink: 0 }}/>
           </div>
+          <div style={{
+            fontFamily: 'var(--font-dm-mono)', fontSize: 8,
+            letterSpacing: '0.18em', color: 'rgba(242,239,232,0.35)',
+            marginTop: 5,
+          }}>{dateStr}</div>
         </div>
       </div>
 
@@ -369,7 +353,7 @@ export default async function HomePage() {
       <div style={{
         position: 'relative', overflow: 'hidden',
         borderBottom: `1px solid ${C.line}`,
-        height: '52vmax', minHeight: 300, maxHeight: 520,
+        height: '62vmax', minHeight: 340, maxHeight: 620,
       }}>
         {/* Fighter wrap image — state determined by day threshold */}
         <div style={{
@@ -377,7 +361,7 @@ export default async function HomePage() {
           backgroundImage: `url(${wrapImage})`,
           backgroundSize: '100% auto',
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center 45%',
+          backgroundPosition: 'center 50%',
         }}/>
         {/* Gradient — preserve readability at bottom, reveal fighter above */}
         <div style={{
@@ -556,6 +540,7 @@ export default async function HomePage() {
             <div style={{
               flex: 1,
               background: today.loggedToday ? C.surface : C.amber,
+              backgroundImage: today.loggedToday ? 'none' : 'repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0,0,0,0.07) 8px, rgba(0,0,0,0.07) 10px)',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '0 20px',
               border: `1px solid ${today.loggedToday ? C.lineHard : 'transparent'}`,
@@ -622,23 +607,6 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* ── Nudge strip ──────────────────────────────────────────────────── */}
-      <div style={{
-        padding: '12px 22px', background: C.surface,
-        display: 'flex', alignItems: 'center', gap: 12,
-        borderBottom: `1px solid ${C.line}`,
-      }}>
-        <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={C.brick} strokeWidth="1.8" strokeLinecap="square">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="13"/>
-          <circle cx="12" cy="16.5" r="0.75" fill={C.brick} stroke="none"/>
-        </svg>
-        <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color: C.brick, letterSpacing: '0.16em', flexShrink: 0 }}>NOTE</span>
-        <div style={{ width: 1, height: 18, background: C.brick, opacity: 0.35, flexShrink: 0 }}/>
-        <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, color: C.text, lineHeight: 1.6, letterSpacing: '0.03em' }}>
-          {nudge}
-        </span>
-      </div>
 
       {/* ── Active Ranks ─────────────────────────────────────────────────── */}
       {allDisciplines.length > 0 && (
@@ -647,18 +615,18 @@ export default async function HomePage() {
             <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 15, letterSpacing: '0.26em', color: C.mid }}>ACTIVE RANKS</span>
             <Link href='/progression' style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.amber, letterSpacing: '0.12em', textDecoration: 'none' }}>VIEW ALL →</Link>
           </div>
-          <div style={{ display: 'flex', gap: 2, overflowX: 'auto', padding: '0 22px 16px', scrollbarWidth: 'none' as const }}>
-            {allDisciplines.map((d, i) => {
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: '0 22px 16px' }}>
+            {allDisciplines.slice(0, 4).map((d, i) => {
               const img = getDisciplineImage(d.discipline as string, d.rank_color as string | null);
               const rankLabel = getDisciplineRankLabel(d.discipline as string, d.rank_color as string | null);
               const stripes = (d.stripes as number) ?? 0;
               const dispName = (d.discipline as string).replace('_', ' ').toUpperCase();
               return (
-                <Link key={i} href={`/progression/${(d.discipline as string).replace('_', '-')}`} style={{ textDecoration: 'none', flexShrink: 0 }}>
-                  <div style={{ width: 108, position: 'relative', borderLeft: i === 0 ? 'none' : `1px solid ${C.lineHard}` }}>
+                <Link key={i} href={`/progression/${(d.discipline as string).replace('_', '-')}`} style={{ textDecoration: 'none' }}>
+                  <div style={{ position: 'relative', aspectRatio: '1 / 1', overflow: 'hidden' }}>
                     {/* Card image */}
                     <div style={{
-                      width: 108, height: 128,
+                      position: 'absolute', inset: 0,
                       backgroundImage: `url(${img})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
@@ -666,15 +634,15 @@ export default async function HomePage() {
                     }} />
                     {/* Overlay gradient */}
                     <div style={{
-                      position: 'absolute', bottom: 0, left: 0, right: 0, top: '40%',
+                      position: 'absolute', bottom: 0, left: 0, right: 0, top: '45%',
                       background: 'linear-gradient(to top, rgba(5,4,3,0.97) 0%, rgba(5,4,3,0.70) 50%, rgba(5,4,3,0) 100%)',
-                      padding: '0 8px 8px',
+                      padding: '0 10px 10px',
                       display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                     }}>
-                      <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 9, letterSpacing: '0.26em', color: C.amber, lineHeight: 1 }}>{dispName}</div>
-                      <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 8, color: C.text, letterSpacing: '0.06em', marginTop: 2, lineHeight: 1 }}>{rankLabel}</div>
+                      <div style={{ fontFamily: 'var(--font-bebas)', fontSize: 11, letterSpacing: '0.26em', color: C.amber, lineHeight: 1 }}>{dispName}</div>
+                      <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.text, letterSpacing: '0.06em', marginTop: 3, lineHeight: 1 }}>{rankLabel}</div>
                       {/* Stripe bars */}
-                      <div style={{ display: 'flex', gap: 2, marginTop: 5 }}>
+                      <div style={{ display: 'flex', gap: 2, marginTop: 6 }}>
                         {Array.from({ length: 4 }, (_, si) => (
                           <div key={si} style={{ flex: 1, height: 2, background: si < stripes ? C.amber : 'rgba(242,239,232,0.15)' }} />
                         ))}
@@ -688,76 +656,6 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* ── Stripe Track ─────────────────────────────────────────────────── */}
-      {primaryDiscipline && (
-        <div style={{
-          borderBottom: `1px solid ${C.line}`,
-          borderLeft: `3px solid ${stripeTimeReady && scoreReady ? C.amber : C.amberLow}`,
-          background: C.surface,
-          cursor: 'pointer',
-        }}>
-          <Link href={`/progression/${(primaryDiscipline.discipline as string ?? 'bjj').replace('_','-')}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-          <div style={{ padding: '16px 22px' }}>
-            {/* Header row */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 17, letterSpacing: '0.2em', color: C.text }}>
-                  STRIPE TRACK
-                </span>
-                {stripeTimeReady && scoreReady && (
-                  <span style={{
-                    fontFamily: 'var(--font-dm-mono)', fontSize: 8, letterSpacing: '0.14em',
-                    color: C.amber, border: `1px solid ${C.amber}`, padding: '2px 6px',
-                  }}>GATES CLEAR</span>
-                )}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dim, letterSpacing: '0.1em' }}>
-                  {String(primaryDiscipline.rank_color ?? 'WHITE').toUpperCase()} BELT
-                </span>
-                <BeltVisual
-                  color={primaryDiscipline.rank_color as string | null}
-                  stripes={(primaryDiscipline.stripes as number) ?? 0}
-                />
-              </div>
-            </div>
-            {/* Time in bar */}
-            <div style={{ marginBottom: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.mid }}>TIME IN PHASE</span>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: stripeTimeReady ? C.amber : C.dim, letterSpacing: '0.06em' }}>
-                  {daysInCurrentPhase}d · {STRIPE_THRESHOLD}d target {stripeTimeReady ? '✓' : ''}
-                </span>
-              </div>
-              <div style={{ height: 5, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', inset: 0, width: `${stripeTimeProgress}%`, background: stripeTimeReady ? C.amber : C.amberLow }}/>
-              </div>
-            </div>
-            {/* Investment bar */}
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.mid }}>INVESTMENT SCORE</span>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: scoreReady ? green : C.dim, letterSpacing: '0.06em' }}>
-                  {score.isRamping ? 'CALIBRATING' : `${roundedScore} / 65 min ${scoreReady ? '✓' : ''}`}
-                </span>
-              </div>
-              <div style={{ height: 5, background: C.sunk, position: 'relative', overflow: 'hidden' }}>
-                <div style={{
-                  position: 'absolute', inset: 0,
-                  width: score.isRamping ? '3%' : `${Math.min(100, (roundedScore / 65) * 100)}%`,
-                  background: scoreReady ? green : C.amberLow,
-                }}/>
-              </div>
-            </div>
-            <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.dimmer, letterSpacing: '0.06em', margin: 0, lineHeight: 1.6 }}>
-              {stripeTimeReady && scoreReady
-                ? 'Both gates clear. Bring it to your coach.'
-                : 'Coach watches both gates. Keep building.'}
-            </p>
-          </div>
-          </Link>
-        </div>
-      )}
 
 
 

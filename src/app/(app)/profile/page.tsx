@@ -9,6 +9,7 @@ import { differenceInCalendarYears, parseISO, format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
 import { BrandNav } from '@/components/ui/brand-nav';
 import { C, fonts } from '@/lib/design-tokens';
+import { signOutAction } from '../settings/actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -407,6 +408,19 @@ export default async function ProfilePage() {
               {l.label} →
             </Link>
           ))}
+        </div>
+
+        {/* ── Sign out ── */}
+        <div style={{ padding: '20px 20px 0' }}>
+          <form action={signOutAction}>
+            <button type="submit" style={{
+              fontFamily: fonts.label, fontSize: 12, letterSpacing: '0.16em',
+              color: 'rgba(242,239,232,0.30)',
+              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+            }}>
+              SIGN OUT
+            </button>
+          </form>
         </div>
 
       </div>
