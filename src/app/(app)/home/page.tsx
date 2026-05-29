@@ -369,7 +369,7 @@ export default async function HomePage() {
       <div style={{
         position: 'relative', overflow: 'hidden',
         borderBottom: `1px solid ${C.line}`,
-        height: '52vmax', minHeight: 300, maxHeight: 520,
+        height: '62vmax', minHeight: 340, maxHeight: 620,
       }}>
         {/* Fighter wrap image — state determined by day threshold */}
         <div style={{
@@ -377,7 +377,7 @@ export default async function HomePage() {
           backgroundImage: `url(${wrapImage})`,
           backgroundSize: '100% auto',
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center 45%',
+          backgroundPosition: 'center 65%',
         }}/>
         {/* Gradient — preserve readability at bottom, reveal fighter above */}
         <div style={{
