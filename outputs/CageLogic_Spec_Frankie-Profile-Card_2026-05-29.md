@@ -57,14 +57,14 @@ These are **link-out cards** (tap opens the page/clip), not inline players.
 | UFC official athlete page | https://www.ufc.com/athlete/frankie-edgar | Works |
 | Instagram — @frankieedgar | https://instagram.com/frankieedgar | Stable (his own) |
 
-**Optional fight-clip links — Chris must tap-test, keep only what plays:**
+**Fight-clip links — tap-tested and confirmed working (2026-05-29):**
 
 | Label | URL |
 |---|---|
 | Top Finishes: Frankie Edgar | https://www.youtube.com/watch?v=atKhoDoO3X0 |
 | Every Frankie Edgar UFC Finish | https://www.youtube.com/watch?v=ZneNpWXFGOU |
 
-Do not put any link on the demo card that Chris hasn't personally confirmed plays. A dead link in front of Frankie is worse than fewer links.
+All four cards (UFC page, IG, two fight clips) confirmed working. Re-check before the demo in case any clip is later pulled.
 
 ## Build notes for Patrick
 
