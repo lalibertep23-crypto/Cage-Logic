@@ -178,19 +178,6 @@ export default async function ProfilePage() {
         backgroundRepeat: 'no-repeat',
       }}>
 
-        {/* Fighter silhouette — centered in upper 2/3 of hero */}
-        <div style={{
-          position: 'absolute',
-          left: '50%',
-          top: '5%',
-          transform: 'translateX(-50%)',
-          width: '55%',
-          height: '75%',
-          opacity: 0.85,
-        }}>
-          <SilhouetteFigure />
-        </div>
-
         {/* Gradient overlay — transparent top → void bottom */}
         <div style={{
           position: 'absolute',
