@@ -163,4 +163,17 @@ export default async function SettingsPage() {
         {/* App version */}
         <div style={{ marginTop: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <span style={{ fontFamily: 'var(--font-bebas), "Bebas Neue", sans-serif', fontSize: 14, letterSpacing: '0.2em', color: C.dimmer }}>A
+            <span style={{ fontFamily: 'var(--font-bebas), "Bebas Neue", sans-serif', fontSize: 14, letterSpacing: '0.2em', color: C.dimmer }}>>APP</span>
+            <div style={{ flex: 1, height: 1, background: C.border }} />
+          </div>
+          <div style={{ background: C.surface, padding: '12px 14px' }}>
+            <p style={{ fontFamily: 'var(--font-dm-mono), "DM Mono", monospace', fontSize: 9, letterSpacing: '0.1em', color: C.dimmer, margin: 0 }}>
+              CAGE LOGIC V1
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  );
+}
