@@ -119,7 +119,7 @@ export default async function SettingsPage() {
               Download your training data as JSON. Sessions, reflections, rolls, soreness, disciplines, basic profile.
             </p>
             <p style={{ fontFamily: 'var(--font-dm-mono), "DM Mono", monospace', fontSize: 9, letterSpacing: '0.04em', lineHeight: 1.7, color: C.dimmer, margin: 0 }}>
-              Encrypted tables (psych check-ins, injury notes, post-loss reflections) excluded from V1 export — full export ships V1.5.
+              Encrypted tables (psych check-ins, injury notes, post-loss reflections, psych raw responses) excluded from V1 export — full export ships V1.5.
             </p>
             <a
               href="/api/export"

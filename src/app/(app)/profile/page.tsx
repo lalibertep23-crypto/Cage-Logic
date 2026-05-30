@@ -13,13 +13,42 @@ import { signOutAction } from '../settings/actions';
 
 export const dynamic = 'force-dynamic';
 
+// ── Demo account overlay — V1 ONLY ─────────────────────────────────────────
+// Frankie's record, credentials, game-style tags, and highlight reel are
+// hardcoded here for the demo account. V1.5: migrate to DB columns on athletes.
+const DEMO_ACCOUNT_ID = 'cde00000-1a4d-4000-8000-ca9e10910001';
+
+const FRANKIE_RECORD = {
+  w: 23, l: 11, d: 1,
+  byMethod: { ko: 6, sub: 4, dec: 13 },
+  losses:   { ko: 5, sub: 0, dec: 6 },
+  signal: 'Never been submitted.',
+};
+
+const FRANKIE_CREDENTIALS = [
+  { title: 'FORMER UFC LIGHTWEIGHT CHAMPION', note: 'def. BJ Penn · UFC 112 · Apr 10 2010 · 687-day reign' },
+  { title: 'UFC HALL OF FAMER', note: null },
+  { title: 'ONLY FIGHTER TO BEAT BJ PENN THREE TIMES', note: null },
+  { title: 'MULTIPLE-TIME FEATHERWEIGHT TITLE CHALLENGER', note: null },
+];
+
+const FRANKIE_TAGS = [
+  'WRESTLER BASE', 'PRESSURE FIGHTER', 'RELENTLESS PACE',
+  'BOXING + FOOTWORK', 'TAKEDOWNS & SCRAMBLES', 'ELITE CARDIO',
+];
+
+const FRANKIE_HIGHLIGHTS = [
+  { label: 'BJ PENN I — WINS THE LW TITLE (UFC 112)',       url: 'https://www.youtube.com/watch?v=boIRifT3_GU' },
+  { label: 'BJ PENN III — EDGAR FINISHES PENN',             url: 'https://www.youtube.com/watch?v=UlRV-c3Wk9M' },
+  { label: '"THE ANSWER" — BEST HIGHLIGHTS (PLAYLIST)',     url: 'https://www.youtube.com/playlist?list=PLCb9XH5bjjRTDOcXqO0jmxha99CHbS6VJ' },
+  { label: 'UFC OFFICIAL ATHLETE PAGE',                     url: 'https://www.ufc.com/athlete/frankie-edgar' },
+];
+
 const DISCIPLINE_LABELS: Record<string, string> = {
   bjj: 'BJJ', mma: 'MMA', boxing: 'BOXING', muay_thai: 'MUAY THAI',
   wrestling: 'WRESTLING', judo: 'JUDO', kickboxing: 'KICKBOXING',
 };
 
-// rank_color in DB is stored as combined "belt_stripe" e.g. "blue_2", "white_0"
-// Parse it so we display "BLUE BELT · 2S" not "BLUE_2"
 function parseBjjRankColor(rankColor: string): { belt: string; parsedStripes: number } {
   const match = rankColor.match(/^([a-z]+)_(\d+)$/);
   if (match) return { belt: match[1], parsedStripes: parseInt(match[2]) };
@@ -27,6 +56,13 @@ function parseBjjRankColor(rankColor: string): { belt: string; parsedStripes: nu
 }
 
 function getDisciplineRank(discipline: string, rankColor: string, stripes: number): string {
+  if (discipline === 'mma') {
+    const labels: Record<string, string> = {
+      level_1: 'BEGINNER', level_2: 'DEVELOPING', level_3: 'COMPETITIVE',
+      level_4: 'ADVANCED',  level_5: 'ELITE',       level_6: 'PROFESSIONAL',
+    };
+    return labels[rankColor] ?? rankColor.toUpperCase();
+  }
   if (discipline === 'bjj') {
     const labels: Record<string, string> = {
       white: 'WHITE BELT', blue: 'BLUE BELT', purple: 'PURPLE BELT',
@@ -74,30 +110,6 @@ function kgToLb(kg: number | null): string {
   return `${Math.round(kg * 2.20462)}`;
 }
 
-// ── Silhouette SVG — bust, used inside hero when no photo ──────────────────
-function SilhouetteFigure() {
-  return (
-    <svg
-      viewBox="0 0 120 180"
-      fill="none"
-      style={{ width: '100%', height: '100%' }}
-    >
-      {/* Head */}
-      <ellipse cx="60" cy="48" rx="22" ry="26" fill="rgba(90,78,60,0.70)" />
-      {/* Neck */}
-      <rect x="51" y="71" width="18" height="12" rx="4" fill="rgba(90,78,60,0.70)" />
-      {/* Shoulders + torso */}
-      <path
-        d="M4 180 C4 138 26 118 60 118 C94 118 116 138 116 180 Z"
-        fill="rgba(90,78,60,0.70)"
-      />
-      {/* Edge highlight on head */}
-      <ellipse cx="60" cy="48" rx="22" ry="26"
-        fill="none" stroke="rgba(200,148,58,0.15)" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
 // ── Page ───────────────────────────────────────────────────────────────────
 
 export default async function ProfilePage() {
@@ -113,6 +125,7 @@ export default async function ProfilePage() {
 
   if (!athlete) redirect('/');
 
+  const isDemo    = user.id === DEMO_ACCOUNT_ID;
   const gymId     = (athlete.gym_id as string | null) ?? null;
   const startDate = (athlete.start_date as string | null) ?? null;
 
@@ -171,7 +184,6 @@ export default async function ProfilePage() {
         overflow: 'hidden',
         background: '#0A0806',
         marginTop: -56,
-        // Fighter placeholder as background-image — transparent PNG renders reliably
         backgroundImage: `url(${(athlete.sex as string | null) === 'female' ? '/profile-female-placeholder.png' : '/profile-male-placeholder.png'})`,
         backgroundSize: 'cover',
         backgroundPosition: 'top center',
@@ -199,7 +211,6 @@ export default async function ProfilePage() {
           bottom: 18,
           right: 16,
         }}>
-          {/* Name */}
           <div style={{
             fontFamily: fonts.header,
             fontSize: 44,
@@ -212,7 +223,6 @@ export default async function ProfilePage() {
             {displayName.toUpperCase()}
           </div>
 
-          {/* Primary discipline + rank */}
           {primary && (
             <div style={{
               fontFamily: fonts.label,
@@ -338,6 +348,15 @@ export default async function ProfilePage() {
                       marginTop: 4,
                       lineHeight: 1,
                     }}>{getDisciplineRank(d.discipline, d.rank_color, d.stripes)}</div>
+                    {isDemo && d.discipline === 'bjj' && d.rank_color === 'black' && (
+                      <div style={{
+                        fontFamily: fonts.label,
+                        fontSize: 7,
+                        letterSpacing: '0.14em',
+                        color: 'rgba(200,148,58,0.65)',
+                        marginTop: 5,
+                      }}>VERIFIED — RICARDO ALMEIDA / RA BJJ</div>
+                    )}
                   </div>
                   {d.is_primary && (
                     <div style={{
@@ -356,7 +375,7 @@ export default async function ProfilePage() {
         </div>
       )}
 
-      {/* ── GOALS ── */}
+      {/* ── GOALS / BIO ── */}
       {goals && (goals.comp_status || goals.belt_goal || goals.why_training) && (
         <div style={{ padding: '20px 16px 0' }}>
           <div style={{
@@ -365,7 +384,7 @@ export default async function ProfilePage() {
             letterSpacing: '0.26em',
             color: 'rgba(138,155,174,0.50)',
             marginBottom: 10,
-          }}>GOALS</div>
+          }}>{isDemo ? 'BIO' : 'GOALS'}</div>
           <div style={{
             background: 'rgba(17,17,17,0.70)',
             borderLeft: '3px solid rgba(200,148,58,0.28)',
@@ -403,6 +422,139 @@ export default async function ProfilePage() {
                 whiteSpace: 'pre-wrap',
               }}>{goals.why_training as string}</p>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── RECORD (demo account only — V1.5: move to DB) ── */}
+      {isDemo && (
+        <div style={{ padding: '20px 16px 0' }}>
+          <div style={{
+            fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.26em',
+            color: 'rgba(138,155,174,0.50)', marginBottom: 10,
+          }}>MMA RECORD</div>
+          <div style={{
+            display: 'flex',
+            borderTop: '1px solid rgba(242,239,232,0.07)',
+            borderBottom: '1px solid rgba(242,239,232,0.07)',
+          }}>
+            {[
+              { val: FRANKIE_RECORD.w, label: 'W' },
+              { val: FRANKIE_RECORD.l, label: 'L' },
+              { val: FRANKIE_RECORD.d, label: 'D' },
+            ].map((s, i) => (
+              <div key={s.label} style={{
+                flex: 1, padding: '14px 0 12px', textAlign: 'center',
+                borderRight: i < 2 ? '1px solid rgba(242,239,232,0.07)' : 'none',
+              }}>
+                <div style={{ fontFamily: fonts.header, fontSize: 30, letterSpacing: '0.04em', color: C.amber, lineHeight: 1 }}>{s.val}</div>
+                <div style={{ fontFamily: fonts.label, fontSize: 7, letterSpacing: '0.20em', color: 'rgba(242,239,232,0.30)', marginTop: 5 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{
+            marginTop: 10, padding: '10px 14px',
+            background: 'rgba(17,17,17,0.70)',
+            borderLeft: '3px solid rgba(200,148,58,0.20)',
+          }}>
+            <div style={{ fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.18em', color: 'rgba(242,239,232,0.30)', marginBottom: 6 }}>WINS BY METHOD</div>
+            <div style={{ fontFamily: fonts.label, fontSize: 11, letterSpacing: '0.12em', color: C.text }}>
+              {FRANKIE_RECORD.byMethod.ko} KO/TKO &nbsp;·&nbsp; {FRANKIE_RECORD.byMethod.sub} SUB &nbsp;·&nbsp; {FRANKIE_RECORD.byMethod.dec} DEC
+            </div>
+            <div style={{
+              fontFamily: fonts.label, fontSize: 10, letterSpacing: '0.10em',
+              color: C.amber, marginTop: 8,
+            }}>{FRANKIE_RECORD.signal}</div>
+          </div>
+        </div>
+      )}
+
+      {/* ── CREDENTIALS (demo account only — V1.5: move to DB) ── */}
+      {isDemo && (
+        <div style={{ padding: '20px 16px 0' }}>
+          <div style={{
+            fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.26em',
+            color: 'rgba(138,155,174,0.50)', marginBottom: 10,
+          }}>CREDENTIALS</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {FRANKIE_CREDENTIALS.map((cred, i) => (
+              <div key={i} style={{
+                padding: '12px 14px',
+                background: 'rgba(17,17,17,0.70)',
+                borderLeft: `3px solid ${i === 0 ? C.amber : 'rgba(200,148,58,0.20)'}`,
+                borderBottom: '1px solid rgba(242,239,232,0.04)',
+              }}>
+                <div style={{
+                  fontFamily: fonts.label, fontSize: 10, letterSpacing: '0.12em',
+                  color: i === 0 ? C.amber : C.text,
+                }}>{cred.title}</div>
+                {cred.note && (
+                  <div style={{
+                    fontFamily: fonts.body, fontSize: 9, letterSpacing: '0.04em',
+                    color: 'rgba(242,239,232,0.40)', marginTop: 4,
+                  }}>{cred.note}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── GAME STYLE (demo account only — V1.5: move to DB) ── */}
+      {isDemo && (
+        <div style={{ padding: '20px 16px 0' }}>
+          <div style={{
+            fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.26em',
+            color: 'rgba(138,155,174,0.50)', marginBottom: 10,
+          }}>GAME STYLE</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {FRANKIE_TAGS.map((tag) => (
+              <div key={tag} style={{
+                fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.14em',
+                color: 'rgba(242,239,232,0.65)',
+                padding: '5px 10px',
+                border: '1px solid rgba(242,239,232,0.14)',
+                background: 'rgba(17,17,17,0.70)',
+              }}>{tag}</div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── HIGHLIGHT REEL (demo account only — V1.5: move to DB) ── */}
+      {isDemo && (
+        <div style={{ padding: '20px 16px 0' }}>
+          <div style={{
+            fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.26em',
+            color: 'rgba(138,155,174,0.50)', marginBottom: 10,
+          }}>HIGHLIGHT REEL</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {FRANKIE_HIGHLIGHTS.map((clip, i) => (
+              <a
+                key={i}
+                href={clip.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none' }}
+              >
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '13px 14px',
+                  background: 'rgba(17,17,17,0.70)',
+                  borderLeft: '3px solid rgba(200,148,58,0.20)',
+                  borderBottom: '1px solid rgba(242,239,232,0.04)',
+                }}>
+                  <div style={{
+                    fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.12em',
+                    color: C.text, flex: 1, paddingRight: 12,
+                  }}>{clip.label}</div>
+                  <div style={{
+                    fontFamily: fonts.label, fontSize: 12,
+                    color: C.amber, flexShrink: 0,
+                  }}>→</div>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       )}
