@@ -167,7 +167,7 @@ const DEMO_PHASES: Record<string, PhaseData> = {
     objective: 'Teach a White Belt',
     objectiveNote: 'Break down any technique until they can replicate it.',
     requirements: [
-      'Straight Ankle Lock and Kneebar Entry — Safe in Controlled Rounds',
+      'Straight Ankle Lock and Kneebar Entry — Coach’s Discretion, Controlled Rounds',
       'Two Functional Guards — Primary Developed, Secondary in Progress',
       'Three Distinct Passing Styles — Pressure, Leg Drag, Torreando',
       'Chain Three Offensive Positions in One Roll',
@@ -248,9 +248,24 @@ const DEMO_PHASES: Record<string, PhaseData> = {
       'Full Guard Repertoire — Functional from Any Common Guard Position',
       'Two Working Takedown Entries with Live Finishes',
       'Character — Leader on the Mat Without Being Asked',
+      'Mentoring Lower Belts as Part of Your Training',
+    ],
+    coachTip: 'Brown belts and black belts take this athlete seriously in rolling. Your game is defined — now it belongs to the room as much as to you.',
+  },
+
+  'purple_4': {
+    phase: 'BROWN BELT READINESS',
+    phaseDesc: 'The question is when, not if. The coaching has turned into a conversation.',
+    objective: 'Make the Room Better',
+    objectiveNote: 'Coach can point to athletes who improved from rolling with you.',
+    requirements: [
+      'Consistent Mat Time Since Purple Promotion — Coach Tracked',
+      '3+ Events Competed or 25+ Hard Rounds with Brown and Black Belts',
+      'Coach Can Name Your A-Game Without Asking',
+      'Known in the Room for Making Training Partners Better',
       'Brown Belt Evaluation Formally Initiated by Coach',
     ],
-    coachTip: 'Brown belts and black belts take this athlete seriously in rolling. You know you are ready when they feel it before the coach says it.',
+    coachTip: 'At purple belt four, the work is no longer about you. The room can tell who is ready before the coach says anything.',
   },
 
   // ── BROWN BELT ───────────────────────────────────────────────────────────────
@@ -301,13 +316,28 @@ const DEMO_PHASES: Record<string, PhaseData> = {
   },
 
   'brown_3': {
+    phase: 'THE COMPLETE GAME',
+    phaseDesc: 'Near-black proficiency. Your game is complete and it shows up the same way every round.',
+    objective: 'Perform Under Any Partner',
+    objectiveNote: 'Your A-game holds against black belts, not just on your best day.',
+    requirements: [
+      'Signature Game Holds Against Black Belts in Live Rolling',
+      'No Position Causes Freeze — Offense or Defense',
+      'Runs Classes Independently — Including Leg Lock Safety',
+      'Named Mentor for Lower Belts in the Room',
+      'Competes or Coaches at a High Level Consistently',
+    ],
+    coachTip: 'Brown belt is the refinement belt. The black belt is no longer about adding — it is about how consistently you show what you already have.',
+  },
+
+  'brown_4': {
     phase: 'BLACK BELT READINESS',
     phaseDesc: 'The room already calls you a black belt in conversation. The formal step is what remains.',
     objective: 'Embody the Culture',
     objectiveNote: 'This is not a technique conversation.',
     requirements: [
       'Age 19+ (IBJJF Standard)',
-      'Minimum 18 Months at Brown Belt',
+      'Minimum 1 Year at Brown Belt (IBJJF Standard)',
       'No Technical Holes the Coach Considers Disqualifying',
       'Character — Teaches Without Being Asked, Competes with Integrity',
       'The Room Already Calls You a Black Belt',
@@ -383,7 +413,7 @@ const DEMO_PHASES: Record<string, PhaseData> = {
     objective: 'Define the Standard',
     objectiveNote: 'Your example is the curriculum.',
     requirements: [
-      'Minimum 13 Years at Black Belt',
+      'Minimum 14 Years at Black Belt',
       'Distinguished Teaching Career',
       'Significant Competitive Legacy or High-Level Coaching Record',
       'Contribution to the Global Spread of the Art',
