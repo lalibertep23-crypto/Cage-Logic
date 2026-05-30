@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { parseISO, format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -66,6 +67,7 @@ export default async function CompetitionsPage() {
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/home" />
 
       {/* ── Hero — image + title merged ───────────────────────────── */}
       <div style={{ position: 'relative', height: 220, overflow: 'hidden' }}>

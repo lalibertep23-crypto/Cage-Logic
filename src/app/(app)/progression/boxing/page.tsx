@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import BoxingRoadmapClient from './BoxingRoadmapClient';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 

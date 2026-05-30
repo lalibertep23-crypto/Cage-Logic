@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { C, fonts } from '@/lib/design-tokens';
 import { BackButton } from '@/components/ui/back-button';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,7 @@ export default async function MuayThaiLevelPage({
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 96, position: 'relative' }}>
+      <BrandNav backHref="/progression" />
 
       {/* Background */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>

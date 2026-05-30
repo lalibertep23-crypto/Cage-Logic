@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
 import { parseISO, format, differenceInCalendarDays } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 const C = {
   bg:      '#050505',
@@ -228,6 +229,7 @@ export default async function CompetitionDetailPage({
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/competitions" />
 
       {/* Header */}
       <div style={{

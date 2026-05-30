@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { parseISO, startOfWeek, endOfWeek, format, differenceInCalendarDays } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -159,6 +160,7 @@ export default async function HistoryPage() {
 
   return (
     <main style={{ minHeight: '100vh', background: C.bg, color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/home" />
 
       {/* ── Hero Zone ─────────────────────────────────────────────────── */}
       <div style={{

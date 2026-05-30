@@ -6,6 +6,7 @@ import { redirect, notFound } from 'next/navigation';
 import { parseISO, format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
 import { DeleteButton } from './delete-button';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -140,6 +141,7 @@ export default async function SessionDetailPage({
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/history" />
 
       {/* ── Page header ──────────────────────────────────────────────────── */}
       <div style={{

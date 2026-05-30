@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase/server';
 import { C, fonts } from '@/lib/design-tokens';
 import { IRON_ARMY_GYM_ID } from '@/lib/constants';
 import { CriteriaClient } from './criteria-client';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -460,6 +461,7 @@ export default async function CriteriaPage({
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 100, position: 'relative' }}>
+      <BrandNav backHref="/progression" />
 
       {/* Full-screen BJJ background */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>

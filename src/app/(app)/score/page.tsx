@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import { loadHomeData } from '@/lib/score/loadHomeData';
 import { RAMPING_DAYS, type DomainPcts } from '@/lib/score/computeInvestmentScore';
 import { C } from '@/lib/design-tokens';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -76,6 +77,7 @@ export default async function ScorePage() {
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/home" />
 
       {/* ── Page header ──────────────────────────────────────────────────── */}
       <div style={{

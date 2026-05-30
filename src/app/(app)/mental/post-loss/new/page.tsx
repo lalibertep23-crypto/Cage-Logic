@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { GateForm } from './gate-form';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +30,7 @@ export default async function PostLossNewPage() {
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/mental" />
 
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',

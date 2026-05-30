@@ -10,6 +10,7 @@ import { redirect } from 'next/navigation';
 import { format, parseISO, startOfWeek } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
 import { BreathworkGuide } from './breathwork-guide';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -109,6 +110,7 @@ export default async function BreathworkPage() {
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/mental" />
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <div style={{ position: 'relative', height: 240, overflow: 'hidden' }}>

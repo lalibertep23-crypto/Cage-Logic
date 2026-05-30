@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { CheckInForm } from './check-in-form';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +15,7 @@ export default async function CheckInPage() {
 
   return (
     <main style={{ background: '#050505', minHeight: '100vh', color: '#F2EFE8', paddingBottom: 80 }}>
+      <BrandNav backHref="/mental" />
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 22px 14px',

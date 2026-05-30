@@ -3,6 +3,7 @@
 // Voice: factual, calm. No false reassurances about confidentiality.
 
 import Link from 'next/link';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-static';
 
@@ -21,6 +22,7 @@ const C = {
 export default function ResourcesPage() {
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/mental" />
 
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',

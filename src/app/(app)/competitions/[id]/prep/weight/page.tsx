@@ -8,6 +8,7 @@ import { parseISO, differenceInCalendarDays } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
 import { LogWeightForm, WeighInDetailsForm } from './weight-form';
 import { CutCounterChart } from './cut-counter-chart';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -144,6 +145,7 @@ export default async function WeightManagementPage({
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/competitions" />
 
       {/* Header */}
       <div style={{

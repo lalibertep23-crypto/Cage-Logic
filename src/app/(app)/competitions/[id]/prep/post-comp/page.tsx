@@ -7,6 +7,7 @@ import { redirect, notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { decryptField } from '@/lib/crypto';
 import { PostCompForm } from './post-comp-form';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,6 +79,7 @@ export default async function PostCompPage({
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/competitions" />
 
       {/* Header */}
       <div style={{

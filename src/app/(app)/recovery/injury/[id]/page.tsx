@@ -8,6 +8,7 @@ import { parseISO, format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
 import { decryptField } from '@/lib/crypto';
 import { markInjuryResolvedAction } from './actions';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -88,6 +89,7 @@ export default async function InjuryDetailPage({
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/recovery" />
 
       {/* Header */}
       <div style={{

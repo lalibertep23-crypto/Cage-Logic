@@ -7,6 +7,7 @@ import { redirect, notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { TimesForm } from './times-form';
 import { DayOfTimeline } from './timeline';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,6 +50,7 @@ export default async function DayOfPage({
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/competitions" />
 
       {/* Header */}
       <div style={{

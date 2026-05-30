@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Phase2Form } from './phase2-form';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,6 +63,7 @@ export default async function Phase2Page({
   if (hoursSince < 24) {
     return (
       <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/mental" />
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '16px 22px 14px', borderBottom: `1px solid ${C.border}`,

@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { BodyMap } from './body-map';
 import { TrainingAudit } from './training-audit';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -116,6 +117,7 @@ export default async function HealthPage() {
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/home" />
 
       {/* ── Header ────────────────────────────────────────────────────── */}
       <div style={{

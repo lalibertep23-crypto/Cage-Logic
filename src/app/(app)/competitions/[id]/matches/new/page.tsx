@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { MatchForm } from './match-form';
+import { BrandNav } from '@/components/ui/brand-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,6 +40,7 @@ export default async function NewMatchPage({
 
   return (
     <main style={{ minHeight: '100vh', color: C.text, paddingBottom: 80 }}>
+      <BrandNav backHref="/competitions" />
 
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
