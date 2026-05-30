@@ -172,9 +172,13 @@ export default async function ProfilePage() {
         background: '#0A0806',
         marginTop: -56, // pull up under the transparent nav
       }}>
-        {/* Background: cage scene */}
+        {/* Athlete placeholder — male/female driven by sex field from onboarding */}
         <img
-          src="/profile-scene.png"
+          src={
+            (athlete.sex as string | null) === 'female'
+              ? '/profile-female-placeholder.png'
+              : '/profile-male-placeholder.png'
+          }
           alt=""
           style={{
             position: 'absolute',
@@ -183,23 +187,8 @@ export default async function ProfilePage() {
             height: '100%',
             objectFit: 'cover',
             objectPosition: 'top center',
-            filter: 'grayscale(20%) contrast(1.08) brightness(0.75)',
           }}
         />
-
-        {/* Silhouette figure — centered */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'center',
-          paddingBottom: '18%',
-        }}>
-          <div style={{ width: '52%', opacity: 0.55 }}>
-            <SilhouetteFigure />
-          </div>
-        </div>
 
         {/* Gradient overlay — transparent top → void bottom */}
         <div style={{
