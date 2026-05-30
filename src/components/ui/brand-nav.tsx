@@ -31,12 +31,12 @@ export function BrandNav({
 
       {/* Left — brain icon only (taps back) */}
       <Link href={backHref} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: 56, height: 56, position: 'relative', flexShrink: 0 }}>
+        <div style={{ width: 72, height: 72, position: 'relative', flexShrink: 0 }}>
           <Image
             src="/cage-logic-back-button.png"
             alt="Back"
             fill
-            sizes="56px"
+            sizes="72px"
             style={{
               objectFit: 'contain',
               filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.95)) drop-shadow(0 0 12px rgba(0,0,0,0.80))',

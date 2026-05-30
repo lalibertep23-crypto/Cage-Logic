@@ -40,20 +40,21 @@ const ICONS = {
       <rect x="18" y="16" width="4" height="4"/>
     </svg>
   ),
-  // Brain — sideways profile, facing left. Cerebrum dome + rear cerebellum bump + sulci.
+  // Brain — uses the actual Cage Logic brain logo image
   mental: (active: boolean) => (
-    <svg width={30} height={30} viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      {/* Cerebrum — large main dome */}
-      <path d="M5,18 L5,13 C5,8 8,4 13,4 C18,4 21,7 21,12 C21,16 19,18 17,18"/>
-      {/* Cerebellum — small rear bump */}
-      <path d="M17,18 C19,18 21,19 20,21 C19,22 17,22 16,21 L16,18"/>
-      {/* Brain stem baseline */}
-      <path d="M5,18 L5,21 L16,21"/>
-      {/* Sulci folds */}
-      <path d="M9,7 C11,9 9,12 11,15"/>
-      <path d="M14,5 C16,8 14,11 16,14"/>
-    </svg>
+    <img
+      src="/cage-logic-back-button.png"
+      alt="Mental"
+      width={30}
+      height={30}
+      style={{
+        objectFit: 'contain',
+        opacity: active ? 1 : 0.45,
+        filter: active
+          ? 'drop-shadow(0 0 4px rgba(200,148,58,0.60))'
+          : 'brightness(0.80)',
+      }}
+    />
   ),
   // Medical cross where the horizontal arm IS the heartbeat spike
   recovery: (active: boolean) => (
