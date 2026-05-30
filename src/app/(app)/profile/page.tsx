@@ -170,25 +170,13 @@ export default async function ProfilePage() {
         maxHeight: 480,
         overflow: 'hidden',
         background: '#0A0806',
-        marginTop: -56, // pull up under the transparent nav
+        marginTop: -56,
+        // Fighter placeholder as background-image — transparent PNG renders reliably
+        backgroundImage: `url(${(athlete.sex as string | null) === 'female' ? '/profile-female-placeholder.png' : '/profile-male-placeholder.png'})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'top center',
+        backgroundRepeat: 'no-repeat',
       }}>
-        {/* Athlete placeholder — male/female driven by sex field from onboarding */}
-        <img
-          src={
-            (athlete.sex as string | null) === 'female'
-              ? '/profile-female-placeholder.png'
-              : '/profile-male-placeholder.png'
-          }
-          alt=""
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'top center',
-          }}
-        />
 
         {/* Gradient overlay — transparent top → void bottom */}
         <div style={{

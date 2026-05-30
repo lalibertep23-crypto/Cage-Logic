@@ -6,6 +6,7 @@
 // Small amber brain in the top-left corner of a hero. Brand presence only.
 
 import Link from 'next/link';
+import Image from 'next/image';
 import type { ReactNode } from 'react';
 
 export function BrandNav({
