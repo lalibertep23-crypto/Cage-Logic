@@ -163,7 +163,7 @@ export default async function SettingsPage() {
         {/* App version */}
         <div style={{ marginTop: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <span style={{ fontFamily: 'var(--font-bebas), "Bebas Neue", sans-serif', fontSize: 14, letterSpacing: '0.2em', color: C.dimmer }}>>APP</span>
+            <span style={{ fontFamily: 'var(--font-bebas), "Bebas Neue", sans-serif', fontSize: 14, letterSpacing: '0.2em', color: C.dimmer }}>APP</span>
             <div style={{ flex: 1, height: 1, background: C.border }} />
           </div>
           <div style={{ background: C.surface, padding: '12px 14px' }}>
