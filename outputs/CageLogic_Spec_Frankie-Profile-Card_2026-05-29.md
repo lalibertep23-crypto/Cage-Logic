@@ -46,18 +46,25 @@ The belt line is the pitch hinge: it's verified by Ricardo Almeida — the perso
 
 ## Highlight reel — clip cards
 
-These are **link-out cards** (tap opens the clip on YouTube), not inline players.
+These are **link-out cards** (tap opens the page/clip), not inline players.
 
-> Why link-out, not embed: we tested YouTube embeds in the Technique Library this session — they throw "error 153 / configuration error" when the prototype runs as a local file, and several videos block embedding. So profile highlights stay as URL links (which is the V1 plan anyway). This is UFC-owned footage — link to public clips, don't host.
+> Why link-out, not embed: YouTube embeds throw "error 153" on a local file and several videos block embedding. Also: the BJ Penn fight-clip links from the prior spec were unofficial UFC-footage uploads and are now dead (tested 2026-05-29). Only stable, official sources go on the card.
+
+**Stable sources (use these — confirmed):**
+
+| Label | URL | Status |
+|---|---|---|
+| UFC official athlete page | https://www.ufc.com/athlete/frankie-edgar | Works |
+| Instagram — @frankieedgar | https://instagram.com/frankieedgar | Stable (his own) |
+
+**Optional fight-clip links — Chris must tap-test, keep only what plays:**
 
 | Label | URL |
 |---|---|
-| BJ Penn I — wins the LW title (UFC 112) | https://www.youtube.com/watch?v=boIRifT3_GU |
-| BJ Penn III — Edgar finishes Penn | https://www.youtube.com/watch?v=UlRV-c3Wk9M |
-| "The Answer" — Best Highlights (playlist) | https://www.youtube.com/playlist?list=PLCb9XH5bjjRTDOcXqO0jmxha99CHbS6VJ |
-| UFC official athlete page | https://www.ufc.com/athlete/frankie-edgar |
+| Top Finishes: Frankie Edgar | https://www.youtube.com/watch?v=atKhoDoO3X0 |
+| Every Frankie Edgar UFC Finish | https://www.youtube.com/watch?v=ZneNpWXFGOU |
 
-Chris to tap-test each link before the demo.
+Do not put any link on the demo card that Chris hasn't personally confirmed plays. A dead link in front of Frankie is worse than fewer links.
 
 ## Build notes for Patrick
 
