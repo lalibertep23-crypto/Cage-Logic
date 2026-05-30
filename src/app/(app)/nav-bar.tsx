@@ -45,8 +45,8 @@ const ICONS = {
     <img
       src="/cage-logic-back-button.png"
       alt="Mental"
-      width={30}
-      height={30}
+      width={36}
+      height={36}
       style={{
         objectFit: 'contain',
         opacity: active ? 1 : 0.45,
