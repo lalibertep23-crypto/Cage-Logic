@@ -30,19 +30,21 @@ export function BrandNav({
     }}>
 
       {/* Left — brain icon only (taps back) */}
-      <Link href={backHref} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/cage-logic-back-button.png"
-          alt="Back"
-          width={96}
-          height={96}
-          style={{
-            objectFit: 'contain',
-            display: 'block',
-            filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.95)) drop-shadow(0 0 12px rgba(0,0,0,0.80))',
-          }}
-        />
+      <Link href={backHref} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+        <div style={{ width: 96, height: 96, position: 'relative', flexShrink: 0 }}>
+          <Image
+            src="/cage-logic-back-button.png"
+            alt="Back"
+            width={96}
+            height={96}
+            style={{
+              objectFit: 'contain',
+              width: 96,
+              height: 96,
+              filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.95)) drop-shadow(0 0 12px rgba(0,0,0,0.80))',
+            }}
+          />
+        </div>
       </Link>
 
       {/* Right — wordmark or page-specific actions */}
