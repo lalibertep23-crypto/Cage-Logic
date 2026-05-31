@@ -328,9 +328,13 @@ export default async function ProfilePage() {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   padding: '13px 14px',
-                  background: 'rgba(17,17,17,0.70)',
-                  borderLeft: `3px solid ${d.is_primary ? C.amber : 'rgba(138,155,174,0.20)'}`,
+                  background: d.is_primary ? 'rgba(22,18,12,0.85)' : 'rgba(17,17,17,0.70)',
+                  borderLeft: `${d.is_primary ? '3px' : '2px'} solid ${d.is_primary ? C.amber : 'rgba(138,155,174,0.25)'}`,
+                  borderTop: d.is_primary ? `1px solid rgba(200,148,58,0.30)` : '1px solid rgba(242,239,232,0.03)',
                   borderBottom: '1px solid rgba(242,239,232,0.05)',
+                  boxShadow: d.is_primary
+                    ? '0 4px 24px rgba(0,0,0,0.70), 0 0 0 1px rgba(200,148,58,0.08), inset 0 1px 0 rgba(200,148,58,0.06)'
+                    : '0 2px 10px rgba(0,0,0,0.45)',
                 }}>
                   <div>
                     <div style={{
@@ -386,12 +390,14 @@ export default async function ProfilePage() {
             marginBottom: 10,
           }}>{isDemo ? 'BIO' : 'GOALS'}</div>
           <div style={{
-            background: 'rgba(17,17,17,0.70)',
-            borderLeft: '3px solid rgba(200,148,58,0.28)',
+            background: 'rgba(20,16,10,0.80)',
+            borderLeft: '3px solid rgba(200,148,58,0.35)',
+            borderTop: '1px solid rgba(200,148,58,0.12)',
             padding: '14px',
             display: 'flex',
             flexDirection: 'column',
             gap: 7,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.60), inset 0 1px 0 rgba(200,148,58,0.05)',
           }}>
             {goals.comp_status && (
               <div style={{
@@ -454,8 +460,10 @@ export default async function ProfilePage() {
           </div>
           <div style={{
             marginTop: 10, padding: '10px 14px',
-            background: 'rgba(17,17,17,0.70)',
-            borderLeft: '3px solid rgba(200,148,58,0.20)',
+            background: 'rgba(20,16,10,0.80)',
+            borderLeft: '2px solid rgba(200,148,58,0.28)',
+            borderTop: '1px solid rgba(200,148,58,0.10)',
+            boxShadow: '0 3px 14px rgba(0,0,0,0.55)',
           }}>
             <div style={{ fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.18em', color: 'rgba(242,239,232,0.30)', marginBottom: 6 }}>WINS BY METHOD</div>
             <div style={{ fontFamily: fonts.label, fontSize: 11, letterSpacing: '0.12em', color: C.text }}>
@@ -480,9 +488,13 @@ export default async function ProfilePage() {
             {FRANKIE_CREDENTIALS.map((cred, i) => (
               <div key={i} style={{
                 padding: '12px 14px',
-                background: 'rgba(17,17,17,0.70)',
-                borderLeft: `3px solid ${i === 0 ? C.amber : 'rgba(200,148,58,0.20)'}`,
+                background: i === 0 ? 'rgba(22,18,12,0.85)' : 'rgba(17,17,17,0.70)',
+                borderLeft: `${i === 0 ? '3px' : '2px'} solid ${i === 0 ? C.amber : 'rgba(200,148,58,0.22)'}`,
+                borderTop: i === 0 ? '1px solid rgba(200,148,58,0.20)' : '1px solid rgba(242,239,232,0.03)',
                 borderBottom: '1px solid rgba(242,239,232,0.04)',
+                boxShadow: i === 0
+                  ? '0 4px 20px rgba(0,0,0,0.65), 0 0 0 1px rgba(200,148,58,0.06)'
+                  : '0 1px 8px rgba(0,0,0,0.35)',
               }}>
                 <div style={{
                   fontFamily: fonts.label, fontSize: 10, letterSpacing: '0.12em',
@@ -511,10 +523,12 @@ export default async function ProfilePage() {
             {FRANKIE_TAGS.map((tag) => (
               <div key={tag} style={{
                 fontFamily: fonts.label, fontSize: 8, letterSpacing: '0.14em',
-                color: 'rgba(242,239,232,0.65)',
+                color: 'rgba(242,239,232,0.75)',
                 padding: '5px 10px',
-                border: '1px solid rgba(242,239,232,0.14)',
-                background: 'rgba(17,17,17,0.70)',
+                border: '1px solid rgba(200,148,58,0.22)',
+                borderTop: '1px solid rgba(200,148,58,0.30)',
+                background: 'rgba(20,16,10,0.80)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.40)',
               }}>{tag}</div>
             ))}
           </div>
@@ -540,9 +554,11 @@ export default async function ProfilePage() {
                 <div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   padding: '13px 14px',
-                  background: 'rgba(17,17,17,0.70)',
-                  borderLeft: '3px solid rgba(200,148,58,0.20)',
+                  background: 'rgba(17,17,17,0.75)',
+                  borderLeft: '2px solid rgba(200,148,58,0.30)',
+                  borderTop: '1px solid rgba(200,148,58,0.08)',
                   borderBottom: '1px solid rgba(242,239,232,0.04)',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.50)',
                 }}>
                   <div style={{
                     fontFamily: fonts.label, fontSize: 9, letterSpacing: '0.12em',
