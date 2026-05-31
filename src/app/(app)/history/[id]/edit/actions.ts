@@ -15,6 +15,8 @@ const Schema = z.object({
   whatClicked:       z.string().max(2000).optional(),
   whatDidnt:         z.string().max(2000).optional(),
   questionForCoach:  z.string().max(500).optional(),
+  followUpNotes:     z.string().max(2000).optional(),
+  skillsExecuted:    z.string().max(2000).optional(),
   tagIds:            z.array(z.string().uuid()).default([]),
   rollCount:         z.coerce.number().int().min(0).default(0),
 });
@@ -37,6 +39,8 @@ export async function editSessionAction(
     whatClicked:      formData.get('whatClicked') || undefined,
     whatDidnt:        formData.get('whatDidnt') || undefined,
     questionForCoach: formData.get('questionForCoach') || undefined,
+    followUpNotes:    formData.get('followUpNotes') || undefined,
+    skillsExecuted:   formData.get('skillsExecuted') || undefined,
     tagIds:           formData.getAll('tagIds').map(String),
     rollCount:        formData.get('rollCount') || 0,
   });
@@ -75,13 +79,15 @@ export async function editSessionAction(
   // Upsert reflection (delete + insert is simplest given single-row pattern)
   await supabase.from('session_reflections').delete().eq('session_id', id);
 
-  if (d.whatClicked || d.whatDidnt || d.questionForCoach) {
+  if (d.whatClicked || d.whatDidnt || d.questionForCoach || d.followUpNotes || d.skillsExecuted) {
     const { error: reflErr } = await supabase.from('session_reflections').insert({
       session_id:         id,
       athlete_id:         user.id,
       what_clicked:       d.whatClicked ?? null,
       what_didnt:         d.whatDidnt ?? null,
       question_for_coach: d.questionForCoach ?? null,
+      follow_up_notes:    d.followUpNotes ?? null,
+      skills_executed:    d.skillsExecuted ?? null,
     });
     if (reflErr) return { error: reflErr.message };
   }

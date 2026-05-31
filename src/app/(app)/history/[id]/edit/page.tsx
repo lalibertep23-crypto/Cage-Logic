@@ -28,7 +28,7 @@ export default async function EditSessionPage({
 
   const { data: reflRows } = await supabase
     .from('session_reflections')
-    .select('what_clicked, what_didnt, question_for_coach')
+    .select('what_clicked, what_didnt, question_for_coach, follow_up_notes, skills_executed')
     .eq('session_id', id)
     .maybeSingle();
 
@@ -66,6 +66,8 @@ export default async function EditSessionPage({
         what_clicked:      (reflRows?.what_clicked as string) ?? null,
         what_didnt:        (reflRows?.what_didnt as string) ?? null,
         question_for_coach:(reflRows?.question_for_coach as string) ?? null,
+        follow_up_notes:   (reflRows?.follow_up_notes as string) ?? null,
+        skills_executed:   (reflRows?.skills_executed as string) ?? null,
       }}
       allTags={(allTagRows ?? []).map((t) => ({
         id:       t.id as string,

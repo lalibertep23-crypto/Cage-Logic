@@ -64,6 +64,8 @@ type Props = {
     what_clicked: string | null;
     what_didnt: string | null;
     question_for_coach: string | null;
+    follow_up_notes: string | null;
+    skills_executed: string | null;
   };
   allTags: TagOption[];
   selectedTagIds: string[];
@@ -160,6 +162,10 @@ export function EditForm({ id, session, allTags, selectedTagIds, rolls }: Props)
           <SectionHeader number="03" title="REFLECTION" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div>
+              <span style={labelStyle}>SKILLS EXECUTED WELL</span>
+              <textarea name="skillsExecuted" defaultValue={session.skills_executed ?? ''} maxLength={2000} rows={3} style={{ ...inputStyle, resize: 'none' }} placeholder="1–3 specific things you executed." />
+            </div>
+            <div>
               <span style={labelStyle}>WHAT CLICKED</span>
               <textarea name="whatClicked" defaultValue={session.what_clicked ?? ''} maxLength={2000} rows={2} style={{ ...inputStyle, resize: 'none' }} placeholder="One technique or concept that landed." />
             </div>
@@ -170,6 +176,10 @@ export function EditForm({ id, session, allTags, selectedTagIds, rolls }: Props)
             <div>
               <span style={labelStyle}>QUESTION FOR COACH</span>
               <input name="questionForCoach" type="text" defaultValue={session.question_for_coach ?? ''} maxLength={500} style={inputStyle} />
+            </div>
+            <div>
+              <span style={labelStyle}>FOLLOW-UP NOTES</span>
+              <textarea name="followUpNotes" defaultValue={session.follow_up_notes ?? ''} maxLength={2000} rows={2} style={{ ...inputStyle, resize: 'none' }} placeholder="Anything else worth noting." />
             </div>
           </div>
         </section>
