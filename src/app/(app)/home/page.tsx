@@ -651,7 +651,11 @@ export default async function HomePage() {
               const dispName = (d.discipline as string).replace('_', ' ').toUpperCase();
               return (
                 <Link key={i} href={`/progression/${(d.discipline as string).replace('_', '-')}`} style={{ textDecoration: 'none' }}>
-                  <div style={{ position: 'relative', aspectRatio: '1 / 1', overflow: 'hidden' }}>
+                  <div style={{
+                    position: 'relative', aspectRatio: '1 / 1', overflow: 'hidden',
+                    border: '1px solid rgba(200,148,58,0.28)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.65), 0 0 0 1px rgba(200,148,58,0.06)',
+                  }}>
                     {/* Card image */}
                     <div style={{
                       position: 'absolute', inset: 0,

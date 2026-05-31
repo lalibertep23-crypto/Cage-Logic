@@ -181,7 +181,13 @@ export default async function SessionDetailPage({
             { label: 'ENERGY',    value: energy != null ? String(energy) : null,    isScore: true, raw: energy },
             { label: 'INTENSITY', value: intensity != null ? String(intensity) : null, isScore: true, raw: intensity },
           ].map((s) => (
-            <div key={s.label} style={{ background: C.surface, padding: '14px 14px 12px' }}>
+            <div key={s.label} style={{
+              background: 'rgba(17,17,17,0.85)',
+              padding: '14px 14px 12px',
+              borderTop: '1px solid rgba(200,148,58,0.08)',
+              borderBottom: '1px solid rgba(242,239,232,0.05)',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.45)',
+            }}>
               <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.18em', color: C.dimmer, marginBottom: 6 }}>
                 {s.label}
               </div>
@@ -228,9 +234,13 @@ export default async function SessionDetailPage({
               {techniques.map((t, i) => (
                 <div key={i} style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
-                  borderBottom: `1px solid ${C.border}`,
-                  padding: '10px 0',
+                  background: 'rgba(17,17,17,0.80)',
+                  borderLeft: '2px solid rgba(200,148,58,0.28)',
+                  borderTop: '1px solid rgba(200,148,58,0.06)',
+                  borderBottom: 'rgba(242,239,232,0.05)',
+                  padding: '10px 12px',
+                  marginBottom: 2,
+                  boxShadow: '0 1px 8px rgba(0,0,0,0.40)',
                 }}>
                   <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 12, letterSpacing: '0.04em', color: C.text }}>
                     {t.label}
@@ -296,7 +306,14 @@ export default async function SessionDetailPage({
                 if (r.partner_label) partnerBits.push(r.partner_label);
                 if (r.partner_relative_size) partnerBits.push(SIZE_LABELS[r.partner_relative_size] ?? r.partner_relative_size);
                 return (
-                  <div key={r.id} style={{ background: C.surface, borderLeft: `2px solid ${C.border}`, padding: '14px 14px 12px' }}>
+                  <div key={r.id} style={{
+                    background: 'rgba(17,17,17,0.85)',
+                    borderLeft: `2px solid rgba(200,148,58,0.35)`,
+                    borderTop: '1px solid rgba(200,148,58,0.10)',
+                    borderBottom: '1px solid rgba(242,239,232,0.05)',
+                    padding: '14px 14px 12px',
+                    boxShadow: '0 3px 14px rgba(0,0,0,0.55)',
+                  }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
                       <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 16, letterSpacing: '0.14em', color: C.amber }}>
                         ROUND {String(r.round_number ?? i + 1).padStart(2, '0')}
@@ -339,7 +356,14 @@ function ReflectionField({ label, value, accent }: { label: string; value: strin
     dimmer:  'rgba(242,239,232,0.35)',
   };
   return (
-    <div style={{ background: C.surface, padding: '12px 14px', borderLeft: `2px solid ${accent ?? C.border}` }}>
+    <div style={{
+      background: accent ? 'rgba(22,18,12,0.85)' : 'rgba(17,17,17,0.80)',
+      padding: '12px 14px',
+      borderLeft: `2px solid ${accent ?? 'rgba(200,148,58,0.22)'}`,
+      borderTop: `1px solid ${accent ? 'rgba(200,148,58,0.14)' : 'rgba(200,148,58,0.05)'}`,
+      borderBottom: '1px solid rgba(242,239,232,0.05)',
+      boxShadow: accent ? '0 3px 14px rgba(0,0,0,0.55)' : '0 1px 8px rgba(0,0,0,0.40)',
+    }}>
       <div style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.16em', color: accent ?? C.dimmer, marginBottom: 6 }}>
         {label}
       </div>

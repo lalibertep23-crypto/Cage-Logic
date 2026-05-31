@@ -62,9 +62,21 @@ export function CompetitionForm({ today }: { today: string }) {
         <label htmlFor="organization" style={labelStyle}>ORGANIZATION (OPTIONAL)</label>
         <input
           id="organization" name="organization" type="text" maxLength={100}
-          placeholder="IBJJF, ADCC, NAGA, UFC, local promotion"
+          placeholder="IBJJF, ADCC, NAGA, UFC BJJ Opens…"
+          list="orgOptions"
           style={flatInput}
         />
+        <datalist id="orgOptions">
+          <option value="UFC BJJ Opens" />
+          <option value="IBJJF" />
+          <option value="ADCC" />
+          <option value="NAGA" />
+          <option value="Polaris" />
+          <option value="Submission Underground" />
+          <option value="EBI" />
+          <option value="FloGrappling" />
+          <option value="Local Promotion" />
+        </datalist>
         {state.fieldErrors?.organization && (
           <p style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.brick, marginTop: 4 }}>
             {state.fieldErrors.organization}

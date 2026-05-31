@@ -326,14 +326,18 @@ export default async function HistoryPage() {
                           display: 'block',
                           textDecoration: 'none',
                           color: C.text,
-                          borderTop: si === 0 ? `1px solid ${C.border}` : 'none',
-                          borderBottom: `1px solid ${C.border}`,
+                          marginBottom: 3,
                         }}
                       >
                         <div style={{
                           display: 'flex', alignItems: 'center',
-                          padding: '14px 0',
+                          padding: '14px 12px 14px 14px',
                           gap: 12,
+                          background: 'rgba(17,17,17,0.80)',
+                          borderLeft: `2px solid ${engColor}`,
+                          borderTop: `1px solid rgba(200,148,58,0.06)`,
+                          borderBottom: `1px solid rgba(242,239,232,0.05)`,
+                          boxShadow: '0 2px 10px rgba(0,0,0,0.45)',
                         }}>
 
                           {/* Energy dot */}
