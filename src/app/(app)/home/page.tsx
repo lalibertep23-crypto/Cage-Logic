@@ -205,10 +205,10 @@ function getRampDescriptor(day: number): string {
 // ── Segmented Bar (10 blocks) ─────────────────────────────────────────────────
 function SegmentedBar({ filled, color }: { filled: number; color: string }) {
   return (
-    <div style={{ display: 'flex', gap: 2.5, flex: 1 }}>
+    <div style={{ display: 'flex', gap: 3.5, flex: 1 }}>
       {Array.from({ length: 10 }, (_, i) => (
         <div key={i} style={{
-          flex: 1, height: 13,
+          flex: 1, height: 20,
           background: i < filled ? color : 'rgba(242,239,232,0.07)',
         }}/>
       ))}
@@ -472,8 +472,8 @@ export default async function HomePage() {
       </div>
 
       {/* ── Domains ──────────────────────────────────────────────────────── */}
-      <div style={{ padding: '16px 22px 18px', borderBottom: `1px solid ${C.line}` }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      <div style={{ padding: '20px 22px 26px', borderBottom: `1px solid ${C.line}` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 18, letterSpacing: '0.2em', color: C.text }}>DOMAINS</span>
           <Link href="/score" style={{
             fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: C.amber,
@@ -484,23 +484,32 @@ export default async function HomePage() {
             FULL BREAKDOWN <span>→</span>
           </Link>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {DOMAIN_DEFS.map((d) => {
             const pct    = Math.max(0, Math.min(100, score.domains[d.key]));
             const filled = Math.round(pct / 10);
             const color  = getDomainColor(pct);
             return (
-              <div key={d.key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 20, flexShrink: 0 }}>
-                  <d.Icon color={color}/>
+              <div key={d.key}>
+                {/* Label row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                  <div style={{ width: 20, flexShrink: 0 }}>
+                    <d.Icon color={color}/>
+                  </div>
+                  <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, letterSpacing: '0.14em', color: C.text, flex: 1 }}>
+                    {d.label}
+                  </span>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 22, letterSpacing: '0.06em', color, lineHeight: 1 }}>
+                      {filled}
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, color: 'rgba(242,239,232,0.30)', letterSpacing: '0.08em', marginLeft: 3 }}>
+                      / 10
+                    </span>
+                  </div>
                 </div>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, letterSpacing: '0.12em', color: C.text, width: 82, flexShrink: 0 }}>
-                  {d.label}
-                </span>
+                {/* Bar row */}
                 <SegmentedBar filled={filled} color={color}/>
-                <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 10, color, letterSpacing: '0.06em', width: 36, textAlign: 'right', flexShrink: 0 }}>
-                  {filled} / 10
-                </span>
               </div>
             );
           })}
