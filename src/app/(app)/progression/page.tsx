@@ -173,13 +173,8 @@ const DISCIPLINES: DisciplineConfig[] = [
     getHref: () => '/progression/mma',
     getRank: mmaRank,
   },
-  {
-    key: 'sambo', label: 'SAMBO',
-    badge: '/wrestling-navigation-badge.png', // temp — sambo nav badge pending
-    accentColor: '#B83A30',
-    getHref: () => '/progression/sambo',
-    getRank: (rc) => samboRank(rc),
-  },
+  // SAMBO — parked until hierarchy is finalized. V1.5.
+  // KARATE — parked. V1.5.
 ];
 
 // ─── Card ───────────────────────────────────────────────────────────────────
