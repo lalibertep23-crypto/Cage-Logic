@@ -2,6 +2,7 @@
 // Single-page form with 4 sections: when/where, technique tags (grouped by
 // position), optional rolls (dynamic rows), energy/intensity/reflection.
 
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { LogForm, type TagOption } from './log-form';
@@ -142,6 +143,21 @@ export default async function LogPage() {
           </div>
         </div>
       </div>
+
+      {/* Scratch pad link — reference your notes while logging */}
+      <Link href="/scratch" style={{ textDecoration: 'none', display: 'block' }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '10px 22px',
+          background: 'rgba(200,148,58,0.05)',
+          borderBottom: '1px solid rgba(200,148,58,0.18)',
+        }}>
+          <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.16em', color: 'rgba(200,148,58,0.70)' }}>
+            SCRATCH PAD — NOTES TO REFERENCE
+          </span>
+          <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 11, color: 'rgba(200,148,58,0.40)' }}>→</span>
+        </div>
+      </Link>
 
       {/* Active injury banner */}
       {activeInjuries.length > 0 && (
