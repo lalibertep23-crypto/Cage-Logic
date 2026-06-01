@@ -534,6 +534,23 @@ export default async function HomePage() {
           <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 14, color: C.dim }}>—</span>
         </div>
 
+        {/* Scratch pad quick link */}
+        <Link href="/scratch" style={{ textDecoration: 'none', display: 'block', margin: '0 22px 6px' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '10px 14px',
+            background: 'rgba(200,148,58,0.06)',
+            border: '1px solid rgba(200,148,58,0.22)',
+            borderLeft: '3px solid rgba(200,148,58,0.50)',
+          }}>
+            <div>
+              <span style={{ fontFamily: 'var(--font-bebas)', fontSize: 14, letterSpacing: '0.18em', color: C.amber }}>SCRATCH PAD</span>
+              <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 9, letterSpacing: '0.12em', color: C.dim, marginLeft: 10 }}>QUICK NOTES</span>
+            </div>
+            <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: 12, color: 'rgba(200,148,58,0.50)' }}>→</span>
+          </div>
+        </Link>
+
         {/* Split PUNCH IN button */}
         <Link href="/log" style={{ textDecoration: 'none', display: 'block', margin: '0 22px 14px' }}>
           <div style={{ display: 'flex', overflow: 'hidden', height: 80 }}>
