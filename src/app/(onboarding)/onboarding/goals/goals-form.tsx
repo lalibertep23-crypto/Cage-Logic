@@ -15,6 +15,7 @@ type FormDefaults = {
   whyTraining: string;
   compStatus: string;
   beltGoal: string;
+  trainingFrequency: number | '';
 };
 
 const initialState: GoalsState = {};
@@ -30,6 +31,31 @@ export function GoalsForm({ defaults }: { defaults: FormDefaults }) {
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="trainingFrequency" className="text-sm font-medium">
+          How many days per week do you train?
+        </label>
+        <select
+          id="trainingFrequency"
+          name="trainingFrequency"
+          required
+          defaultValue={defaults.trainingFrequency}
+          className={inputClass}
+        >
+          <option value="">Pick one</option>
+          <option value="2">2 days</option>
+          <option value="3">3 days</option>
+          <option value="4">4 days</option>
+          <option value="5">5 days</option>
+          <option value="6">6 days</option>
+          <option value="7">Every day</option>
+        </select>
+        {state.fieldErrors?.trainingFrequency && (
+          <p className="text-xs text-destructive">{state.fieldErrors.trainingFrequency}</p>
+        )}
+        <p className="text-xs text-muted-foreground">Used to calculate your Consistency score. You can update it in settings later.</p>
+      </div>
+
       <div className="flex flex-col gap-1.5">
         <label htmlFor="whyTraining" className="text-sm font-medium">
           Why are you training?

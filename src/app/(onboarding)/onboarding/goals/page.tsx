@@ -17,11 +17,19 @@ export default async function GoalsPage() {
     redirect('/login');
   }
 
-  const { data: existing } = await supabase
-    .from('athlete_goals')
-    .select('why_training, comp_status, belt_goal')
-    .eq('athlete_id', user.id)
-    .maybeSingle();
+  const [goalsRes, athleteRes] = await Promise.all([
+    supabase
+      .from('athlete_goals')
+      .select('why_training, comp_status, belt_goal')
+      .eq('athlete_id', user.id)
+      .maybeSingle(),
+    supabase
+      .from('athletes')
+      .select('training_frequency_per_week')
+      .eq('id', user.id)
+      .maybeSingle(),
+  ]);
+  const existing = goalsRes.data;
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12">
@@ -35,6 +43,7 @@ export default async function GoalsPage() {
 
         <GoalsForm
           defaults={{
+            trainingFrequency: typeof athleteRes.data?.training_frequency_per_week === 'number' ? athleteRes.data.training_frequency_per_week : '',
             whyTraining: typeof existing?.why_training === 'string' ? existing.why_training : '',
             compStatus: typeof existing?.comp_status === 'string' ? existing.comp_status : 'occasional',
             beltGoal: typeof existing?.belt_goal === 'string' ? existing.belt_goal : '',

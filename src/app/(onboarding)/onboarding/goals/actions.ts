@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 const COMP_STATUSES = ['never', 'occasional', 'regular', 'pro'] as const;
 
 const Schema = z.object({
+  trainingFrequency: z.coerce.number().int().min(1).max(7),
   whyTraining: z
     .string()
     .trim()
@@ -24,7 +25,7 @@ const Schema = z.object({
 
 export type GoalsState = {
   error?: string;
-  fieldErrors?: Partial<Record<'whyTraining' | 'compStatus' | 'beltGoal', string>>;
+  fieldErrors?: Partial<Record<'trainingFrequency' | 'whyTraining' | 'compStatus' | 'beltGoal', string>>;
 };
 
 /**
@@ -36,6 +37,7 @@ export async function saveGoalsAction(
   formData: FormData
 ): Promise<GoalsState> {
   const parsed = Schema.safeParse({
+    trainingFrequency: formData.get('trainingFrequency'),
     whyTraining: formData.get('whyTraining'),
     compStatus: formData.get('compStatus'),
     beltGoal: formData.get('beltGoal'),
@@ -79,9 +81,15 @@ export async function saveGoalsAction(
         .eq('id', existing.id as string)
     : await supabase.from('athlete_goals').insert(payload);
 
-  if (error) {
-    return { error: error.message };
-  }
+  if (error) return { error: error.message };
+
+  // Write training frequency to athletes table (Consistency domain denominator)
+  const { error: freqErr } = await supabase
+    .from('athletes')
+    .update({ training_frequency_per_week: parsed.data.trainingFrequency })
+    .eq('id', user.id);
+
+  if (freqErr) return { error: freqErr.message };
 
   redirect('/onboarding/baseline');
 }
