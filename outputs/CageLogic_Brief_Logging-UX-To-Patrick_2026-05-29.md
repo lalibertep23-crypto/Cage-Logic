@@ -48,14 +48,40 @@ Tap segments (session type, outcome), 1–10 tap scales (energy/intensity), tech
 - Add a **mic button** to the free-text fields (Notes / reflection / "what it felt like").
 - Biggest single "not homework" lever — talk 20 seconds instead of typing. Browser speech-to-text or a documented reliance on native keyboard dictation; your call on approach.
 
+### 6. Recent-first technique picker, curriculum-linked
+- Open the picker to **"This week's class"** (from the Iron Army 14-week curriculum map already in the repo) + **"Recently logged"** — not an empty search box.
+- This is MyFitnessPal's "recent foods" pattern: most logs become one tap because you train the same positions week to week. Strongest single idea borrowed from MFP.
+
+### 7. Repeat last session
+- One tap clones the last session (type, duration, instructor) to edit — MFP's "saved meals." Recurring training is most logs.
+
+### 8. Tap-to-count rolls (recommended — changes data input, your call)
+- The closest BJJ apps (BJJ Notes, RollData) sell "log a roll in seconds" by making rolls one-tap **countable events** — tapped them / got tapped / swept / passed — and *deriving* metrics, instead of asking for prose.
+- Recommend shifting roll capture toward tap-counts with free text optional. This changes what's stored, so it's a data-model call on your end.
+
+> **Informed by:** MyFitnessPal (recent-first, saved meals, voice, never-a-blank-box) and BJJ Notes / RollData (log in seconds via tap-to-count). Deliberately **not** copying their leaderboards / social scoreboards / streak gamification — that violates the "mirror, not megaphone" charter. We take their input speed, not their scoreboard.
+
 ---
 
 ## Suggested build order
 
 1. Collapse optional sections + last-used session-type default (UI only — ship this alone and it already fixes most of the feeling).
-2. Reflection → one box + optional prompt chips.
-3. Rolls → partner+outcome default, rest behind "+ detail."
-4. Voice input on text fields.
+2. Recent-first / curriculum-linked picker + repeat-last-session (biggest speed wins after #1).
+3. Reflection → one box + optional prompt chips.
+4. Rolls → partner+outcome default, rest behind "+ detail."
+5. Voice input on text fields.
+6. Tap-to-count rolls (data-model call).
+
+## Phase 2 — make logging *worth it* (analytics layer — your lane)
+
+Speed gets them to log; payoff keeps them logging. Right now the reward for filling fields is invisible, which is half of why it feels like a chore. These are analytics-layer ideas (your lane), and every one must obey the charter — mirror, not megaphone; factual, no celebration:
+
+- **One factual insight after each log** — e.g. "3rd session this week" or "8 knee cuts logged this month, 0 escapes." Turns logging into a mirror with an immediate payoff.
+- **Coach-question inbox** — the "question for coach" entries collect into a list to bring to class. Gives that field a real purpose.
+- **Confidence-file payoff** — surface "skills executed well" as a comp-prep tally ("wins banked for Aug 22"), tying logging to the Comp Prep layer.
+- **Post-class capture nudge** — optional reminder ~30 min after your usual class time → one-tap quick log while memory's fresh.
+
+Near-term = Phase 1 (speed). Phase 2 = the payoff loop, once Phase 1 ships.
 
 ## Out of scope (revisit later)
 
